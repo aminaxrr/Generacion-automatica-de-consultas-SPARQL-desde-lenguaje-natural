@@ -1,0 +1,10 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+SELECT ?id ?desc
+WHERE {
+  ?req rdf:type p510:Requirement ;
+       p510:id ?id ;
+       p510:description ?desc .
+  FILTER(CONTAINS(LCASE(?desc), "sistema"))
+}

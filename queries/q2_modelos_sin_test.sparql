@@ -1,0 +1,13 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+SELECT ?modelo ?nombre
+WHERE {
+    ?modelo rdf:type p510:DesignModel .
+    ?modelo p510:name ?nombre .
+
+    # FILTRO CLAVE: Que NO exista relación 'Verified_by'
+    FILTER NOT EXISTS {
+        ?modelo p510:Verified_by ?test .
+    }
+}

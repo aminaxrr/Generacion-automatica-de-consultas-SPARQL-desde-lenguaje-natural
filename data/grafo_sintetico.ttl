@@ -1,0 +1,521 @@
+@prefix ex: <http://mi-empresa.org/proyecto-avion#> .
+@prefix p510: <http://www.lotar.org/schemas/mbse/p510#> .
+
+ex:Model_002 a p510:DesignModel ;
+    p510:Verified_by ex:Test_020 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 2" .
+
+ex:Model_005 a p510:DesignModel ;
+    p510:Verified_by ex:Test_001 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 5" .
+
+ex:Model_008 a p510:DesignModel ;
+    p510:Verified_by ex:Test_010 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 8" .
+
+ex:Model_011 a p510:DesignModel ;
+    p510:Verified_by ex:Test_006 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 11" .
+
+ex:Model_012 a p510:DesignModel ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 12" .
+
+ex:Model_013 a p510:DesignModel ;
+    p510:Verified_by ex:Test_017 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 13" .
+
+ex:Model_025 a p510:DesignModel ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 25" .
+
+ex:Model_028 a p510:DesignModel ;
+    p510:Verified_by ex:Test_012 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 28" .
+
+ex:Req_001 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_020 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 1" ;
+    p510:id "REQ-001" .
+
+ex:Req_002 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_018 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 2" ;
+    p510:id "REQ-002" .
+
+ex:Req_003 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 3" ;
+    p510:id "REQ-003" .
+
+ex:Req_004 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_030 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 4" ;
+    p510:id "REQ-004" .
+
+ex:Req_005 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_016 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 5" ;
+    p510:id "REQ-005" .
+
+ex:Req_006 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_019 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 6" ;
+    p510:id "REQ-006" .
+
+ex:Req_007 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_017 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 7" ;
+    p510:id "REQ-007" .
+
+ex:Req_008 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_004 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 8" ;
+    p510:id "REQ-008" .
+
+ex:Req_009 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_007 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 9" ;
+    p510:id "REQ-009" .
+
+ex:Req_010 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 10" ;
+    p510:id "REQ-010" .
+
+ex:Req_011 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_026 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 11" ;
+    p510:id "REQ-011" .
+
+ex:Req_012 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_003 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 12" ;
+    p510:id "REQ-012" .
+
+ex:Req_013 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 13" ;
+    p510:id "REQ-013" .
+
+ex:Req_014 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_006 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 14" ;
+    p510:id "REQ-014" .
+
+ex:Req_015 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_027 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 15" ;
+    p510:id "REQ-015" .
+
+ex:Req_016 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_019 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 16" ;
+    p510:id "REQ-016" .
+
+ex:Req_017 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_023 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 17" ;
+    p510:id "REQ-017" .
+
+ex:Req_018 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_010 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 18" ;
+    p510:id "REQ-018" .
+
+ex:Req_019 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_017 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 19" ;
+    p510:id "REQ-019" .
+
+ex:Req_020 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_029 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 20" ;
+    p510:id "REQ-020" .
+
+ex:Req_021 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 21" ;
+    p510:id "REQ-021" .
+
+ex:Req_022 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_024 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 22" ;
+    p510:id "REQ-022" .
+
+ex:Req_023 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_017 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 23" ;
+    p510:id "REQ-023" .
+
+ex:Req_024 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_015 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 24" ;
+    p510:id "REQ-024" .
+
+ex:Req_025 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 25" ;
+    p510:id "REQ-025" .
+
+ex:Req_026 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 26" ;
+    p510:id "REQ-026" .
+
+ex:Req_027 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_003 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 27" ;
+    p510:id "REQ-027" .
+
+ex:Req_028 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_006 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 28" ;
+    p510:id "REQ-028" .
+
+ex:Req_029 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_023 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 29" ;
+    p510:id "REQ-029" .
+
+ex:Req_030 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_009 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 30" ;
+    p510:id "REQ-030" .
+
+ex:Req_031 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_007 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 31" ;
+    p510:id "REQ-031" .
+
+ex:Req_032 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_010 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 32" ;
+    p510:id "REQ-032" .
+
+ex:Req_033 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_016 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 33" ;
+    p510:id "REQ-033" .
+
+ex:Req_034 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_009 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 34" ;
+    p510:id "REQ-034" .
+
+ex:Req_035 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_006 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 35" ;
+    p510:id "REQ-035" .
+
+ex:Req_036 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_024 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 36" ;
+    p510:id "REQ-036" .
+
+ex:Req_037 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_016 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 37" ;
+    p510:id "REQ-037" .
+
+ex:Req_038 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_009 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 38" ;
+    p510:id "REQ-038" .
+
+ex:Req_039 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_022 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 39" ;
+    p510:id "REQ-039" .
+
+ex:Req_040 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_006 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 40" ;
+    p510:id "REQ-040" .
+
+ex:Req_041 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_021 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 41" ;
+    p510:id "REQ-041" .
+
+ex:Req_042 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 42" ;
+    p510:id "REQ-042" .
+
+ex:Req_043 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_026 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 43" ;
+    p510:id "REQ-043" .
+
+ex:Req_044 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_029 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 44" ;
+    p510:id "REQ-044" .
+
+ex:Req_045 a p510:Requirement ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 45" ;
+    p510:id "REQ-045" .
+
+ex:Req_046 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_017 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 46" ;
+    p510:id "REQ-046" .
+
+ex:Req_047 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_001 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 47" ;
+    p510:id "REQ-047" .
+
+ex:Req_048 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_014 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 48" ;
+    p510:id "REQ-048" .
+
+ex:Req_049 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_010 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 49" ;
+    p510:id "REQ-049" .
+
+ex:Req_050 a p510:Requirement ;
+    p510:Satisfied_by ex:Model_014 ;
+    p510:contentType "Requirement" ;
+    p510:description "El sistema debe cumplir la función 50" ;
+    p510:id "REQ-050" .
+
+ex:Test_009 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_011 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_013 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_014 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_015 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_016 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Model_001 a p510:DesignModel ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 1" .
+
+ex:Model_004 a p510:DesignModel ;
+    p510:Verified_by ex:Test_002 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 4" .
+
+ex:Model_015 a p510:DesignModel ;
+    p510:Verified_by ex:Test_018 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 15" .
+
+ex:Model_018 a p510:DesignModel ;
+    p510:Verified_by ex:Test_002 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 18" .
+
+ex:Model_020 a p510:DesignModel ;
+    p510:Verified_by ex:Test_003 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 20" .
+
+ex:Model_021 a p510:DesignModel ;
+    p510:Verified_by ex:Test_008 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 21" .
+
+ex:Model_022 a p510:DesignModel ;
+    p510:Verified_by ex:Test_012 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 22" .
+
+ex:Model_027 a p510:DesignModel ;
+    p510:Verified_by ex:Test_008 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 27" .
+
+ex:Model_030 a p510:DesignModel ;
+    p510:Verified_by ex:Test_019 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 30" .
+
+ex:Test_003 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_004 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_005 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_018 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Model_003 a p510:DesignModel ;
+    p510:Verified_by ex:Test_001 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 3" .
+
+ex:Model_007 a p510:DesignModel ;
+    p510:Verified_by ex:Test_017 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 7" .
+
+ex:Model_014 a p510:DesignModel ;
+    p510:Verified_by ex:Test_019 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 14" .
+
+ex:Model_019 a p510:DesignModel ;
+    p510:Verified_by ex:Test_004 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 19" .
+
+ex:Model_023 a p510:DesignModel ;
+    p510:Verified_by ex:Test_001 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 23" .
+
+ex:Model_024 a p510:DesignModel ;
+    p510:Verified_by ex:Test_010 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 24" .
+
+ex:Model_026 a p510:DesignModel ;
+    p510:Verified_by ex:Test_005 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 26" .
+
+ex:Model_029 a p510:DesignModel ;
+    p510:Verified_by ex:Test_002 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 29" .
+
+ex:Test_006 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_007 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_008 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_010 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_012 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_017 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_019 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_020 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Model_009 a p510:DesignModel ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 9" .
+
+ex:Model_010 a p510:DesignModel ;
+    p510:Verified_by ex:Test_020 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 10" .
+
+ex:Model_016 a p510:DesignModel ;
+    p510:Verified_by ex:Test_006 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 16" .
+
+ex:Test_001 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Test_002 a p510:VerificationTest ;
+    p510:contentType "Test Case" ;
+    p510:status "Passed" .
+
+ex:Model_006 a p510:DesignModel ;
+    p510:Verified_by ex:Test_007 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 6" .
+
+ex:Model_017 a p510:DesignModel ;
+    p510:Verified_by ex:Test_007 ;
+    p510:contentType "Physical Model" ;
+    p510:name "Modelo físico 17" .
+

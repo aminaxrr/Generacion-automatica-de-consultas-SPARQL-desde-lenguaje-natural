@@ -1,0 +1,9 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+SELECT (COUNT(?req) AS ?totalReqs) (COUNT(?model) AS ?totalModelos)
+WHERE {
+    { ?req rdf:type p510:Requirement }
+    UNION
+    { ?model rdf:type p510:DesignModel }
+}

@@ -1,0 +1,11 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+SELECT (COUNT(?reqConModelo) * 100 / COUNT(?req) AS ?porcentaje)
+WHERE {
+  ?req rdf:type p510:Requirement .
+  OPTIONAL {
+    ?req p510:Satisfied_by ?model .
+    BIND(?req AS ?reqConModelo)
+  }
+}

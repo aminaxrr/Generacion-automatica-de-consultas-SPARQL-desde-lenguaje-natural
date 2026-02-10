@@ -1,0 +1,9 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+SELECT ?req ?model ?test
+WHERE {
+  ?req rdf:type p510:Requirement ;
+       p510:Satisfied_by ?model .
+  ?model p510:Verified_by ?test .
+}
