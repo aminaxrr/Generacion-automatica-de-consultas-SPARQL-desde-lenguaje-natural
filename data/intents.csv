@@ -1,0 +1,57 @@
+texto,intencion
+¿Hay requisitos sin modelo?,MissingRequirementToModel
+¿Existen requisitos huérfanos?,MissingRequirementToModel
+Requisitos que no estén asociados a ningún modelo,MissingRequirementToModel
+¿Qué requisitos no tienen trazabilidad a diseño?,MissingRequirementToModel
+Requisitos sin implementar,MissingRequirementToModel
+
+¿Hay modelos sin test?,MissingModelToTest
+Modelos que no están verificados,MissingModelToTest
+Diseños sin pruebas asociadas,MissingModelToTest
+¿Qué modelos no tienen test de verificación?,MissingModelToTest
+Modelos sin validación,MissingModelToTest
+
+¿Hay requisitos que no lleguen a test?,MissingEndToEndTrace
+Requisitos sin trazabilidad completa,MissingEndToEndTrace
+Elementos sin cadena completa de trazabilidad,MissingEndToEndTrace
+Requisitos no verificados ni validados,MissingEndToEndTrace
+
+¿Hay tests que no verifiquen nada?,UnusedTests
+Tests sin requisito asociado,UnusedTests
+Pruebas inútiles,UnusedTests
+Tests sueltos en el sistema,UnusedTests
+
+¿Cuál es el porcentaje de trazabilidad?,TraceabilityCoverage
+Nivel de cobertura de requisitos,TraceabilityCoverage
+¿Qué porcentaje de requisitos está completamente trazado?,TraceabilityCoverage
+Cobertura de trazabilidad del sistema,TraceabilityCoverage
+
+¿Cuántos requisitos hay?,CountEntities
+Número total de modelos,CountEntities
+Cuántos tests existen,CountEntities
+Cantidad total de elementos,CountEntities
+
+¿Cuántos requisitos hay por tipo?,CountByType
+Distribución de modelos por tipo,CountByType
+Conteo de elementos según categoría,CountByType
+Número de elementos por clase,CountByType
+
+¿Hay requisitos con varios modelos?,OverSpecification
+Requisitos sobre-especificados,OverSpecification
+Requisitos con demasiadas implementaciones,OverSpecification
+Modelos redundantes por requisito,OverSpecification
+
+¿Hay elementos aislados?,IsolatedElements
+Nodos sin conexiones,IsolatedElements
+Elementos sin enlaces en el grafo,IsolatedElements
+Partes desconectadas del sistema,IsolatedElements
+
+¿Existen ciclos de trazabilidad?,StructuralAnomalies
+Problemas estructurales en el grafo,StructuralAnomalies
+Errores en la estructura de enlaces,StructuralAnomalies
+Inconsistencias en la trazabilidad,StructuralAnomalies
+
+Buscar requisitos que contengan sistema,TextSearch
+Requisitos que hablen de seguridad,TextSearch
+Buscar modelos por palabra clave,TextSearch
+Elementos cuyo texto contenga motor,TextSearch

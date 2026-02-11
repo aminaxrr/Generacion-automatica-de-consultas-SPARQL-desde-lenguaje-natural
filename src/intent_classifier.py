@@ -1,34 +1,21 @@
-import re
-from intents import INTENTS
+import joblib
 
-def normalizar(texto):
-    texto = texto.lower()
-    texto = re.sub(r"[¿?¡!.,]", "", texto)
-    return texto
+MODELO = "models/intent_model.joblib"
 
-def puntuar_intencion(pregunta, intent):
-    score = 0
-    for kw in intent.get("keywords", []):
-        if kw in pregunta:
-            score += 2
-    for ex in intent.get("examples", []):
-        if any(p in pregunta for p in ex.lower().split()):
-            score += 1
-    return score
+class IntentClassifier:
+    def __init__(self):
+        self.model = joblib.load(MODELO)
 
-def detectar_intencion(pregunta):
-    pregunta = normalizar(pregunta)
+    def predecir(self, texto):
+        return self.model.predict([texto])[0]
 
-    mejor_intencion = None
-    mejor_score = 0
+if __name__ == "__main__":
+    clf = IntentClassifier()
 
-    for intent in INTENTS:
-        score = puntuar_intencion(pregunta, intent)
-        if score > mejor_score:
-            mejor_score = score
-            mejor_intencion = intent
+    while True:
+        pregunta = input("Pregunta: ")
+        if pregunta.lower() == "salir":
+            break
 
-    if mejor_score == 0:
-        return None
-
-    return mejor_intencion
+        intent = clf.predecir(pregunta)
+        print(f"👉 Intención detectada: {intent}")
