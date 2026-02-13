@@ -1,0 +1,12 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+# Misma traza repetida: mismo source + predicate + target en más de un link-node
+SELECT ?src ?pred ?target (COUNT(DISTINCT ?link) AS ?numLinks)
+WHERE {
+  VALUES ?pred { p510:Satisfied_by p510:Verified_by p510:Validated_by p510:uses }
+  ?src ?pred ?link .
+  ?link p510:Link ?target .
+}
+GROUP BY ?src ?pred ?target
+HAVING(COUNT(DISTINCT ?link) > 1)
+ORDER BY DESC(?numLinks)

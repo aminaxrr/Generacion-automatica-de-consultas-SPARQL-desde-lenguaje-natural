@@ -1,0 +1,15 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+SELECT ?req ?id ?desc
+WHERE {
+  ?req rdf:type p510:Requirement ;
+       p510:Id ?id .
+  OPTIONAL { ?req p510:Description ?desc }
+
+  FILTER NOT EXISTS {
+    ?req p510:Satisfied_by ?link .
+    ?link p510:Link ?modelo .
+    ?link p510:ContentType "Physical Model" .
+  }
+}

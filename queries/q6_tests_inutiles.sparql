@@ -1,8 +1,0 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
-
-SELECT ?test
-WHERE {
-  ?test rdf:type p510:VerificationTest .
-  FILTER NOT EXISTS { ?model p510:Verified_by ?test . }
-}

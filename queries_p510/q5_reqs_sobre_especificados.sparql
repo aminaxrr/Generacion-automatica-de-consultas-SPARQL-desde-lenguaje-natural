@@ -1,0 +1,15 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+# Requisitos con más de un modelo físico (más de un enlace Satisfied_by)
+SELECT ?req ?id (COUNT(DISTINCT ?modelo) AS ?numModelos)
+WHERE {
+  ?req rdf:type p510:Requirement ;
+       p510:Id ?id ;
+       p510:Satisfied_by ?link .
+  ?link p510:ContentType "Physical Model" ;
+        p510:Link ?modelo .
+}
+GROUP BY ?req ?id
+HAVING(COUNT(DISTINCT ?modelo) > 1)
+ORDER BY DESC(?numModelos)

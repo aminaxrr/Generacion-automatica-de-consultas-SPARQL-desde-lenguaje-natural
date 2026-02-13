@@ -1,0 +1,13 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?org ?created ?purpose ?objective ?version
+WHERE {
+  ?manifest rdf:type p510:P510_ManifestType ;
+            p510:has_GeneralPLMInfo ?info .
+  OPTIONAL { ?info p510:Organization ?org }
+  OPTIONAL { ?info p510:Created_on ?created }
+  OPTIONAL { ?info p510:Model_Purpose ?purpose }
+  OPTIONAL { ?info p510:Model_Objective ?objective }
+  OPTIONAL { ?info p510:Version_identifier ?version }
+}

@@ -1,0 +1,12 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Links que violan el XSD porque no tienen timestamps
+SELECT ?link
+WHERE {
+  ?link rdf:type p510:Traceability_Link_Type .
+  FILTER(
+    !EXISTS { ?link p510:Timestamp_Archiving ?ta } ||
+    !EXISTS { ?link p510:Timestamp_PLM ?tp }
+  )
+}

@@ -1,0 +1,19 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX ex: <http://example.org/tfg/mbse#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Proveedores con más modelos sin verificación
+SELECT ?prov (COUNT(DISTINCT ?modelo) AS ?numModelosSinTest)
+WHERE {
+  ?modelo rdf:type p510:DesignModel ;
+          p510:ContentType "Physical Model" ;
+          ex:providedBy ?prov .
+
+  FILTER NOT EXISTS {
+    ?modelo p510:Verified_by ?link .
+    ?link p510:ContentType "Test Case" ;
+          p510:Link ?test .
+  }
+}
+GROUP BY ?prov
+ORDER BY DESC(?numModelosSinTest)

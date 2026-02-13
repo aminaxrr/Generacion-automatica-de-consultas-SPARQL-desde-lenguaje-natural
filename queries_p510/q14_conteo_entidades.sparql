@@ -1,0 +1,23 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+
+# Conteos globales por tipo de entidad (rápido en rdflib)
+SELECT ?entity (COUNT(DISTINCT ?s) AS ?count)
+WHERE {
+  {
+    VALUES (?entity ?type) {
+      ("Requirement" p510:Requirement)
+      ("DesignModel" p510:DesignModel)
+      ("VerificationTest" p510:VerificationTest)
+      ("VnVScenario" p510:Verification_Validation_Scenario_Type)
+      ("TraceabilityLink" p510:Traceability_Link_Type)
+    }
+    ?s a ?type .
+  }
+  UNION
+  {
+    BIND("Document" AS ?entity)
+    ?s p510:ContentType "Document" .
+  }
+}
+GROUP BY ?entity
+ORDER BY ?entity

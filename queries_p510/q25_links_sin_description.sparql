@@ -1,0 +1,11 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Links sin Description (campo opcional en XSD, pero útil para calidad)
+SELECT ?link ?ct
+WHERE {
+  ?link rdf:type p510:Traceability_Link_Type ;
+        p510:ContentType ?ct .
+  FILTER NOT EXISTS { ?link p510:Description ?d }
+}
+ORDER BY ?ct

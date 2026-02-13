@@ -1,0 +1,17 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?tool ?toolVer ?os ?osVer ?format ?formatVer ?tech ?lang
+WHERE {
+  ?manifest rdf:type p510:P510_ManifestType ;
+            p510:has_RequirementsDevStructure ?dev .
+
+  OPTIONAL { ?dev p510:DevTool_Name ?tool }
+  OPTIONAL { ?dev p510:DevTool_Version ?toolVer }
+  OPTIONAL { ?dev p510:DevOS_Name ?os }
+  OPTIONAL { ?dev p510:DevOS_Version ?osVer }
+  OPTIONAL { ?dev p510:Format_name ?format }
+  OPTIONAL { ?dev p510:Format_version ?formatVer }
+  OPTIONAL { ?dev p510:RequirementAuthoringTechnique ?tech }
+  OPTIONAL { ?dev p510:Language ?lang }
+}

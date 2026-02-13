@@ -1,0 +1,19 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Elementos marcados como Approved pero sin Approver
+SELECT ?entity ?id ?type
+WHERE {
+  {
+    ?entity rdf:type p510:Requirement ; p510:Id ?id ; p510:Approval_State "Approved" .
+    BIND("Requirement" AS ?type)
+  }
+  UNION
+  {
+    ?entity rdf:type p510:DesignModel ; p510:Id ?id ; p510:Approval_State "Approved" .
+    BIND("DesignModel" AS ?type)
+  }
+
+  FILTER NOT EXISTS { ?entity p510:Approver ?a }
+}
+ORDER BY ?type ?id

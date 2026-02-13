@@ -1,0 +1,10 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?maturity (COUNT(DISTINCT ?req) AS ?num)
+WHERE {
+  ?req rdf:type p510:Requirement .
+  OPTIONAL { ?req p510:Maturity_State ?maturity }
+}
+GROUP BY ?maturity
+ORDER BY DESC(?num)

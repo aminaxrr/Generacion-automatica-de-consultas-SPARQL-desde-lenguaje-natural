@@ -1,0 +1,15 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Escenarios sin Verified_by ni Validated_by
+SELECT ?scenarioId
+WHERE {
+  ?manifest rdf:type p510:P510_ManifestType ;
+            p510:has_Requirements_Verification_Validation ?vnv .
+  ?vnv p510:Scenario ?sc .
+  ?sc p510:Id ?scenarioId .
+
+  FILTER NOT EXISTS { ?sc p510:Verified_by ?_v }
+  FILTER NOT EXISTS { ?sc p510:Validated_by ?_a }
+}
+ORDER BY ?scenarioId

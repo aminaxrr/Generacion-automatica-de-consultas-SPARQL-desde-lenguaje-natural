@@ -1,0 +1,14 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Links cuyo ContentType no coincide con el ContentType real del recurso destino
+SELECT ?link ?linkCT ?target ?targetCT
+WHERE {
+  ?link rdf:type p510:Traceability_Link_Type ;
+        p510:ContentType ?linkCT ;
+        p510:Link ?target .
+
+  OPTIONAL { ?target p510:ContentType ?targetCT }
+  FILTER(BOUND(?targetCT) && ?linkCT != ?targetCT)
+}
+ORDER BY ?linkCT

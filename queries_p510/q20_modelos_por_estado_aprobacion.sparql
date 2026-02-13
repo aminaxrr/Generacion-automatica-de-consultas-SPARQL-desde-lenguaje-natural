@@ -1,0 +1,11 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?approval (COUNT(DISTINCT ?modelo) AS ?numModelos)
+WHERE {
+  ?modelo rdf:type p510:DesignModel ;
+          p510:ContentType "Physical Model" .
+  OPTIONAL { ?modelo p510:Approval_State ?approval }
+}
+GROUP BY ?approval
+ORDER BY DESC(?numModelos)

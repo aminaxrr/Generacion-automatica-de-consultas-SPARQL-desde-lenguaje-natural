@@ -1,0 +1,2241 @@
+@base <http://www.lotar.org/schemas/mbse/> .
+@prefix ex: <http://example.org/tfg/mbse#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix p510: <http://www.lotar.org/schemas/mbse/p510#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_02> a ex:Evidence,
+        p510:Verification_Validation_Evidence_Type ;
+    rdfs:label "Evidence 02" ;
+    p510:ContentType "Evidence" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Evidencia de validación 02" ;
+    p510:Id "EVD-002" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_P510_Manifest_e94d7e04-8c7d-4166-834a-b0692709f040> a p510:P510_ManifestType ;
+    rdfs:label "P510_Manifest" ;
+    p510:GeneralPLMInfo <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_GeneralPLMInfo_9770f995-6370-47f4-8dc8-471df43e4f7a> ;
+    p510:RequirementsDevStructure <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_RequirementsDevStructure_b3da177d-6505-47d8-9297-e0f998602ec2> ;
+    p510:Requirements_Traceability <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_c84d572b-4416-45de-9c5b-fa9c654ab25d> ;
+    p510:Requirements_Verification_Validation <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Verification_Validation_54f6c83f-94c6-4836-9b87-5d11bae1c764> ;
+    p510:has_GeneralPLMInfo <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_GeneralPLMInfo_9770f995-6370-47f4-8dc8-471df43e4f7a> ;
+    p510:has_RequirementsDevStructure <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_RequirementsDevStructure_b3da177d-6505-47d8-9297-e0f998602ec2> ;
+    p510:has_Requirements_Traceability <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_c84d572b-4416-45de-9c5b-fa9c654ab25d> ;
+    p510:has_Requirements_Verification_Validation <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Verification_Validation_54f6c83f-94c6-4836-9b87-5d11bae1c764> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_003> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 003" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_06> ;
+    p510:Approval_State "Pending" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 3" ;
+    p510:Id "MOD-003" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_61533ccb-4f02-4260-962f-2f539621edc7> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_005> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 005" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_06> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 5" ;
+    p510:Id "MOD-005" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_99d8bb47-f7bb-4d97-839d-23c0d9e9cf92> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_008> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 008" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_01> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 8" ;
+    p510:Id "MOD-008" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_d2ece5e9-a422-4f6d-8538-ca66602fb116> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_012> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 012" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Mario" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 12" ;
+    p510:Id "MOD-012" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_fce7ca14-c0c9-471b-af39-7d34500c0e16> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_015> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 015" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 15" ;
+    p510:Id "MOD-015" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_3e15a117-ed2b-4d2a-b905-ec28a05fb191> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_017> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 017" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_04> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 17" ;
+    p510:Id "MOD-017" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_af760b57-c31d-4875-b0a0-3b8348d9f247> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_024> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 024" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_01> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 24" ;
+    p510:Id "MOD-024" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_30f30e2d-f0bc-4bb0-9d9e-b9a274756f66> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_026> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 026" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_05> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 26" ;
+    p510:Id "MOD-026" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a3e11ccf-981b-4803-be41-6129f157f523> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_030> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 030" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_02> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 30" ;
+    p510:Id "MOD-030" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a00b4002-71dc-431b-9596-528d70c30245> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_001> a p510:Requirement ;
+    rdfs:label "Requirement 001" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 1" ;
+    p510:Id "REQ-001" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_32b050b6-5b6e-46f1-9014-7d6c27a500e8> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_002> a p510:Requirement ;
+    rdfs:label "Requirement 002" ;
+    p510:Approval_State "Approved" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 2" ;
+    p510:Id "REQ-002" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_a3dd442e-532b-4fad-87a1-c5af51b66dd9> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_003> a p510:Requirement ;
+    rdfs:label "Requirement 003" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 3" ;
+    p510:Id "REQ-003" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_fffd51d6-2a54-4e8f-873d-32be09e3cf22> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_004> a p510:Requirement ;
+    rdfs:label "Requirement 004" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Equipo MBSE" ;
+    p510:Author_Organization "Proveedor 02" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 4" ;
+    p510:Id "REQ-004" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_0450f7a2-846f-45a8-ab08-3d26fd7e1c36> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_005> a p510:Requirement ;
+    rdfs:label "Requirement 005" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Equipo MBSE" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 5" ;
+    p510:Id "REQ-005" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_7ab3aa4c-c2bf-489a-b37d-323973e01224> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_006> a p510:Requirement ;
+    rdfs:label "Requirement 006" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 6" ;
+    p510:Id "REQ-006" ;
+    p510:Maturity_State "Released" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_007> a p510:Requirement ;
+    rdfs:label "Requirement 007" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Mario" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 7" ;
+    p510:Id "REQ-007" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d1ab18b6-929a-43cc-b7fb-7c89da9cf680>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_fe933315-2017-4ce9-ae5e-fef9cf49fd7e> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_008> a p510:Requirement ;
+    rdfs:label "Requirement 008" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Álvaro" ;
+    p510:Author_Organization "Proveedor 02" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 8" ;
+    p510:Id "REQ-008" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c25407f1-9ac1-475f-b04c-c5450b0dd22b> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_009> a p510:Requirement ;
+    rdfs:label "Requirement 009" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 02" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 9" ;
+    p510:Id "REQ-009" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3f751bb5-8ada-420b-8a6f-daf8d77dced7> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_010> a p510:Requirement ;
+    rdfs:label "Requirement 010" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 10" ;
+    p510:Id "REQ-010" ;
+    p510:Maturity_State "InWork" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_011> a p510:Requirement ;
+    rdfs:label "Requirement 011" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Álvaro" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 11" ;
+    p510:Id "REQ-011" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_41c0c00e-e6b4-4c40-831b-9146353c6d3f> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_012> a p510:Requirement ;
+    rdfs:label "Requirement 012" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 12" ;
+    p510:Id "REQ-012" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4af2d7bf-052c-42b1-bc85-e373bc003618> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_013> a p510:Requirement ;
+    rdfs:label "Requirement 013" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Mario" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 13" ;
+    p510:Id "REQ-013" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3104d4dd-fe01-4f35-94e4-b010e44ce424> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_014> a p510:Requirement ;
+    rdfs:label "Requirement 014" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 14" ;
+    p510:Id "REQ-014" ;
+    p510:Maturity_State "Obsolete" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_015> a p510:Requirement ;
+    rdfs:label "Requirement 015" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 15" ;
+    p510:Id "REQ-015" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_7c421110-40fd-43bc-98d8-d760cb1bab1b> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_016> a p510:Requirement ;
+    rdfs:label "Requirement 016" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 16" ;
+    p510:Id "REQ-016" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c8d309e1-6949-4867-a9b0-170f5b82cd4d> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_017> a p510:Requirement ;
+    rdfs:label "Requirement 017" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 17" ;
+    p510:Id "REQ-017" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3e615d4c-85a1-4aad-bbed-90f9e096e859> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_018> a p510:Requirement ;
+    rdfs:label "Requirement 018" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 18" ;
+    p510:Id "REQ-018" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c79d8bdb-b546-483c-8638-191bd6c5259b> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_019> a p510:Requirement ;
+    rdfs:label "Requirement 019" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Álvaro" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 19" ;
+    p510:Id "REQ-019" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4e89f48e-9d20-4dc7-b40c-04cf3bc17692>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_593c12ec-f965-40f4-ae71-93b51a113430> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_020> a p510:Requirement ;
+    rdfs:label "Requirement 020" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 20" ;
+    p510:Id "REQ-020" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_59198cd8-7e52-48a8-a9af-7a5c7cc478c2> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_021> a p510:Requirement ;
+    rdfs:label "Requirement 021" ;
+    p510:Approval_State "Approved" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 21" ;
+    p510:Id "REQ-021" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_936a8fce-6c0b-4aab-bcdd-8571609a722f> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_022> a p510:Requirement ;
+    rdfs:label "Requirement 022" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 22" ;
+    p510:Id "REQ-022" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_9b14b42c-2d8d-4fc9-893c-ffed3d0a6576> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_023> a p510:Requirement ;
+    rdfs:label "Requirement 023" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 23" ;
+    p510:Id "REQ-023" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3ae853ed-0c93-491d-a4a7-c2a6e355432d> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_024> a p510:Requirement ;
+    rdfs:label "Requirement 024" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 24" ;
+    p510:Id "REQ-024" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d807b782-62ba-4ca6-b3c6-c941c232f973> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_025> a p510:Requirement ;
+    rdfs:label "Requirement 025" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 25" ;
+    p510:Id "REQ-025" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b22aa703-c8b0-4773-b8a1-9a668f24872b> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_026> a p510:Requirement ;
+    rdfs:label "Requirement 026" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 26" ;
+    p510:Id "REQ-026" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3bc5a870-d887-4ce7-8f46-6de08f79bab5> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_027> a p510:Requirement ;
+    rdfs:label "Requirement 027" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 27" ;
+    p510:Id "REQ-027" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4623aa0c-dead-4cbf-9309-a4da99a854a1>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_6ad18072-ff90-4874-8cd3-1e015e041566> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_028> a p510:Requirement ;
+    rdfs:label "Requirement 028" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 28" ;
+    p510:Id "REQ-028" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b8230275-96dd-49b9-9306-d8b7909f1ec6> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_029> a p510:Requirement ;
+    rdfs:label "Requirement 029" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 29" ;
+    p510:Id "REQ-029" ;
+    p510:Maturity_State "Obsolete" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_030> a p510:Requirement ;
+    rdfs:label "Requirement 030" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Equipo MBSE" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 30" ;
+    p510:Id "REQ-030" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b1d8365f-0f71-4017-96b8-9244442c4db6> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_031> a p510:Requirement ;
+    rdfs:label "Requirement 031" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 31" ;
+    p510:Id "REQ-031" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_770ea04a-7982-4b5d-b60e-ccd2365315b5> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_032> a p510:Requirement ;
+    rdfs:label "Requirement 032" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Mario" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 32" ;
+    p510:Id "REQ-032" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_e6d519c3-242d-4aa8-b9b9-41246cefcaf4> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_033> a p510:Requirement ;
+    rdfs:label "Requirement 033" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 33" ;
+    p510:Id "REQ-033" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d30c2ccd-68fc-4743-ac9f-7c67ea8abf4b> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_034> a p510:Requirement ;
+    rdfs:label "Requirement 034" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Equipo MBSE" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 34" ;
+    p510:Id "REQ-034" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_74f58981-9dfd-4f36-bfac-0552376cb395> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_035> a p510:Requirement ;
+    rdfs:label "Requirement 035" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Equipo MBSE" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 35" ;
+    p510:Id "REQ-035" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_eaf6d1cf-b2bc-44ae-a602-6269df23a452> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_036> a p510:Requirement ;
+    rdfs:label "Requirement 036" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 36" ;
+    p510:Id "REQ-036" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_13c32829-d64c-437a-98e3-be15171f495e>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_254ad404-f186-4b95-a53d-67f41ac50db3> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_037> a p510:Requirement ;
+    rdfs:label "Requirement 037" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 37" ;
+    p510:Id "REQ-037" ;
+    p510:Maturity_State "InWork" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_038> a p510:Requirement ;
+    rdfs:label "Requirement 038" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 38" ;
+    p510:Id "REQ-038" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_36fe888a-20bc-4a88-a03d-fd0852054ca2> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_039> a p510:Requirement ;
+    rdfs:label "Requirement 039" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 39" ;
+    p510:Id "REQ-039" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b509858f-409a-416e-aced-b49498311e97> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_040> a p510:Requirement ;
+    rdfs:label "Requirement 040" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 40" ;
+    p510:Id "REQ-040" ;
+    p510:Maturity_State "Released" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_041> a p510:Requirement ;
+    rdfs:label "Requirement 041" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 41" ;
+    p510:Id "REQ-041" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_de56e77d-918b-48ec-8b12-643fa5bd45f8> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_042> a p510:Requirement ;
+    rdfs:label "Requirement 042" ;
+    p510:Approval_State "Rejected" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 42" ;
+    p510:Id "REQ-042" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_ba51bf03-a065-4c5c-967a-78808ad09218> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_043> a p510:Requirement ;
+    rdfs:label "Requirement 043" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 43" ;
+    p510:Id "REQ-043" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_f0a45e65-36ba-44da-913a-7737b8d15123> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_044> a p510:Requirement ;
+    rdfs:label "Requirement 044" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 44" ;
+    p510:Id "REQ-044" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_5984822c-5c20-4951-af6c-0723e517b8ec> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_045> a p510:Requirement ;
+    rdfs:label "Requirement 045" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Amina" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 45" ;
+    p510:Id "REQ-045" ;
+    p510:Maturity_State "Obsolete" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_26786bd0-80b1-4845-b653-9b4b7951d8b4> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_046> a p510:Requirement ;
+    rdfs:label "Requirement 046" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 46" ;
+    p510:Id "REQ-046" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_36848a94-9a87-42e1-bae5-7254440e9d07> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_047> a p510:Requirement ;
+    rdfs:label "Requirement 047" ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 47" ;
+    p510:Id "REQ-047" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_47865e31-b275-4d00-b291-2993539c7122> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_048> a p510:Requirement ;
+    rdfs:label "Requirement 048" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Mario" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 48" ;
+    p510:Id "REQ-048" ;
+    p510:Maturity_State "Draft" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4aabcda7-f694-4448-9531-8010be1a3db7> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_049> a p510:Requirement ;
+    rdfs:label "Requirement 049" ;
+    p510:Approval_State "Pending" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 49" ;
+    p510:Id "REQ-049" ;
+    p510:Maturity_State "InWork" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_803b8c0e-0622-43f1-9332-f533e93e97a5> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_050> a p510:Requirement ;
+    rdfs:label "Requirement 050" ;
+    p510:Approval_State "Rejected" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Requirement" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "El sistema debe cumplir la función 50" ;
+    p510:Id "REQ-050" ;
+    p510:Maturity_State "Released" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_013ad91d-fbb0-46a7-8279-80c2941817eb> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_001> a p510:VerificationTest ;
+    rdfs:label "TestCase 001" ;
+    ex:status "Passed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 1" ;
+    p510:Id "TST-001" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_006> a p510:VerificationTest ;
+    rdfs:label "TestCase 006" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 6" ;
+    p510:Id "TST-006" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_007> a p510:VerificationTest ;
+    rdfs:label "TestCase 007" ;
+    ex:status "NotRun" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 7" ;
+    p510:Id "TST-007" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_012> a p510:VerificationTest ;
+    rdfs:label "TestCase 012" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 12" ;
+    p510:Id "TST-012" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_020> a p510:VerificationTest ;
+    rdfs:label "TestCase 020" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 20" ;
+    p510:Id "TST-020" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_01> a ex:Document ;
+    rdfs:label "Document 01" ;
+    p510:ContentType "Document" ;
+    p510:Description "Documento de apoyo 01" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_02> a ex:Document ;
+    rdfs:label "Document 02" ;
+    p510:ContentType "Document" ;
+    p510:Description "Documento de apoyo 02" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_03> a ex:Document ;
+    rdfs:label "Document 03" ;
+    p510:ContentType "Document" ;
+    p510:Description "Documento de apoyo 03" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_04> a ex:Document ;
+    rdfs:label "Document 04" ;
+    p510:ContentType "Document" ;
+    p510:Description "Documento de apoyo 04" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_05> a ex:Document ;
+    rdfs:label "Document 05" ;
+    p510:ContentType "Document" ;
+    p510:Description "Documento de apoyo 05" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_01> a ex:Evidence,
+        p510:Verification_Validation_Evidence_Type ;
+    rdfs:label "Evidence 01" ;
+    p510:ContentType "Evidence" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Evidencia de validación 01" ;
+    p510:Id "EVD-001" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_03> a ex:Evidence,
+        p510:Verification_Validation_Evidence_Type ;
+    rdfs:label "Evidence 03" ;
+    p510:ContentType "Evidence" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Evidencia de validación 03" ;
+    p510:Id "EVD-003" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_04> a ex:Evidence,
+        p510:Verification_Validation_Evidence_Type ;
+    rdfs:label "Evidence 04" ;
+    p510:ContentType "Evidence" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Evidencia de validación 04" ;
+    p510:Id "EVD-004" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_05> a ex:Evidence,
+        p510:Verification_Validation_Evidence_Type ;
+    rdfs:label "Evidence 05" ;
+    p510:ContentType "Evidence" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Evidencia de validación 05" ;
+    p510:Id "EVD-005" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_001> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 001" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> ;
+    p510:Approval_State "Approved" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 1" ;
+    p510:Id "MOD-001" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_2f19e7f0-39a4-474a-87fe-f28842f865fb> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_004> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 004" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_04> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 4" ;
+    p510:Id "MOD-004" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b27100fd-2512-4e20-a385-48c50431bc94> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_010> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 010" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 10" ;
+    p510:Id "MOD-010" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_4e90c653-0d60-4df2-88ff-b8211c382d1a> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_019> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 019" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 19" ;
+    p510:Id "MOD-019" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_ad846f1c-6acc-45cb-9bbb-627204addfd3> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_021> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 021" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_02> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 21" ;
+    p510:Id "MOD-021" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_4a71b704-e5f3-4f7e-a937-767533d245aa> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_028> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 028" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_05> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Mario" ;
+    p510:Author_Organization "Proveedor 02" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 28" ;
+    p510:Id "MOD-028" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a676f6be-ae20-414e-82db-1bf2fef261e5> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_029> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 029" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_02> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 01" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 29" ;
+    p510:Id "MOD-029" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_28a8fbae-9980-4735-add8-910a6dd2e34a> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_02f06c73-2962-48e5-a7a3-b9026430ccc1> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 01" ;
+    p510:Id "SCN-001" ;
+    p510:Model_Summary_Report <http://example.org/reports/b244f42e-3cc9-4540-917d-c054af3b63a0.pdf> ;
+    p510:Validated_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_157d701a-814a-4b49-b5f6-89f17a0ba6b2> ;
+    p510:Validation_Credibility_Level "A" ;
+    p510:Verification_Credibility_Level "B" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_03e8431d-47a4-41ab-9fee-354394cbfab5> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 02" ;
+    p510:Id "SCN-002" ;
+    p510:Model_Summary_Report <http://example.org/reports/cee7767e-259e-4d13-b92c-1a40c32d2e80.pdf> ;
+    p510:Validated_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_a2ad7195-fcbb-4784-972c-e6b0ef132c27> ;
+    p510:Validation_Credibility_Level "A" ;
+    p510:Verification_Credibility_Level "A" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_0a393c8d-f0b7-45ab-8ed1-e78458914835> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 03" ;
+    p510:Id "SCN-003" ;
+    p510:Model_Summary_Report <http://example.org/reports/f4245b61-1469-4aa6-9e20-6fa1a0eebf32.pdf> ;
+    p510:Validation_Credibility_Level "B" ;
+    p510:Verification_Credibility_Level "B" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_c9e4bb15-c699-46f4-9385-1179d5c177c6> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_1fe1ddb7-a977-416b-9dc5-a2752d0f9801> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 08" ;
+    p510:Id "SCN-008" ;
+    p510:Model_Summary_Report <http://example.org/reports/fd75c451-59e4-4ce8-a2b0-9939de9a3046.pdf> ;
+    p510:Validation_Credibility_Level "B" ;
+    p510:Verification_Credibility_Level "C" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a935145c-12ef-4f87-88c1-63dee3e61bea> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_453ee61d-0b5e-4dd5-93f5-d402a4eee702> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 04" ;
+    p510:Id "SCN-004" ;
+    p510:Model_Summary_Report <http://example.org/reports/cd280ba8-98f3-400f-a409-3754d234e4a1.pdf> ;
+    p510:Validated_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_6f4434a6-e656-4a24-8a85-46ec872c771c> ;
+    p510:Validation_Credibility_Level "C" ;
+    p510:Verification_Credibility_Level "A" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_5d1e07ee-7cf8-48ee-9cc4-30a7801ff971> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 05" ;
+    p510:Id "SCN-005" ;
+    p510:Model_Summary_Report <http://example.org/reports/1caf22f2-66eb-46ba-8931-a6163b8fb26e.pdf> ;
+    p510:Validation_Credibility_Level "B" ;
+    p510:Verification_Credibility_Level "B" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_128c11d8-06ec-4567-9b00-936c4776df8e> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_6892e32d-5078-45f5-afc0-a12df9e0edad> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 09" ;
+    p510:Id "SCN-009" ;
+    p510:Model_Summary_Report <http://example.org/reports/da93a30e-fa73-4e7c-bcaa-6071df42268a.pdf> ;
+    p510:Validation_Credibility_Level "A" ;
+    p510:Verification_Credibility_Level "A" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b1f0cf1b-e1f1-4823-9257-a380497fb32f> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_6de1c867-def4-4bb2-8904-07d794ec31e2> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 10" ;
+    p510:Id "SCN-010" ;
+    p510:Model_Summary_Report <http://example.org/reports/03a17793-3eaf-47b7-8909-0888b76c67a5.pdf> ;
+    p510:Validated_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_7be56a26-b72f-4a94-a6b5-9540359b8507> ;
+    p510:Validation_Credibility_Level "B" ;
+    p510:Verification_Credibility_Level "C" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_78ee4be4-ddee-426f-8c1f-a5e12fc5515e> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 06" ;
+    p510:Id "SCN-006" ;
+    p510:Model_Summary_Report <http://example.org/reports/70c85841-bb3d-44fb-979f-7848e6717a31.pdf> ;
+    p510:Validation_Credibility_Level "A" ;
+    p510:Verification_Credibility_Level "C" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_46fb1921-b0dd-4300-948c-e8c6594c78af> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_87487a17-49ed-46e2-a7de-012c3e935f0f> a p510:Verification_Validation_Scenario_Type ;
+    rdfs:label "Scenario 07" ;
+    p510:Id "SCN-007" ;
+    p510:Validation_Credibility_Level "B" ;
+    p510:Verification_Credibility_Level "C" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_009> a p510:VerificationTest ;
+    rdfs:label "TestCase 009" ;
+    ex:status "NotRun" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 9" ;
+    p510:Id "TST-009" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_010> a p510:VerificationTest ;
+    rdfs:label "TestCase 010" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 10" ;
+    p510:Id "TST-010" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_011> a p510:VerificationTest ;
+    rdfs:label "TestCase 011" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 11" ;
+    p510:Id "TST-011" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_014> a p510:VerificationTest ;
+    rdfs:label "TestCase 014" ;
+    ex:status "NotRun" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 14" ;
+    p510:Id "TST-014" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_015> a p510:VerificationTest ;
+    rdfs:label "TestCase 015" ;
+    ex:status "NotRun" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 15" ;
+    p510:Id "TST-015" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_017> a p510:VerificationTest ;
+    rdfs:label "TestCase 017" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 17" ;
+    p510:Id "TST-017" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_019> a p510:VerificationTest ;
+    rdfs:label "TestCase 019" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 19" ;
+    p510:Id "TST-019" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_157d701a-814a-4b49-b5f6-89f17a0ba6b2> a p510:Traceability_Link_Type ;
+    p510:ContentType "Evidence" ;
+    p510:Description "Evidencia de validación" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_01> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_6f4434a6-e656-4a24-8a85-46ec872c771c> a p510:Traceability_Link_Type ;
+    p510:ContentType "Evidence" ;
+    p510:Description "Evidencia de validación" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_05> ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_7be56a26-b72f-4a94-a6b5-9540359b8507> a p510:Traceability_Link_Type ;
+    p510:ContentType "Evidence" ;
+    p510:Description "Evidencia de validación" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_04> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Validated_by_a2ad7195-fcbb-4784-972c-e6b0ef132c27> a p510:Traceability_Link_Type ;
+    p510:ContentType "Evidence" ;
+    p510:Description "Evidencia de validación" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Evidence_03> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_128c11d8-06ec-4567-9b00-936c4776df8e> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "Evidencia de verificación (test case)" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_019> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_46fb1921-b0dd-4300-948c-e8c6594c78af> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "Evidencia de verificación (test case)" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_018> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a935145c-12ef-4f87-88c1-63dee3e61bea> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "Evidencia de verificación (test case)" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_002> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b1f0cf1b-e1f1-4823-9257-a380497fb32f> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "Evidencia de verificación (test case)" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_015> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_c9e4bb15-c699-46f4-9385-1179d5c177c6> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "Evidencia de verificación (test case)" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_011> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_5740cf68-d80b-424a-aa17-3d877f329a6f> a p510:Traceability_Link_Type ;
+    p510:ContentType "Document" ;
+    p510:Description "Artefacto usado en la ingeniería de requisitos" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_01> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_857a9bda-e25d-4d45-b7a8-9f6e395c9947> a p510:Traceability_Link_Type ;
+    p510:ContentType "Document" ;
+    p510:Description "Artefacto usado en la ingeniería de requisitos" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_04> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_88b3ef41-edd4-4483-aaca-3c5aeb93876d> a p510:Traceability_Link_Type ;
+    p510:ContentType "Document" ;
+    p510:Description "Artefacto usado en la ingeniería de requisitos" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_02> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_950a785b-1340-44a8-8037-af61f6baa473> a p510:Traceability_Link_Type ;
+    p510:ContentType "Document" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_03> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_ed63b8f0-26bb-4f41-b8a0-c508f289c384> a p510:Traceability_Link_Type ;
+    p510:ContentType "Document" ;
+    p510:Description "Artefacto usado en la ingeniería de requisitos" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Document_05> ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_GeneralPLMInfo_9770f995-6370-47f4-8dc8-471df43e4f7a> a p510:GeneralPLMInfoType ;
+    rdfs:label "GeneralPLMInfo" ;
+    p510:Approval_State "Approved" ;
+    p510:Author_Organization "Universidad" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Last_Modified_Date "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Maturity_State "Draft" ;
+    p510:Model_Objective "Auditar trazabilidad y responsables" ;
+    p510:Model_Purpose "TFG: consultas SPARQL desde Lenguaje Natural" ;
+    p510:Organization "Universidad" ;
+    p510:Unique_baseline_id "60b7d955-f3fd-438d-a9ac-b0a263bc46b9" ;
+    p510:Unique_object_id "8b33f42a-4734-40d4-80aa-72bd120db020" ;
+    p510:Version_identifier "1.0" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_002> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 002" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_05> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 2" ;
+    p510:Id "MOD-002" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_991aa257-3a6f-46e3-9c48-448058e653cc> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_006> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 006" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_02> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Lucía" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 6" ;
+    p510:Id "MOD-006" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_3f375a7c-4d71-4650-98bc-34194db83f5e> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_009> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 009" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_02> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 04" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 9" ;
+    p510:Id "MOD-009" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_796d1f85-25bb-49ce-9d19-83669f484071> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_013> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 013" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_01> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 13" ;
+    p510:Id "MOD-013" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b25aad40-58b5-4800-9793-529d207e2626> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_014> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 014" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_06> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 14" ;
+    p510:Id "MOD-014" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_32d4628f-eb65-4b89-afa5-94a8e683d4d9> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_018> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 018" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_01> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 18" ;
+    p510:Id "MOD-018" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_d710e44f-79b8-4bd4-ad60-307bddce8473> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_RequirementsDevStructure_b3da177d-6505-47d8-9297-e0f998602ec2> a p510:RequirementsDevStructureType ;
+    rdfs:label "RequirementsDevStructure" ;
+    p510:DevOS_License "OEM" ;
+    p510:DevOS_Name "Windows" ;
+    p510:DevOS_Version "11" ;
+    p510:DevTool_License "Academic" ;
+    p510:DevTool_Name "ReqTool" ;
+    p510:DevTool_Version "3.2" ;
+    p510:Format_name "SysML" ;
+    p510:Format_version "1.0" ;
+    p510:Language "es-ES" ;
+    p510:RequirementAuthoringTechnique "Formal" ;
+    p510:Specification_level "SyRS" ;
+    p510:uses <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_5740cf68-d80b-424a-aa17-3d877f329a6f>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_857a9bda-e25d-4d45-b7a8-9f6e395c9947>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_88b3ef41-edd4-4483-aaca-3c5aeb93876d>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_950a785b-1340-44a8-8037-af61f6baa473>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_uses_ed63b8f0-26bb-4f41-b8a0-c508f289c384> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_c84d572b-4416-45de-9c5b-fa9c654ab25d> a p510:Requirements_Traceability_Type ;
+    rdfs:label "Requirements_Traceability" ;
+    p510:Satisfied_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_013ad91d-fbb0-46a7-8279-80c2941817eb>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_0450f7a2-846f-45a8-ab08-3d26fd7e1c36>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_13c32829-d64c-437a-98e3-be15171f495e>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_254ad404-f186-4b95-a53d-67f41ac50db3>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_26786bd0-80b1-4845-b653-9b4b7951d8b4>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3104d4dd-fe01-4f35-94e4-b010e44ce424>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_32b050b6-5b6e-46f1-9014-7d6c27a500e8>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_36848a94-9a87-42e1-bae5-7254440e9d07>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_36fe888a-20bc-4a88-a03d-fd0852054ca2>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3ae853ed-0c93-491d-a4a7-c2a6e355432d>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3bc5a870-d887-4ce7-8f46-6de08f79bab5>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3e615d4c-85a1-4aad-bbed-90f9e096e859>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3f751bb5-8ada-420b-8a6f-daf8d77dced7>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_41c0c00e-e6b4-4c40-831b-9146353c6d3f>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4623aa0c-dead-4cbf-9309-a4da99a854a1>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_47865e31-b275-4d00-b291-2993539c7122>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4aabcda7-f694-4448-9531-8010be1a3db7>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4af2d7bf-052c-42b1-bc85-e373bc003618>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4e89f48e-9d20-4dc7-b40c-04cf3bc17692>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_59198cd8-7e52-48a8-a9af-7a5c7cc478c2>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_593c12ec-f965-40f4-ae71-93b51a113430>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_5984822c-5c20-4951-af6c-0723e517b8ec>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_6ad18072-ff90-4874-8cd3-1e015e041566>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_74f58981-9dfd-4f36-bfac-0552376cb395>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_770ea04a-7982-4b5d-b60e-ccd2365315b5>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_7ab3aa4c-c2bf-489a-b37d-323973e01224>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_7c421110-40fd-43bc-98d8-d760cb1bab1b>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_803b8c0e-0622-43f1-9332-f533e93e97a5>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_936a8fce-6c0b-4aab-bcdd-8571609a722f>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_9b14b42c-2d8d-4fc9-893c-ffed3d0a6576>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_a3dd442e-532b-4fad-87a1-c5af51b66dd9>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b1d8365f-0f71-4017-96b8-9244442c4db6>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b22aa703-c8b0-4773-b8a1-9a668f24872b>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b509858f-409a-416e-aced-b49498311e97>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b8230275-96dd-49b9-9306-d8b7909f1ec6>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_ba51bf03-a065-4c5c-967a-78808ad09218>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c25407f1-9ac1-475f-b04c-c5450b0dd22b>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c79d8bdb-b546-483c-8638-191bd6c5259b>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c8d309e1-6949-4867-a9b0-170f5b82cd4d>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d1ab18b6-929a-43cc-b7fb-7c89da9cf680>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d30c2ccd-68fc-4743-ac9f-7c67ea8abf4b>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d807b782-62ba-4ca6-b3c6-c941c232f973>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_de56e77d-918b-48ec-8b12-643fa5bd45f8>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_e6d519c3-242d-4aa8-b9b9-41246cefcaf4>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_eaf6d1cf-b2bc-44ae-a602-6269df23a452>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_f0a45e65-36ba-44da-913a-7737b8d15123>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_fe933315-2017-4ce9-ae5e-fef9cf49fd7e>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_fffd51d6-2a54-4e8f-873d-32be09e3cf22> ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_0bfc0f69-3d78-4aa1-b621-b08ad321738f>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_28a8fbae-9980-4735-add8-910a6dd2e34a>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_2948d5c5-d854-4039-8b9b-75179a866f60>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_2f19e7f0-39a4-474a-87fe-f28842f865fb>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_30f30e2d-f0bc-4bb0-9d9e-b9a274756f66>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_32d4628f-eb65-4b89-afa5-94a8e683d4d9>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_3e15a117-ed2b-4d2a-b905-ec28a05fb191>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_3f375a7c-4d71-4650-98bc-34194db83f5e>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_4a71b704-e5f3-4f7e-a937-767533d245aa>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_4e90c653-0d60-4df2-88ff-b8211c382d1a>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_61401eab-e289-4f2b-9aa6-7bda35490e7d>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_61533ccb-4f02-4260-962f-2f539621edc7>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_6e390e8f-39ca-4eb7-9745-535aceef5359>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_796d1f85-25bb-49ce-9d19-83669f484071>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_991aa257-3a6f-46e3-9c48-448058e653cc>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_99d8bb47-f7bb-4d97-839d-23c0d9e9cf92>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a00b4002-71dc-431b-9596-528d70c30245>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a00d927d-b628-4015-8fa2-4b9c2b0165e3>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a3e11ccf-981b-4803-be41-6129f157f523>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a676f6be-ae20-414e-82db-1bf2fef261e5>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_ad846f1c-6acc-45cb-9bbb-627204addfd3>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_af760b57-c31d-4875-b0a0-3b8348d9f247>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b25aad40-58b5-4800-9793-529d207e2626>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b27100fd-2512-4e20-a385-48c50431bc94>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_bb2d7c70-38d8-4716-b254-cdfd0fc0d15d>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_d2ece5e9-a422-4f6d-8538-ca66602fb116>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_d710e44f-79b8-4bd4-ad60-307bddce8473>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_fce7ca14-c0c9-471b-af39-7d34500c0e16> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Verification_Validation_54f6c83f-94c6-4836-9b87-5d11bae1c764> a p510:Requirements_Verification_Validation_Type ;
+    rdfs:label "Requirements_Verification_Validation" ;
+    p510:Scenario <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_02f06c73-2962-48e5-a7a3-b9026430ccc1>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_03e8431d-47a4-41ab-9fee-354394cbfab5>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_0a393c8d-f0b7-45ab-8ed1-e78458914835>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_1fe1ddb7-a977-416b-9dc5-a2752d0f9801>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_453ee61d-0b5e-4dd5-93f5-d402a4eee702>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_5d1e07ee-7cf8-48ee-9cc4-30a7801ff971>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_6892e32d-5078-45f5-afc0-a12df9e0edad>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_6de1c867-def4-4bb2-8904-07d794ec31e2>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_78ee4be4-ddee-426f-8c1f-a5e12fc5515e>,
+        <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Scenario_87487a17-49ed-46e2-a7de-012c3e935f0f> ;
+    p510:Specification_Completeness true ;
+    p510:Specification_Consistency true .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_013ad91d-fbb0-46a7-8279-80c2941817eb> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_014> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_0450f7a2-846f-45a8-ab08-3d26fd7e1c36> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_025> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_13c32829-d64c-437a-98e3-be15171f495e> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_006> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_254ad404-f186-4b95-a53d-67f41ac50db3> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "(duplicado) El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_006> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_26786bd0-80b1-4845-b653-9b4b7951d8b4> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_025> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3104d4dd-fe01-4f35-94e4-b010e44ce424> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_004> ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_32b050b6-5b6e-46f1-9014-7d6c27a500e8> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_022> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_36848a94-9a87-42e1-bae5-7254440e9d07> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_019> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_36fe888a-20bc-4a88-a03d-fd0852054ca2> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_009> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3ae853ed-0c93-491d-a4a7-c2a6e355432d> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_022> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3bc5a870-d887-4ce7-8f46-6de08f79bab5> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_016> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3e615d4c-85a1-4aad-bbed-90f9e096e859> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_020> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_3f751bb5-8ada-420b-8a6f-daf8d77dced7> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_023> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_41c0c00e-e6b4-4c40-831b-9146353c6d3f> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_022> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4623aa0c-dead-4cbf-9309-a4da99a854a1> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "(duplicado) El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_027> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_47865e31-b275-4d00-b291-2993539c7122> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_011> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4aabcda7-f694-4448-9531-8010be1a3db7> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_013> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4af2d7bf-052c-42b1-bc85-e373bc003618> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_027> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_4e89f48e-9d20-4dc7-b40c-04cf3bc17692> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "(duplicado) El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_025> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_59198cd8-7e52-48a8-a9af-7a5c7cc478c2> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_011> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_593c12ec-f965-40f4-ae71-93b51a113430> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_025> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_5984822c-5c20-4951-af6c-0723e517b8ec> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_027> ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_6ad18072-ff90-4874-8cd3-1e015e041566> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_027> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_74f58981-9dfd-4f36-bfac-0552376cb395> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_014> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_770ea04a-7982-4b5d-b60e-ccd2365315b5> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_013> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_7ab3aa4c-c2bf-489a-b37d-323973e01224> a p510:Traceability_Link_Type ;
+    p510:ContentType "Document" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_016> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_7c421110-40fd-43bc-98d8-d760cb1bab1b> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_001> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_803b8c0e-0622-43f1-9332-f533e93e97a5> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_025> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_936a8fce-6c0b-4aab-bcdd-8571609a722f> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_007> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_9b14b42c-2d8d-4fc9-893c-ffed3d0a6576> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_021> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_a3dd442e-532b-4fad-87a1-c5af51b66dd9> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_018> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b1d8365f-0f71-4017-96b8-9244442c4db6> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_016> ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b22aa703-c8b0-4773-b8a1-9a668f24872b> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_011> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b509858f-409a-416e-aced-b49498311e97> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_018> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_b8230275-96dd-49b9-9306-d8b7909f1ec6> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_023> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_ba51bf03-a065-4c5c-967a-78808ad09218> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_023> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c25407f1-9ac1-475f-b04c-c5450b0dd22b> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_007> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c79d8bdb-b546-483c-8638-191bd6c5259b> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_009> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_c8d309e1-6949-4867-a9b0-170f5b82cd4d> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_027> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d1ab18b6-929a-43cc-b7fb-7c89da9cf680> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_002> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d30c2ccd-68fc-4743-ac9f-7c67ea8abf4b> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_020> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_d807b782-62ba-4ca6-b3c6-c941c232f973> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_011> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_de56e77d-918b-48ec-8b12-643fa5bd45f8> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_020> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_e6d519c3-242d-4aa8-b9b9-41246cefcaf4> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_010> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_eaf6d1cf-b2bc-44ae-a602-6269df23a452> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_007> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_f0a45e65-36ba-44da-913a-7737b8d15123> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_029> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_fe933315-2017-4ce9-ae5e-fef9cf49fd7e> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "(duplicado) El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_002> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Satisfied_by_fffd51d6-2a54-4e8f-873d-32be09e3cf22> a p510:Traceability_Link_Type ;
+    p510:ContentType "Physical Model" ;
+    p510:Description "El requisito queda satisfecho por este modelo físico" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_028> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_003> a p510:VerificationTest ;
+    rdfs:label "TestCase 003" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 3" ;
+    p510:Id "TST-003" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_008> a p510:VerificationTest ;
+    rdfs:label "TestCase 008" ;
+    ex:status "Passed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Noelia" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 8" ;
+    p510:Id "TST-008" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_0bfc0f69-3d78-4aa1-b621-b08ad321738f> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_28a8fbae-9980-4735-add8-910a6dd2e34a> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_008> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_2948d5c5-d854-4039-8b9b-75179a866f60> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_018> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_2f19e7f0-39a4-474a-87fe-f28842f865fb> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_002> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_30f30e2d-f0bc-4bb0-9d9e-b9a274756f66> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_014> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_32d4628f-eb65-4b89-afa5-94a8e683d4d9> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_3e15a117-ed2b-4d2a-b905-ec28a05fb191> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_003> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_3f375a7c-4d71-4650-98bc-34194db83f5e> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_4a71b704-e5f3-4f7e-a937-767533d245aa> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_4e90c653-0d60-4df2-88ff-b8211c382d1a> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_008> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_61401eab-e289-4f2b-9aa6-7bda35490e7d> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_016> ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_61533ccb-4f02-4260-962f-2f539621edc7> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_018> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_6e390e8f-39ca-4eb7-9745-535aceef5359> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_017> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_796d1f85-25bb-49ce-9d19-83669f484071> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_991aa257-3a6f-46e3-9c48-448058e653cc> a p510:Traceability_Link_Type ;
+    p510:ContentType "Evidence" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_004> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_99d8bb47-f7bb-4d97-839d-23c0d9e9cf92> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_016> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a00b4002-71dc-431b-9596-528d70c30245> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a00d927d-b628-4015-8fa2-4b9c2b0165e3> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_009> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a3e11ccf-981b-4803-be41-6129f157f523> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a676f6be-ae20-414e-82db-1bf2fef261e5> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_016> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_ad846f1c-6acc-45cb-9bbb-627204addfd3> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_af760b57-c31d-4875-b0a0-3b8348d9f247> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_003> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b25aad40-58b5-4800-9793-529d207e2626> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_004> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_b27100fd-2512-4e20-a385-48c50431bc94> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_bb2d7c70-38d8-4716-b254-cdfd0fc0d15d> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_004> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_d2ece5e9-a422-4f6d-8538-ca66602fb116> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_016> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_d710e44f-79b8-4bd4-ad60-307bddce8473> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_010> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_fce7ca14-c0c9-471b-af39-7d34500c0e16> a p510:Traceability_Link_Type ;
+    p510:ContentType "Test Case" ;
+    p510:Description "El modelo queda verificado por este caso de prueba" ;
+    p510:Link <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_002> ;
+    p510:Timestamp_Archiving "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Timestamp_PLM "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Type "Local" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_007> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 007" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_04> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 7" ;
+    p510:Id "MOD-007" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_6e390e8f-39ca-4eb7-9745-535aceef5359> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_016> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 016" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_06> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 03" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 16" ;
+    p510:Id "MOD-016" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_61401eab-e289-4f2b-9aa6-7bda35490e7d> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_020> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 020" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_06> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Equipo MBSE" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 20" ;
+    p510:Id "MOD-020" ;
+    p510:Maturity_State "Released" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_022> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 022" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_04> ;
+    p510:Approval_State "Pending" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 22" ;
+    p510:Id "MOD-022" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_a00d927d-b628-4015-8fa2-4b9c2b0165e3> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_023> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 023" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_04> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Noelia" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 23" ;
+    p510:Id "MOD-023" ;
+    p510:Maturity_State "Draft" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_2948d5c5-d854-4039-8b9b-75179a866f60> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_002> a p510:VerificationTest ;
+    rdfs:label "TestCase 002" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Amina" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 2" ;
+    p510:Id "TST-002" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_004> a p510:VerificationTest ;
+    rdfs:label "TestCase 004" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 4" ;
+    p510:Id "TST-004" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_018> a p510:VerificationTest ;
+    rdfs:label "TestCase 018" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Lucía" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 18" ;
+    p510:Id "TST-018" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_011> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 011" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Amina" ;
+    p510:Author_Organization "Proveedor 05" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Mario" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 11" ;
+    p510:Id "MOD-011" ;
+    p510:Maturity_State "InWork" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_0bfc0f69-3d78-4aa1-b621-b08ad321738f> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_05> a foaf:Organization ;
+    rdfs:label "Supplier_05" ;
+    foaf:name "Proveedor 05" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013> a p510:VerificationTest ;
+    rdfs:label "TestCase 013" ;
+    ex:status "Failed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 13" ;
+    p510:Id "TST-013" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_016> a p510:VerificationTest ;
+    rdfs:label "TestCase 016" ;
+    ex:status "NotRun" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 16" ;
+    p510:Id "TST-016" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_025> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 025" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_01> ;
+    p510:Approval_State "Pending" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Equipo MBSE" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 25" ;
+    p510:Id "MOD-025" ;
+    p510:Maturity_State "Released" ;
+    p510:Verified_by <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Verified_by_bb2d7c70-38d8-4716-b254-cdfd0fc0d15d> .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_027> a p510:DesignModel ;
+    rdfs:label "PhysicalModel 027" ;
+    ex:providedBy <http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_05> ;
+    p510:Approval_State "Approved" ;
+    p510:Approver "Sara" ;
+    p510:Author_Organization "Proveedor 06" ;
+    p510:ContentType "Physical Model" ;
+    p510:Created_by "Álvaro" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Modelo físico 27" ;
+    p510:Id "MOD-027" ;
+    p510:Maturity_State "Released" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_01> a foaf:Organization ;
+    rdfs:label "Supplier_01" ;
+    foaf:name "Proveedor 01" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_02> a foaf:Organization ;
+    rdfs:label "Supplier_02" ;
+    foaf:name "Proveedor 02" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_04> a foaf:Organization ;
+    rdfs:label "Supplier_04" ;
+    foaf:name "Proveedor 04" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_06> a foaf:Organization ;
+    rdfs:label "Supplier_06" ;
+    foaf:name "Proveedor 06" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005> a p510:VerificationTest ;
+    rdfs:label "TestCase 005" ;
+    ex:status "Passed" ;
+    p510:ContentType "Test Case" ;
+    p510:Created_by "Sara" ;
+    p510:Created_on "2026-02-13T16:50:12+00:00"^^xsd:dateTime ;
+    p510:Description "Test de verificación 5" ;
+    p510:Id "TST-005" .
+
+<http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Supplier_03> a foaf:Organization ;
+    rdfs:label "Supplier_03" ;
+    foaf:name "Proveedor 03" .
+
