@@ -40,6 +40,69 @@ Ejemplos:
 
 Esto te da un punto de partida para el TFG: luego puedes sustituir/expandir el parser por un clasificador, LLM, etc.
 
+## Text2SPARQL offline (estilo NeoDash Text2Cypher)
+
+Además del baseline por reglas, hay un modo **LLM-like** pero **local/offline**: genera SPARQL a partir de una pregunta y la valida/ejecuta sobre el grafo.
+
+Script: `python src/text2sparql_cli.py "..."`
+
+Modos:
+
+- `--mode translate`: solo genera la SPARQL
+- `--mode run`: genera + ejecuta (por defecto)
+
+Backends soportados:
+
+1) **Rules (sin modelos, 100% reproducible)**
+
+`python src/text2sparql_cli.py "¿Cuántos proveedores hay?" --backend rules --mode run`
+
+2) **Ollama (local)**
+
+- Instala/arranca Ollama y descarga un modelo, por ejemplo:
+	- `ollama pull llama3.1`
+
+Ejemplo:
+
+`python src/text2sparql_cli.py "requisitos sin trazabilidad end to end" --backend ollama --model llama3.1 --mode run`
+
+Por defecto usa `http://localhost:11434/api/chat`. Puedes cambiarlo con:
+
+- `TEXT2SPARQL_OLLAMA_URL`
+
+3) **Servidor OpenAI-compatible local** (por ejemplo LM Studio, LocalAI, etc.)
+
+Configura:
+
+- `TEXT2SPARQL_OPENAI_BASE_URL` (ej: `http://localhost:1234`)
+- `TEXT2SPARQL_OPENAI_API_KEY` (si aplica; puede estar vacío)
+
+Ejemplo:
+
+`python src/text2sparql_cli.py "auditoría links duplicados" --backend openai_compat --model <tu_modelo> --mode run`
+
+### Seguridad / restricciones
+
+- Solo se permiten consultas `SELECT` o `ASK` (se bloquean `CONSTRUCT/DESCRIBE/INSERT/DELETE/...`).
+- Si es `SELECT` y no incluye `LIMIT`, se añade `LIMIT 200` (configurable con `--limit`).
+- Se incluye un conjunto few-shot en `eval/text2sparql_examples.jsonl` para anclar el estilo a tu catálogo `queries_p510/`.
+
+## Auto-evaluación (para el capítulo de evaluación)
+
+Script: `python src/text2sparql_eval.py`
+
+1) Validar que las SPARQL de referencia del JSONL ejecutan (sanity check):
+
+`python src/text2sparql_eval.py --mode reference`
+
+2) Evaluar el generador (genera desde NL y comprueba que se ejecuta):
+
+`python src/text2sparql_eval.py --mode generate --backend rules`
+
+Si usas un LLM local:
+
+`python src/text2sparql_eval.py --mode generate --backend ollama --model llama3.1`
+
 ## Consultas incluidas (ejemplos)
 
 - Requisitos sin modelo físico (falta de `Satisfied_by`)
