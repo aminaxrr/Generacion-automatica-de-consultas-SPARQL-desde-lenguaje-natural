@@ -87,6 +87,31 @@ Ejemplo:
 - Si es `SELECT` y no incluye `LIMIT`, se añade `LIMIT 200` (configurable con `--limit`).
 - Se incluye un conjunto few-shot en `eval/text2sparql_examples.jsonl` para anclar el estilo a tu catálogo `queries_p510/`.
 
+## Demo visual (web local)
+
+Hay una demo visual tipo “NeoDash” (web local) **sin dependencias extra**: HTML+JS servido por Python estándar.
+
+1) Ejecutar la demo:
+
+`python src/demo_server.py`
+
+2) Abrir:
+
+`http://127.0.0.1:8000`
+
+Notas:
+
+- Si no existe `data/p510_sintetico.ttl`, la demo puede regenerarlo (botón “Regenerar grafo”).
+- Para usar Ollama: servidor levantado (`ollama serve`) y un modelo descargado.
+
+### (Opcional) Demo Streamlit
+
+También hay una versión con Streamlit en `src/demo_visual.py`, pero depende de `streamlit/pandas` (puede requerir Python ≤ 3.12 según wheels disponibles).
+
+`pip install -r requirements.txt`
+
+`python -m streamlit run src/demo_visual.py`
+
 ## Auto-evaluación (para el capítulo de evaluación)
 
 Script: `python src/text2sparql_eval.py`
