@@ -119,17 +119,6 @@ Notas:
 - Si no existe `data/p510_sintetico.ttl`, la demo puede regenerarlo (botón “Regenerar grafo”).
 - Para usar Ollama: servidor levantado (`ollama serve`) y un modelo descargado.
 
-### Usar un TTL externo (ej. LIVE_STRATOLINER.ttl)
-
-Si tu tutor te da un TTL real (por ejemplo `LIVE_STRATOLINER.ttl`), cópialo a `data/` y úsalo así:
-
-- En la demo visual: cambia el campo **TTL** a `data/LIVE_STRATOLINER.ttl`.
-- En CLI: `python src/text2sparql_cli.py "..." --ttl data/LIVE_STRATOLINER.ttl ...`
-
-Nota: ese fichero suele ser de **P550**, no P510. Para que el LLM genere SPARQL acorde al patrón P550 (campos con `rdf:value`, propiedades `has_*`, etc.), usa el prompt:
-
-- [prompts/system_p550_es.txt](prompts/system_p550_es.txt)
-
 ### (Opcional) Demo Streamlit
 
 También hay una versión con Streamlit en `src/demo_visual.py`, pero depende de `streamlit/pandas` (puede requerir Python ≤ 3.12 según wheels disponibles).

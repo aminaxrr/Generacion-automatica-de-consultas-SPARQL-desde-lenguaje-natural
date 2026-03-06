@@ -62,9 +62,6 @@ HTML = """<!doctype html>
           <option value=\"documentos usados\">documentos usados</option>
         </select>
 
-        <label>TTL (ruta al archivo .ttl)</label>
-        <input id=\"ttlPath\" value=\"data/p510_sintetico.ttl\" />
-
         <label>Pregunta (NL)</label>
         <textarea id=\"question\" spellcheck=\"false\"></textarea>
 
@@ -76,7 +73,7 @@ HTML = """<!doctype html>
           <span class=\"status\" id=\"status\"></span>
         </div>
 
-        <div style=\"margin-top:10px\" class=\"status\">TTL activo: <code id=\"ttlLabel\"></code></div>
+        <div style=\"margin-top:10px\" class=\"status\">TTL: <code id=\"ttlLabel\"></code></div>
       </div>
 
       <div class=\"card\">
@@ -210,7 +207,6 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     try {
       const info = await (await fetch('/api/info')).json();
       el('ttlLabel').textContent = info.ttl_path;
-      if (info.ttl_path) el('ttlPath').value = info.ttl_path;
     } catch {}
   }
 
@@ -218,7 +214,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     el('error').textContent = '';
     setStatus('Regenerando grafo...');
     try {
-      const info = await postJson('/api/generate', { ttl_path: el('ttlPath').value });
+      const info = await postJson('/api/generate', {});
       setStatus(`Grafo regenerado (${info.ttl_path})`);
     } catch (e) {
       el('error').textContent = e.error || JSON.stringify(e, null, 2);
@@ -236,7 +232,6 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     setStatus('Generando/ejecutando...');
 
     const payload = {
-      ttl_path: el('ttlPath').value,
       question: el('question').value,
       execute: el('execute').checked,
       backend: el('backend').value,
@@ -296,16 +291,6 @@ class AppState:
         self._graph = None
         self._mtime = 0.0
 
-    def set_ttl_path(self, ttl_path: str) -> None:
-      ttl_path = ttl_path.strip()
-      if not ttl_path:
-        return
-      if ttl_path == self.ttl_path:
-        return
-      self.ttl_path = ttl_path
-      self._graph = None
-      self._mtime = 0.0
-
 
 def _query_result_to_json(qres: Any, max_rows: int) -> dict[str, Any]:
     if hasattr(qres, "askAnswer") and qres.askAnswer is not None:
@@ -363,10 +348,6 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         state: AppState = self.server.state  # type: ignore[attr-defined]
-
-        ttl_path = str(payload.get("ttl_path") or "").strip()
-        if ttl_path:
-          state.set_ttl_path(ttl_path)
 
         if self.path == "/api/generate":
             try:
