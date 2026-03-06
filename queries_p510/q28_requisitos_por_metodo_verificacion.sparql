@@ -1,0 +1,11 @@
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ex:   <http://example.org/tfg/mbse#>
+
+SELECT ?method (COUNT(DISTINCT ?req) AS ?numRequisitos)
+WHERE {
+  ?req rdf:type p510:Requirement .
+  OPTIONAL { ?req ex:verification_method ?method }
+}
+GROUP BY ?method
+ORDER BY DESC(?numRequisitos)

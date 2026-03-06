@@ -48,6 +48,25 @@ def parse_spanish_question(text: str) -> ParsedNLQuery:
     if any(k in lower for k in ["trazabilidad completa", "end to end", "end-to-end", "extremo a extremo", "e2e"]):
         return ParsedNLQuery(kind="file", query_file="q4_req_sin_traza_end_to_end.sparql")
 
+    # --- New metadata queries (enriched dataset) ---
+    if any(k in lower for k in ["baseline", "código de proyecto", "codigo de proyecto", "project code", "producto"]):
+        return ParsedNLQuery(kind="file", query_file="q26_baseline_y_proyecto.sparql")
+
+    if "requisit" in lower and any(k in lower for k in ["subsistema", "subsystem"]):
+        return ParsedNLQuery(kind="file", query_file="q27_requisitos_por_subsistema.sparql")
+
+    if "requisit" in lower and any(
+        k in lower
+        for k in [
+            "método de verificación",
+            "metodo de verificacion",
+            "verification_method",
+            "se verifican por",
+            "método de verificacion",
+        ]
+    ):
+        return ParsedNLQuery(kind="file", query_file="q28_requisitos_por_metodo_verificacion.sparql")
+
     if any(k in lower for k in ["resumen plm", "plm resumen", "metadatos plm"]):
         return ParsedNLQuery(kind="file", query_file="q8_plm_resumen.sparql")
 
@@ -58,9 +77,12 @@ def parse_spanish_question(text: str) -> ParsedNLQuery:
             "development environment",
             "herramientas",
             "sistema operativo",
-            "os ",
         ]
     ):
+        return ParsedNLQuery(kind="file", query_file="q9_dev_environment.sparql")
+
+    # Avoid false positives: match 'OS' as a standalone token, not as part of words like 'requisitos'.
+    if re.search(r"\bos\b", lower):
         return ParsedNLQuery(kind="file", query_file="q9_dev_environment.sparql")
 
     if any(

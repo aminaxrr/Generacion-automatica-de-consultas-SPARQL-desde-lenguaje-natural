@@ -11,6 +11,8 @@ INSTANCES_ROOT = BASE + "p510/instances/"
 
 EX = Namespace("http://example.org/tfg/mbse#")
 FOAF = Namespace("http://xmlns.com/foaf/0.1/")
+DCTERMS = Namespace("http://purl.org/dc/terms/")
+PROV = Namespace("http://www.w3.org/ns/prov#")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 
@@ -116,6 +118,8 @@ def generar_grafo_p510(
     g.bind("p510", P510)
     g.bind("foaf", FOAF)
     g.bind("ex", EX)
+    g.bind("dcterms", DCTERMS)
+    g.bind("prov", PROV)
 
     # Para parecerse al TTL del profe: URIs en /p510/instances/<seed>/... y nodos contenedor.
     seed = str(random.randint(1_000_000_000, 9_999_999_999))
@@ -124,6 +128,19 @@ def generar_grafo_p510(
     manifest = _new_instance_uri(instances_base, "P510_Manifest")
     g.add((manifest, RDF.type, P510.P510_ManifestType))
     g.add((manifest, RDFS.label, Literal("P510_Manifest")))
+    g.add((manifest, P510.Id, Literal(f"P510-MANIFEST-{seed}")))
+    g.add((manifest, P510.Description, Literal("Manifest sintético P510-like para el TFG")))
+
+    # Nodo dataset (metadatos editoriales / reproducibilidad)
+    dataset = _new_instance_uri(instances_base, "Dataset")
+    g.add((dataset, RDF.type, EX.Dataset))
+    g.add((dataset, RDFS.label, Literal("Dataset")))
+    g.add((dataset, DCTERMS.title, Literal("Dataset sintético P510-like")))
+    g.add((dataset, DCTERMS.created, Literal(_now_iso(), datatype=XSD.dateTime)))
+    g.add((dataset, EX.seed, Literal(seed)))
+    g.add((dataset, EX.generator, Literal("p510_generate_synthetic.py")))
+    g.add((dataset, EX.generator_version, Literal("1.1")))
+    g.add((manifest, EX.describesDataset, dataset))
 
     general_info = _new_instance_uri(instances_base, "GeneralPLMInfo")
     g.add((general_info, RDF.type, P510.GeneralPLMInfoType))
@@ -142,10 +159,20 @@ def generar_grafo_p510(
     g.add((general_info, P510.Model_Purpose, Literal("TFG: consultas SPARQL desde Lenguaje Natural")))
     g.add((general_info, P510.Model_Objective, Literal("Auditar trazabilidad y responsables")))
     g.add((general_info, P510.Organization, Literal("Universidad")))
+    g.add((general_info, EX.project_code, Literal("TFG-MBSE-P510")))
+    g.add((general_info, EX.product, Literal("Aircraft System (synthetic)")))
     g.add((general_info, P510.Maturity_State, Literal(random.choice(["Draft", "Released", "InWork"])) ))
     g.add((general_info, P510.Approval_State, Literal(random.choice(["Pending", "Approved"])) ))
     g.add((general_info, P510.Created_by, Literal(random.choice(["Amina", "Tutor", "Equipo MBSE"]))))
     g.add((general_info, P510.Author_Organization, Literal("Universidad")))
+
+    baseline = _new_instance_uri(instances_base, "Baseline")
+    g.add((baseline, RDF.type, EX.Baseline))
+    g.add((baseline, RDFS.label, Literal("Baseline")))
+    g.add((baseline, EX.baseline_id, Literal(str(uuid.uuid4()))))
+    g.add((baseline, EX.baseline_name, Literal(random.choice(["BL-0", "BL-1", "BL-2"])) ))
+    g.add((baseline, DCTERMS.created, Literal(created_ts, datatype=XSD.dateTime)))
+    g.add((general_info, EX.hasBaseline, baseline))
 
     dev_struct = _new_instance_uri(instances_base, "RequirementsDevStructure")
     g.add((dev_struct, RDF.type, P510.RequirementsDevStructureType))
@@ -190,6 +217,10 @@ def generar_grafo_p510(
         g.add((doc, RDFS.label, Literal(f"Document {i:02d}")))
         g.add((doc, P510.ContentType, Literal("Document")))
         g.add((doc, P510.Description, Literal(f"Documento de apoyo {i:02d}")))
+        g.add((doc, DCTERMS.title, Literal(f"Supporting Document {i:02d}")))
+        g.add((doc, DCTERMS.issued, Literal(_now_iso(), datatype=XSD.dateTime)))
+        g.add((doc, DCTERMS["format"], Literal(random.choice(["application/pdf", "text/plain", "application/xml"]))))
+        g.add((doc, EX.doc_kind, Literal(random.choice(["Spec", "Plan", "Report", "Guideline"]))))
         documentos.append(doc)
 
     for doc in documentos:
@@ -226,6 +257,14 @@ def generar_grafo_p510(
         proveedores.append(prov)
 
     requisitos: list[URIRef] = []
+    subsistemas = [
+        "Avionics",
+        "Propulsion",
+        "Structures",
+        "FlightControl",
+        "Electrical",
+        "Cabin",
+    ]
     for i in range(1, n_requisitos + 1):
         req = instances_base[f"_Requirement_{i:03d}"]
         g.add((req, RDF.type, P510.Requirement))
@@ -239,6 +278,14 @@ def generar_grafo_p510(
         g.add((req, P510.Created_by, Literal(random.choice(personas))))
         g.add((req, P510.Maturity_State, Literal(random.choice(["Draft", "Released", "InWork", "Obsolete"]))))
         g.add((req, P510.Approval_State, Literal(random.choice(["Pending", "Approved", "Rejected"]))))
+
+        # Metadatos adicionales (para preguntas más ricas en NL)
+        g.add((req, EX.subsystem, Literal(random.choice(subsistemas))))
+        g.add((req, EX.priority, Literal(random.randint(1, 5), datatype=XSD.integer)))
+        g.add((req, EX.verification_method, Literal(random.choice(["Test", "Analysis", "Inspection", "Demonstration"]))))
+        g.add((req, EX.criticality, Literal(random.choice(["Low", "Medium", "High"]))))
+        if random.random() > 0.35:
+            g.add((req, EX.rationale, Literal("Rationale sintetizada para justificar el requisito")))
 
         if random.random() > prob_req_sin_aprobador:
             g.add((req, P510.Approver, Literal(random.choice(personas))))
@@ -263,6 +310,10 @@ def generar_grafo_p510(
         g.add((model, P510.Maturity_State, Literal(random.choice(["Draft", "Released", "InWork"]))))
         approval_state = random.choice(["Pending", "Approved"])
         g.add((model, P510.Approval_State, Literal(approval_state)))
+
+        g.add((model, EX.model_kind, Literal(random.choice(["CAD", "FEM", "SysML", "Simulink"]))))
+        g.add((model, EX.part_number, Literal(f"PN-{random.randint(1000, 9999)}-{i:03d}")))
+        g.add((model, EX.subsystem, Literal(random.choice(subsistemas))))
         if random.random() > 0.15:
             g.add((model, P510.Author_Organization, Literal(f"Proveedor {random.randint(1, n_proveedores):02d}")))
         # Aprover solo algunas veces incluso si está Approved (para auditar incoherencias)
@@ -285,6 +336,9 @@ def generar_grafo_p510(
         g.add((test, P510.Created_on, Literal(_now_iso(), datatype=XSD.dateTime)))
         g.add((test, P510.Created_by, Literal(random.choice(personas))))
         g.add((test, EX.status, Literal(random.choice(["Passed", "Failed", "NotRun"]))))
+        g.add((test, P510.Maturity_State, Literal(random.choice(["Draft", "InWork", "Released"]))))
+        g.add((test, EX.test_type, Literal(random.choice(["Unit", "Integration", "System", "Acceptance"]))))
+        g.add((test, EX.environment, Literal(random.choice(["SIL", "HIL", "Bench", "Flight"]))))
         tests.append(test)
 
     for req in requisitos:
@@ -363,6 +417,8 @@ def generar_grafo_p510(
         g.add((ev, P510.ContentType, Literal("Evidence")))
         g.add((ev, P510.Description, Literal(f"Evidencia de validación {i:02d}")))
         g.add((ev, P510.Created_on, Literal(_now_iso(), datatype=XSD.dateTime)))
+        g.add((ev, PROV.wasAttributedTo, Literal(random.choice(personas))))
+        g.add((ev, EX.evidence_kind, Literal(random.choice(["Report", "Log", "Checklist", "Screenshot"]))))
         evidencias.append(ev)
 
     cred_levels = ["A", "B", "C"]

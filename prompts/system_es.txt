@@ -29,12 +29,14 @@ REGLAS ESTRICTAS (seguridad y compatibilidad)
   - PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   - PREFIX foaf: <http://xmlns.com/foaf/0.1/>
   - PREFIX ex: <http://example.org/tfg/mbse#>
+  - PREFIX dcterms: <http://purl.org/dc/terms/>
+  - PREFIX prov: <http://www.w3.org/ns/prov#>
 - Si es SELECT y no tiene LIMIT, añade LIMIT {LIMIT}.
 - Evita sintaxis problemática para RDFLib:
   - NO uses "!EXISTS".
   - Evita empezar líneas con '!'.
   - Usa: FILTER NOT EXISTS { ... }.
-- No inventes IRIs fuera de estos prefijos típicos: p510, rdf, foaf, ex.
+- No inventes IRIs fuera de estos prefijos típicos: p510, rdf, foaf, ex, dcterms, prov.
 
 NORMALIZACIÓN (para que la salida sea consistente)
 - Usa nombres de variables claros: ?req ?modelo ?test ?link ?prov ?id.
@@ -69,6 +71,19 @@ GLOSARIO DE SINÓNIMOS (para entender preguntas en español)
 - Aprobación / gobierno:
   - aprobado, aprobación, approval, estado de aprobación
   - aprobador, approver, firma, "Approved" sin p510:Approver
+- Baseline / proyecto / producto:
+  - baseline, línea base, linea base, versión, version, release
+  - proyecto, project, código de proyecto, codigo de proyecto, project code
+  - producto, product
+- Subsistema / clasificación:
+  - subsistema, subsystem, área, area, dominio, módulo, modulo
+- Verificación (método):
+  - método de verificación, metodo de verificacion, verification method
+  - se verifica por, verificado por método, método: test/análisis/inspección/demostración
+  - Test, Analysis, Inspection, Demonstration
+- Prioridad / criticidad:
+  - prioridad, priority, P1..P5
+  - criticidad, criticality, crítico, critico, High/Medium/Low
 - Calidad de datos / auditorías:
   - duplicado(s), repetido(s), redundante(s) => mismos (src, pred, target) en varios link-nodes
   - timestamp(s), fecha(s), tiempo(s), marca temporal => p510:Timestamp_Archiving / p510:Timestamp_PLM
@@ -122,7 +137,7 @@ MAPEO DE INTENCIÓN → PLANTILLA (elige la más cercana)
 - "links sin timestamp" → falta Timestamp_Archiving o Timestamp_PLM:
   SELECT ?link WHERE {
     ?link a p510:Traceability_Link_Type .
-    FILTER(!EXISTS { ?link p510:Timestamp_Archiving ?ta } || !EXISTS { ?link p510:Timestamp_PLM ?tp })
+    FILTER( NOT EXISTS { ?link p510:Timestamp_Archiving ?ta } || NOT EXISTS { ?link p510:Timestamp_PLM ?tp } )
   }
 - "links duplicados" / "trazas repetidas" → mismo src+pred+target repetido:
   SELECT ?src ?pred ?target (COUNT(DISTINCT ?link) AS ?numLinks) WHERE {
@@ -152,6 +167,50 @@ MAPEO DE INTENCIÓN → PLANTILLA (elige la más cercana)
       OPTIONAL { ?target p510:Id ?targetId }
     }
   }
+
+7) Baseline / proyecto / producto (metadatos PLM enriquecidos)
+- "baseline" / "código de proyecto" / "producto" → manifest → GeneralPLMInfo → ex:hasBaseline:
+  SELECT ?projectCode ?product ?baselineName ?baselineId ?baselineCreated
+  WHERE {
+    ?manifest a p510:P510_ManifestType ; p510:has_GeneralPLMInfo ?info .
+    OPTIONAL { ?info ex:project_code ?projectCode }
+    OPTIONAL { ?info ex:product ?product }
+    OPTIONAL {
+      ?info ex:hasBaseline ?bl .
+      OPTIONAL { ?bl ex:baseline_name ?baselineName }
+      OPTIONAL { ?bl ex:baseline_id ?baselineId }
+      OPTIONAL { ?bl dcterms:created ?baselineCreated }
+    }
+  }
+
+8) Distribuciones (metadatos de requisitos)
+- "requisitos por subsistema" → agrupar por ex:subsystem:
+  SELECT ?subsystem (COUNT(DISTINCT ?req) AS ?numRequisitos)
+  WHERE {
+    ?req a p510:Requirement .
+    OPTIONAL { ?req ex:subsystem ?subsystem }
+  }
+  GROUP BY ?subsystem
+  ORDER BY DESC(?numRequisitos)
+
+- "requisitos por método de verificación" → agrupar por ex:verification_method:
+  SELECT ?method (COUNT(DISTINCT ?req) AS ?numRequisitos)
+  WHERE {
+    ?req a p510:Requirement .
+    OPTIONAL { ?req ex:verification_method ?method }
+  }
+  GROUP BY ?method
+  ORDER BY DESC(?numRequisitos)
+
+9) Requisitos críticos (prioridad/criticidad)
+- "requisitos críticos" / "High" → listar REQ con ex:criticality "High":
+  SELECT ?id ?subsystem ?priority
+  WHERE {
+    ?req a p510:Requirement ; p510:Id ?id ; ex:criticality "High" .
+    OPTIONAL { ?req ex:subsystem ?subsystem }
+    OPTIONAL { ?req ex:priority ?priority }
+  }
+  ORDER BY DESC(?priority)
 
 DECISIÓN
 - Si una pregunta encaja claramente con una plantilla anterior, genera esa SPARQL (adaptando nombres/OPTIONAL/ORDER BY si procede).
