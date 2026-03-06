@@ -62,18 +62,21 @@ HTML = """<!doctype html>
           <option value=\"documentos usados\">documentos usados</option>
         </select>
 
+        <label>TTL (ruta al archivo .ttl)</label>
+        <input id=\"ttlPath\" value=\"data/p510_sintetico.ttl\" />
+
         <label>Pregunta (NL)</label>
         <textarea id=\"question\" spellcheck=\"false\"></textarea>
 
+        <label><input id=\"execute\" type=\"checkbox\" checked /> Ejecutar sobre el grafo (si no, solo traducir)</label>
+
         <div class=\"row\" style=\"margin-top:10px\">
-          <button id=\"run\">Generar y ejecutar</button>
+          <button id=\"run\">Generar</button>
           <button class=\"secondary\" id=\"regen\">Regenerar grafo</button>
           <span class=\"status\" id=\"status\"></span>
         </div>
 
-        <div style=\"margin-top:10px\" class=\"status\">
-          TTL: <code id=\"ttlLabel\"></code>
-        </div>
+        <div style=\"margin-top:10px\" class=\"status\">TTL activo: <code id=\"ttlLabel\"></code></div>
       </div>
 
       <div class=\"card\">
@@ -113,6 +116,9 @@ HTML = """<!doctype html>
         <label>Few-shot JSONL (opcional)</label>
         <input id=\"examplesPath\" value=\"eval/text2sparql_examples.jsonl\" />
 
+        <label>Prompt file (system prompt)</label>
+        <input id=\"promptFile\" value=\"prompts/system_es.txt\" />
+
         <label>Filas máx</label>
         <input id=\"rows\" type=\"number\" value=\"200\" />
 
@@ -132,6 +138,10 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
       <div class=\"card\" style=\"grid-column: 1 / -1\">
         <h3 style=\"margin:0 0 6px 0\">Resultados</h3>
         <div id=\"error\" class=\"error\"></div>
+        <details id=\"traceBox\" style=\"margin-top:10px; display:none\">
+          <summary class=\"status\">Detalles técnicos (trace)</summary>
+          <pre class=\"error\"><code id=\"trace\"></code></pre>
+        </details>
         <div id=\"table\"></div>
       </div>
 
@@ -145,6 +155,11 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
   function renderTable(obj) {
     const tableDiv = el('table');
     tableDiv.innerHTML = '';
+
+    if (obj === null || obj === undefined) {
+      tableDiv.innerHTML = `<div class="status">(solo traducción)</div>`;
+      return;
+    }
 
     if (obj.askAnswer !== undefined) {
       tableDiv.innerHTML = `<div class="status">ASK: <b>${obj.askAnswer}</b></div>`;
@@ -195,6 +210,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     try {
       const info = await (await fetch('/api/info')).json();
       el('ttlLabel').textContent = info.ttl_path;
+      if (info.ttl_path) el('ttlPath').value = info.ttl_path;
     } catch {}
   }
 
@@ -202,7 +218,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     el('error').textContent = '';
     setStatus('Regenerando grafo...');
     try {
-      const info = await postJson('/api/generate', {});
+      const info = await postJson('/api/generate', { ttl_path: el('ttlPath').value });
       setStatus(`Grafo regenerado (${info.ttl_path})`);
     } catch (e) {
       el('error').textContent = e.error || JSON.stringify(e, null, 2);
@@ -212,13 +228,17 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
 
   el('run').addEventListener('click', async () => {
     el('error').textContent = '';
+    el('traceBox').style.display = 'none';
+    el('trace').textContent = '';
     el('sparql').textContent = '';
     el('table').innerHTML = '';
 
     setStatus('Generando/ejecutando...');
 
     const payload = {
+      ttl_path: el('ttlPath').value,
       question: el('question').value,
+      execute: el('execute').checked,
       backend: el('backend').value,
       model: el('model').value,
       limit: Number(el('limit').value || 200),
@@ -226,6 +246,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
       max_retries: Number(el('retries').value || 2),
       rules_first: el('rulesFirst').checked,
       examples_path: el('examplesPath').value,
+      prompt_file: el('promptFile').value,
       max_rows: Number(el('rows').value || 200),
     };
 
@@ -233,9 +254,14 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
       const res = await postJson('/api/ask', payload);
       el('sparql').textContent = res.sparql;
       renderTable(res.result);
-      setStatus(`OK · backend=${res.backend_used} · attempts=${res.attempts} · ${res.elapsed_s.toFixed(2)}s`);
+      const mode = (payload.execute ? 'run' : 'translate');
+      setStatus(`OK (${mode}) · backend=${res.backend_used} · attempts=${res.attempts} · ${res.elapsed_s.toFixed(2)}s`);
     } catch (e) {
       el('error').textContent = e.error || JSON.stringify(e, null, 2);
+      if (e.trace) {
+        el('trace').textContent = e.trace;
+        el('traceBox').style.display = 'block';
+      }
       if (e.sparql) el('sparql').textContent = e.sparql;
       setStatus('Error');
     }
@@ -269,6 +295,16 @@ class AppState:
         generar_grafo_p510(out_path=self.ttl_path)
         self._graph = None
         self._mtime = 0.0
+
+    def set_ttl_path(self, ttl_path: str) -> None:
+      ttl_path = ttl_path.strip()
+      if not ttl_path:
+        return
+      if ttl_path == self.ttl_path:
+        return
+      self.ttl_path = ttl_path
+      self._graph = None
+      self._mtime = 0.0
 
 
 def _query_result_to_json(qres: Any, max_rows: int) -> dict[str, Any]:
@@ -328,6 +364,10 @@ class Handler(BaseHTTPRequestHandler):
 
         state: AppState = self.server.state  # type: ignore[attr-defined]
 
+        ttl_path = str(payload.get("ttl_path") or "").strip()
+        if ttl_path:
+          state.set_ttl_path(ttl_path)
+
         if self.path == "/api/generate":
             try:
                 state.regenerate()
@@ -347,15 +387,20 @@ class Handler(BaseHTTPRequestHandler):
 
         backend = str(payload.get("backend") or "ollama")
         model = str(payload.get("model") or "llama3.2:3b")
+        execute = bool(payload.get("execute") if payload.get("execute") is not None else True)
         limit = int(payload.get("limit") or 200)
         timeout_s = float(payload.get("timeout_s") or 30.0)
         max_retries = int(payload.get("max_retries") or 2)
         rules_first = bool(payload.get("rules_first") if payload.get("rules_first") is not None else True)
         examples_path = str(payload.get("examples_path") or "").strip() or None
+        prompt_file = str(payload.get("prompt_file") or "").strip() or None
         max_rows = int(payload.get("max_rows") or 200)
 
         if examples_path and not Path(examples_path).exists():
             examples_path = None
+
+        if prompt_file and not Path(prompt_file).exists():
+            prompt_file = None
 
         start = time.perf_counter()
         try:
@@ -367,10 +412,11 @@ class Handler(BaseHTTPRequestHandler):
                 timeout_s=timeout_s,
                 limit=limit,
                 rules_first=rules_first,
+                prompt_file=prompt_file,
             )
 
             result: GenerationResult = generate_sparql(g, question, config=cfg, examples_path=examples_path)
-            qres = g.query(result.sparql)
+            qres = g.query(result.sparql) if execute else None
             elapsed = time.perf_counter() - start
 
             self._send_json(
@@ -378,7 +424,7 @@ class Handler(BaseHTTPRequestHandler):
                 {
                     **asdict(result),
                     "elapsed_s": elapsed,
-                    "result": _query_result_to_json(qres, max_rows=max_rows),
+                  "result": _query_result_to_json(qres, max_rows=max_rows) if qres is not None else None,
                 },
             )
         except Exception as e:  # noqa: BLE001

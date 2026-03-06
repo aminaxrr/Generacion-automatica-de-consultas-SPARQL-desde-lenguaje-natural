@@ -81,6 +81,21 @@ Ejemplo:
 
 `python src/text2sparql_cli.py "auditoría links duplicados" --backend openai_compat --model <tu_modelo> --mode run`
 
+### Prompt “grande” con sinónimos (estilo tutor)
+
+Si tu tutor quiere que “todo esté en un prompt” (glosario + sinónimos + reglas), edita:
+
+- [prompts/system_es.txt](prompts/system_es.txt)
+
+Y ejecútalo así:
+
+`python src/text2sparql_cli.py "modelos físicos sin test" --backend ollama --model llama3.1 --prompt-file prompts/system_es.txt --mode run`
+
+Notas:
+
+- El prompt puede incluir el placeholder `{LIMIT}`, que se sustituye por el valor de `--limit`.
+- Si no pasas `--prompt-file` y existe `prompts/system_es.txt`, se usa automáticamente.
+
 ### Seguridad / restricciones
 
 - Solo se permiten consultas `SELECT` o `ASK` (se bloquean `CONSTRUCT/DESCRIBE/INSERT/DELETE/...`).
@@ -103,6 +118,17 @@ Notas:
 
 - Si no existe `data/p510_sintetico.ttl`, la demo puede regenerarlo (botón “Regenerar grafo”).
 - Para usar Ollama: servidor levantado (`ollama serve`) y un modelo descargado.
+
+### Usar un TTL externo (ej. LIVE_STRATOLINER.ttl)
+
+Si tu tutor te da un TTL real (por ejemplo `LIVE_STRATOLINER.ttl`), cópialo a `data/` y úsalo así:
+
+- En la demo visual: cambia el campo **TTL** a `data/LIVE_STRATOLINER.ttl`.
+- En CLI: `python src/text2sparql_cli.py "..." --ttl data/LIVE_STRATOLINER.ttl ...`
+
+Nota: ese fichero suele ser de **P550**, no P510. Para que el LLM genere SPARQL acorde al patrón P550 (campos con `rdf:value`, propiedades `has_*`, etc.), usa el prompt:
+
+- [prompts/system_p550_es.txt](prompts/system_p550_es.txt)
 
 ### (Opcional) Demo Streamlit
 

@@ -39,6 +39,7 @@ class GenerationConfig:
     fewshot_max_examples: int = 3
     ollama_num_predict: int = 400
     rules_first: bool = True
+    prompt_file: str | None = None
 
 
 @dataclass(frozen=True)
@@ -163,8 +164,9 @@ def build_prompt(
     examples: list[dict[str, Any]],
     limit: int,
     fewshot_max_examples: int,
+    system_prompt_override: str | None = None,
 ) -> list[dict[str, str]]:
-    system = (
+    system = system_prompt_override or (
         "Eres un asistente local 'Text2SPARQL' para un grafo RDF inspirado en LOTAR P510. "
         "Devuelves SOLO una consulta SPARQL válida (sin explicaciones) que responda a la pregunta en español.\n\n"
         "REGLAS ESTRICTAS:\n"
@@ -282,6 +284,12 @@ def validate_and_run(graph: Graph, sparql: str) -> Any:
     return graph.query(sparql)
 
 
+def _load_prompt_file(path: str, limit: int) -> str:
+    text = Path(path).read_text(encoding="utf-8")
+    # Allow prompt templates to reference the LIMIT value.
+    return text.replace("{LIMIT}", str(int(limit)))
+
+
 def generate_sparql(
     graph: Graph,
     question_es: str,
@@ -292,6 +300,15 @@ def generate_sparql(
     schema = build_schema_summary(graph, max_items=config.schema_max_items)
     if examples is None:
         examples = _read_jsonl(examples_path) if examples_path else []
+
+    system_prompt_override: str | None = None
+    if config.prompt_file:
+        try:
+            p = Path(config.prompt_file)
+            if p.exists():
+                system_prompt_override = _load_prompt_file(str(p), limit=config.limit)
+        except Exception:
+            system_prompt_override = None
 
     last_error: str | None = None
     sparql_candidate: str | None = None
@@ -332,6 +349,7 @@ def generate_sparql(
                 examples,
                 limit=config.limit,
                 fewshot_max_examples=config.fewshot_max_examples,
+                system_prompt_override=system_prompt_override,
             )
 
             if last_error and sparql_candidate:

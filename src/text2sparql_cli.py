@@ -60,6 +60,11 @@ def main() -> None:
         default=os.path.join("eval", "text2sparql_examples.jsonl"),
         help="JSONL few-shot con pares NL↔SPARQL",
     )
+    parser.add_argument(
+        "--prompt-file",
+        default=None,
+        help="Ruta a un system prompt (texto) con glosario/sinónimos. Puede usar {LIMIT}.",
+    )
     parser.add_argument("--max-retries", type=int, default=2, help="Reintentos si falla validación/ejecución")
     parser.add_argument("--timeout", type=float, default=30.0, help="Timeout del backend (segundos)")
     parser.add_argument("--temperature", type=float, default=0.1, help="Temperatura")
@@ -86,6 +91,12 @@ def main() -> None:
 
     g: Graph = load_graph(args.ttl)
 
+    prompt_file: str | None = args.prompt_file
+    if prompt_file is None:
+        default_prompt = Path("prompts") / "system_es.txt"
+        if default_prompt.exists():
+            prompt_file = str(default_prompt)
+
     config = GenerationConfig(
         backend=args.backend,
         model=args.model,
@@ -93,6 +104,7 @@ def main() -> None:
         timeout_s=args.timeout,
         temperature=args.temperature,
         limit=args.limit,
+        prompt_file=prompt_file,
     )
 
     result = generate_sparql(g, args.text, config=config, examples_path=examples_path)
