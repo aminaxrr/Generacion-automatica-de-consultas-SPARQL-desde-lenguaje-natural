@@ -30,7 +30,7 @@ def _print_results(qres, max_rows: int) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Text2SPARQL offline: generate (and optionally run) SPARQL from an English question"
+        description="Text2SPARQL offline (no backend): map an English question to a known SPARQL query from a JSONL catalog"
     )
     parser.add_argument("text", help="Question in English")
     parser.add_argument(
@@ -45,40 +45,49 @@ def main() -> None:
         help="Only generate SPARQL (translate) or generate + run it (run)",
     )
     parser.add_argument(
-        "--backend",
-        choices=["ollama", "openai_compat", "rules"],
-        default="ollama",
-        help="Local backend: ollama | openai_compat | rules",
-    )
-    parser.add_argument(
-        "--model",
-        default="llama3.1",
-        help="Model name (depends on backend)",
-    )
-    parser.add_argument(
         "--examples",
         default=os.path.join("eval", "text2sparql_examples.jsonl"),
-        help="Few-shot JSONL with NL↔SPARQL pairs",
+        help="JSONL catalog with 'nl' and 'sparql' fields",
     )
     parser.add_argument(
-        "--prompt-file",
+        "--synonyms-file",
         default=None,
-        help="Path to a system prompt text file with glossary/synonyms. Can use {LIMIT}.",
+        help=(
+            "Optional synonyms/glossary 'prompt' file. If it contains a '### SYNONYMS START/END' block, "
+            "only that block is parsed. Defaults to prompts/system_en.txt when present."
+        ),
     )
     parser.add_argument(
-        "--rules-first",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="If enabled, try the deterministic catalog mapping before using the LLM.",
+        "--classifier-model",
+        default=None,
+        help=(
+            "Optional offline classifier model file (trained from the catalog). "
+            "If provided and confident enough, it selects the catalog id directly."
+        ),
     )
-    parser.add_argument("--max-retries", type=int, default=2, help="Retries if validation/execution fails")
-    parser.add_argument("--timeout", type=float, default=30.0, help="Backend timeout (seconds)")
-    parser.add_argument("--temperature", type=float, default=0.1, help="Sampling temperature")
+    parser.add_argument(
+        "--classifier-min-prob",
+        type=float,
+        default=0.60,
+        help="Minimum probability to accept classifier prediction (otherwise fallback to similarity matcher)",
+    )
     parser.add_argument(
         "--limit",
         type=int,
         default=200,
         help="LIMIT to enforce if missing (SELECT only)",
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.35,
+        help="Minimum similarity score required to accept a match",
+    )
+    parser.add_argument(
+        "--suggestions",
+        type=int,
+        default=3,
+        help="How many candidate matches to show on failure",
     )
     parser.add_argument(
         "--rows",
@@ -99,27 +108,25 @@ def main() -> None:
 
     g: Graph = load_graph(args.ttl)
 
-    prompt_file: str | None = args.prompt_file
-    if prompt_file is None:
-        default_en = Path("prompts") / "system_en.txt"
-        if default_en.exists():
-            prompt_file = str(default_en)
-
     config = GenerationConfig(
-        backend=args.backend,
-        model=args.model,
-        max_retries=args.max_retries,
-        timeout_s=args.timeout,
-        temperature=args.temperature,
         limit=args.limit,
-        rules_first=bool(args.rules_first),
-        prompt_file=prompt_file,
+        match_threshold=float(args.threshold),
+        max_suggestions=int(args.suggestions),
+        synonyms_file=args.synonyms_file,
+        classifier_model_file=args.classifier_model,
+        classifier_min_prob=float(args.classifier_min_prob),
     )
 
     result = generate_sparql(g, args.text, config=config, examples_path=examples_path)
 
-    print(f"Backend: {result.backend_used}")
     print(f"Attempts: {result.attempts}")
+    if result.matched_id or result.matched_nl:
+        mid = result.matched_id or "(no id)"
+        mnl = result.matched_nl or "(no nl)"
+        ms = result.match_score
+        ms_s = f"{ms:.3f}" if isinstance(ms, float) else "(n/a)"
+        print(f"Matched: {mid} · score={ms_s}")
+        print(f"Matched NL: {mnl}")
     print("-" * 80)
     print(result.sparql.strip())
     print("-" * 80)

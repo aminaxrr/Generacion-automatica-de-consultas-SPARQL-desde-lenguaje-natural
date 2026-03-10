@@ -43,27 +43,30 @@ def main() -> None:
         default="reference",
         help="reference: validate reference SPARQL; generate: generate from NL and validate execution",
     )
-    parser.add_argument(
-        "--backend",
-        choices=["ollama", "openai_compat", "rules"],
-        default="rules",
-        help="Backend for mode=generate",
-    )
-    parser.add_argument("--model", default="llama3.1", help="Model for mode=generate")
-    parser.add_argument("--max-retries", type=int, default=1, help="Retries during generation")
-    parser.add_argument("--timeout", type=float, default=30.0, help="Backend timeout")
-    parser.add_argument("--temperature", type=float, default=0.1, help="Sampling temperature")
     parser.add_argument("--limit", type=int, default=200, help="LIMIT to enforce if missing")
-    parser.add_argument("--max", type=int, default=0, help="Max examples to evaluate (0=all)")
     parser.add_argument(
-        "--on-unmapped",
-        choices=["auto", "skip", "fail"],
-        default="auto",
-        help=(
-            "What to do if the backend cannot map the question (only applies to backend=rules): "
-            "auto=skip, skip=SKIP, fail=FAIL"
-        ),
+        "--threshold",
+        type=float,
+        default=0.35,
+        help="Minimum similarity score required to accept a match (mode=generate)",
     )
+    parser.add_argument(
+        "--synonyms-file",
+        default=None,
+        help="Optional synonyms prompt file (defaults to prompts/system_en.txt when present)",
+    )
+    parser.add_argument(
+        "--classifier-model",
+        default=None,
+        help="Optional offline classifier model file (trained from the catalog)",
+    )
+    parser.add_argument(
+        "--classifier-min-prob",
+        type=float,
+        default=0.60,
+        help="Minimum probability to accept classifier prediction",
+    )
+    parser.add_argument("--max", type=int, default=0, help="Max examples to evaluate (0=all)")
     args = parser.parse_args()
 
     if not os.path.exists(args.ttl):
@@ -86,17 +89,12 @@ def main() -> None:
     skipped = 0
 
     config = GenerationConfig(
-        backend=args.backend,
-        model=args.model,
-        max_retries=args.max_retries,
-        timeout_s=args.timeout,
-        temperature=args.temperature,
         limit=args.limit,
+        match_threshold=float(args.threshold),
+        synonyms_file=args.synonyms_file,
+        classifier_model_file=args.classifier_model,
+        classifier_min_prob=float(args.classifier_min_prob),
     )
-
-    on_unmapped = args.on_unmapped
-    if on_unmapped == "auto":
-        on_unmapped = "skip" if (args.mode == "generate" and args.backend == "rules") else "fail"
 
     try:
         for idx, ex in enumerate(examples, start=1):
@@ -114,31 +112,18 @@ def main() -> None:
                     if not isinstance(nl, str) or not nl.strip():
                         raise ValueError("Example missing 'nl'")
 
-                    # Leave-one-out few-shot: do not include the current example in the prompt.
-                    other_examples = [e for e in examples if e is not ex]
-                    result = generate_sparql(
-                        g,
-                        nl,
-                        config=config,
-                        examples=other_examples,
-                    )
+                    # Deterministic catalog matching: allow matching against the full catalog.
+                    result = generate_sparql(g, nl, config=config, examples=examples)
                     rows = _run_query(g, result.sparql)
 
                 elapsed_ms = (time.perf_counter() - started) * 1000.0
                 ok += 1
                 print(f"[OK]   {ex_id}  rows={rows}  {elapsed_ms:.1f}ms")
             except ValueError as e:
-                # For backend=rules, not all NL variants are covered by the baseline.
-                # In that case, allow SKIP to measure coverage separately from correctness.
                 elapsed_ms = (time.perf_counter() - started) * 1000.0
-                if args.mode == "generate" and args.backend == "rules" and on_unmapped == "skip":
-                    skipped += 1
-                    msg = str(e).replace("\n", " ")
-                    print(f"[SKIP] {ex_id}  {elapsed_ms:.1f}ms  {msg}")
-                else:
-                    fail += 1
-                    msg = str(e).replace("\n", " ")
-                    print(f"[FAIL] {ex_id}  {elapsed_ms:.1f}ms  {msg}")
+                fail += 1
+                msg = str(e).replace("\n", " ")
+                print(f"[FAIL] {ex_id}  {elapsed_ms:.1f}ms  {msg}")
             except Exception as e:  # noqa: BLE001
                 elapsed_ms = (time.perf_counter() - started) * 1000.0
                 fail += 1

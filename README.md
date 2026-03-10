@@ -26,23 +26,9 @@ Output: `data/p510_sintetico.ttl`
 
 Queries live in `queries_p510/`.
 
-## NL → SPARQL baseline (deterministic)
-
-Includes a **no-ML** baseline (rules + templates) that converts **English questions** into SPARQL and runs them.
-
-Examples:
-
-`python src/nl2sparql_cli.py "How many suppliers are there?"`
-
-`python src/nl2sparql_cli.py "requirements without a physical model"`
-
-`python src/nl2sparql_cli.py "models from Supplier 03"`
-
-This is a reproducible starting point; you can later replace/extend the parser with a classifier, an LLM, etc.
-
 ## Text2SPARQL offline (NeoDash Text2Cypher style)
 
-In addition to the rules baseline, there is an **LLM-like** but **local/offline** mode: it generates SPARQL from a question and validates/runs it on the RDF graph.
+This tool maps an English question to a SPARQL query using a **deterministic catalog matcher** (no backend, no server) and validates/runs it on the RDF graph.
 
 Script: `python src/text2sparql_cli.py "..."`
 
@@ -51,56 +37,38 @@ Modes:
 - `--mode translate`: only generate SPARQL
 - `--mode run`: generate + run (default)
 
-Supported backends:
+Catalog source:
 
-1) **Rules (no models, 100% reproducible)**
+- `eval/text2sparql_examples.jsonl` (fields: `nl`, `sparql`, optional `id`)
 
-`python src/text2sparql_cli.py "How many suppliers are there?" --backend rules --mode run`
+Synonyms / glossary ("prompt" file):
 
-2) **Ollama (local)**
-
-- Install/run Ollama and pull a model, for example:
-	- `ollama pull llama3.1`
+- Edit `prompts/system_en.txt` and maintain the `### SYNONYMS START/END` block.
+- This project parses that block locally (no LLM) to normalize synonyms before matching.
 
 Example:
 
-`python src/text2sparql_cli.py "requirements missing end-to-end traceability" --backend ollama --model llama3.1 --mode run`
+`python src/text2sparql_cli.py "requirements missing end-to-end traceability" --mode run`
 
-Default endpoint is `http://localhost:11434/api/chat`. Override with:
+### (Optional) Offline classifier ("own model")
 
-- `TEXT2SPARQL_OLLAMA_URL`
+If you want a simple **self-contained model** (still no backend/server), you can train a Multinomial Naive Bayes classifier on the catalog and let it predict the best `id`.
 
-3) **Local OpenAI-compatible server** (e.g., LM Studio, LocalAI, ...)
+1) Train:
 
-Configure:
+`python src/train_catalog_classifier.py --examples eval/text2sparql_examples.jsonl --out models/catalog_nb_v1.json`
 
-- `TEXT2SPARQL_OPENAI_BASE_URL` (e.g., `http://localhost:1234`)
-- `TEXT2SPARQL_OPENAI_API_KEY` (if applicable; can be empty)
+2) Use it (falls back to similarity matching if not confident enough):
 
-Example:
+`python src/text2sparql_cli.py "how many suppliers are there" --classifier-model models/catalog_nb_v1.json --classifier-min-prob 0.60`
 
-`python src/text2sparql_cli.py "audit duplicate links" --backend openai_compat --model <your_model> --mode run`
-
-### Single “mega prompt” with synonyms (supervisor style)
-
-If you want the mapping/glossary/synonym logic to live fully in a prompt, edit:
-
-- [prompts/system_en.txt](prompts/system_en.txt)
-
-And run:
-
-`python src/text2sparql_cli.py "physical models without tests" --backend ollama --model llama3.1 --prompt-file prompts/system_en.txt --mode run`
-
-Notes:
-
-- The prompt may include a `{LIMIT}` placeholder, replaced by `--limit`.
-- If you do not pass `--prompt-file` and `prompts/system_en.txt` exists, it is used automatically.
+If a question does not match any known example above a similarity threshold, the tool fails and prints the closest candidates.
 
 ### Safety / constraints
 
 - Only `SELECT` or `ASK` queries are allowed (blocks `CONSTRUCT/DESCRIBE/INSERT/DELETE/...`).
 - If a `SELECT` query has no `LIMIT`, the tool adds `LIMIT 200` (configurable via `--limit`).
-- Few-shot examples are in `eval/text2sparql_examples.jsonl` to anchor generation to the `queries_p510/` catalog.
+- Catalog examples are in `eval/text2sparql_examples.jsonl` to anchor selection to the `queries_p510/` catalog.
 
 ## Visual demo (local web)
 
@@ -117,7 +85,7 @@ There is a lightweight "NeoDash-like" visual demo **with no extra dependencies**
 Notes:
 
 - If `data/p510_sintetico.ttl` is missing, the demo can regenerate it ("Regenerate graph" button).
-- To use Ollama: run `ollama serve` and ensure a model is pulled.
+- The web demo also accepts a classifier model path (defaults to `models/catalog_nb_v1.json`).
 
 ### (Optional) Streamlit demo
 
@@ -137,11 +105,7 @@ Script: `python src/text2sparql_eval.py`
 
 2) Evaluate the generator (generate from NL and check execution):
 
-`python src/text2sparql_eval.py --mode generate --backend rules`
-
-With a local LLM:
-
-`python src/text2sparql_eval.py --mode generate --backend ollama --model llama3.1`
+`python src/text2sparql_eval.py --mode generate`
 
 ## Included queries (examples)
 

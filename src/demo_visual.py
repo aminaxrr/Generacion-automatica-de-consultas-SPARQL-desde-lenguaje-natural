@@ -81,30 +81,24 @@ def main() -> None:
 
         st.divider()
 
-        st.header("Backend")
-        backend = st.selectbox("Backend", options=["rules", "ollama", "openai_compat"], index=1)
-        model = st.text_input("Model", value="llama3.2:3b" if backend == "ollama" else "llama3.1")
-
-        st.caption("Useful environment variables")
-        st.code(
-            "\n".join(
-                [
-                    "TEXT2SPARQL_OLLAMA_URL=http://localhost:11434/api/chat",
-                    "TEXT2SPARQL_OPENAI_BASE_URL=http://localhost:1234",
-                    "TEXT2SPARQL_OPENAI_API_KEY=",
-                ]
-            )
-        )
+        st.header("Mode")
+        st.caption("Deterministic catalog matching (no backend, no server)")
 
         st.divider()
 
         st.header("Generation")
-        examples_path = st.text_input("Few-shot JSONL", value=os.path.join("eval", "text2sparql_examples.jsonl"))
-        rules_first = st.checkbox("Rules-first (catalog → LLM)", value=False)
-        max_retries = st.number_input("Retries", min_value=0, max_value=5, value=2, step=1)
-        timeout_s = st.number_input("Timeout backend (s)", min_value=1.0, max_value=600.0, value=30.0, step=5.0)
-        temperature = st.number_input("Temperature", min_value=0.0, max_value=2.0, value=0.1, step=0.05)
+        examples_path = st.text_input("Catalog JSONL", value=os.path.join("eval", "text2sparql_examples.jsonl"))
+        synonyms_file = st.text_input("Synonyms prompt file", value=os.path.join("prompts", "system_en.txt"))
+        classifier_model = st.text_input("Classifier model (optional)", value=os.path.join("models", "catalog_nb_v1.json"))
+        classifier_min_prob = st.number_input(
+            "Classifier min probability",
+            min_value=0.0,
+            max_value=1.0,
+            value=0.60,
+            step=0.01,
+        )
         limit = st.number_input("LIMIT (if missing)", min_value=1, max_value=5000, value=200, step=50)
+        threshold = st.number_input("Match threshold", min_value=0.0, max_value=1.0, value=0.35, step=0.01)
 
         st.divider()
 
@@ -144,20 +138,22 @@ def main() -> None:
                     g = _load_graph_cached(ttl_path, _ttl_mtime_key(ttl_path))
 
                     cfg = GenerationConfig(
-                        backend=backend,
-                        model=model.strip() or "llama3.1",
-                        max_retries=int(max_retries),
-                        timeout_s=float(timeout_s),
-                        temperature=float(temperature),
                         limit=int(limit),
-                        rules_first=bool(rules_first),
+                        match_threshold=float(threshold),
+                        synonyms_file=(synonyms_file if Path(synonyms_file).exists() else None),
+                        classifier_model_file=(classifier_model if Path(classifier_model).exists() else None),
+                        classifier_min_prob=float(classifier_min_prob),
                     )
 
                     examples_path_eff = examples_path if Path(examples_path).exists() else None
                     result = generate_sparql(g, question.strip(), config=cfg, examples_path=examples_path_eff)
 
                     elapsed = time.perf_counter() - start
-                    st.success(f"OK · backend={result.backend_used} · attempts={result.attempts} · {elapsed:.2f}s")
+                    ms = result.match_score
+                    ms_s = f"{ms:.3f}" if isinstance(ms, float) else "n/a"
+                    st.success(
+                        f"OK · match={result.matched_id or 'catalog'} · score={ms_s} · attempts={result.attempts} · {elapsed:.2f}s"
+                    )
 
                     with st.expander("Generated SPARQL", expanded=True):
                         st.code(result.sparql.strip(), language="sparql")

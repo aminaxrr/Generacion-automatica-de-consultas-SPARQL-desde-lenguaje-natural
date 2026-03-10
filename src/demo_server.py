@@ -80,50 +80,31 @@ HTML = """<!doctype html>
         <h3 style=\"margin:0 0 6px 0\">Settings</h3>
         <div class=\"row\">
           <div style=\"flex:1\">
-            <label>Backend</label>
-            <select id=\"backend\">
-              <option value=\"rules\">rules</option>
-              <option value=\"ollama\" selected>ollama</option>
-              <option value=\"openai_compat\">openai_compat</option>
-            </select>
-          </div>
-          <div style=\"flex:1\">
-            <label>Model</label>
-            <input id=\"model\" value=\"llama3.2:3b\" />
-          </div>
-        </div>
-
-        <div class=\"row\">
-          <div style=\"flex:1\">
             <label>LIMIT (if missing)</label>
             <input id=\"limit\" type=\"number\" value=\"200\" />
           </div>
           <div style=\"flex:1\">
-            <label>Timeout (s)</label>
-            <input id=\"timeout\" type=\"number\" value=\"30\" />
-          </div>
-          <div style=\"flex:1\">
-            <label>Retries</label>
-            <input id=\"retries\" type=\"number\" value=\"2\" />
+            <label>Match threshold</label>
+            <input id=\"threshold\" type=\"number\" step=\"0.01\" value=\"0.35\" />
           </div>
         </div>
-
-        <label><input id=\"rulesFirst\" type=\"checkbox\" /> Rules-first (catalog → LLM)</label>
-
-        <label>Few-shot JSONL (optional)</label>
+        <label>Catalog JSONL (optional)</label>
         <input id=\"examplesPath\" value=\"eval/text2sparql_examples.jsonl\" />
 
-        <label>Prompt file (system prompt)</label>
-        <input id=\"promptFile\" value=\"prompts/system_en.txt\" />
+        <label>Synonyms prompt file (optional)</label>
+        <input id=\"synonymsFile\" value=\"prompts/system_en.txt\" />
+
+        <label>Classifier model (optional)</label>
+        <input id=\"classifierModel\" value=\"models/catalog_nb_v1.json\" />
+
+        <label>Classifier min probability</label>
+        <input id=\"classifierMinProb\" type=\"number\" step=\"0.01\" value=\"0.60\" />
 
         <label>Max rows</label>
         <input id=\"rows\" type=\"number\" value=\"200\" />
 
         <div class=\"status\" style=\"margin-top:10px\">
-          Environment variables:
-          <pre><code>TEXT2SPARQL_OLLAMA_URL=http://localhost:11434/api/chat
-TEXT2SPARQL_OPENAI_BASE_URL=http://localhost:1234
-TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
+          Deterministic mode: no backend, no server.
         </div>
       </div>
 
@@ -234,14 +215,12 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     const payload = {
       question: el('question').value,
       execute: el('execute').checked,
-      backend: el('backend').value,
-      model: el('model').value,
       limit: Number(el('limit').value || 200),
-      timeout_s: Number(el('timeout').value || 30),
-      max_retries: Number(el('retries').value || 2),
-      rules_first: el('rulesFirst').checked,
+      match_threshold: Number(el('threshold').value || 0.35),
       examples_path: el('examplesPath').value,
-      prompt_file: el('promptFile').value,
+      synonyms_file: el('synonymsFile').value,
+      classifier_model_file: el('classifierModel').value,
+      classifier_min_prob: Number(el('classifierMinProb').value || 0.60),
       max_rows: Number(el('rows').value || 200),
     };
 
@@ -250,7 +229,9 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
       el('sparql').textContent = res.sparql;
       renderTable(res.result);
       const mode = (payload.execute ? 'run' : 'translate');
-      setStatus(`OK (${mode}) · backend=${res.backend_used} · attempts=${res.attempts} · ${res.elapsed_s.toFixed(2)}s`);
+      const mid = (res.matched_id || 'catalog');
+      const ms = (typeof res.match_score === 'number' ? res.match_score.toFixed(3) : 'n/a');
+      setStatus(`OK (${mode}) · match=${mid} · score=${ms} · attempts=${res.attempts} · ${res.elapsed_s.toFixed(2)}s`);
     } catch (e) {
       el('error').textContent = e.error || JSON.stringify(e, null, 2);
       if (e.trace) {
@@ -366,34 +347,33 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Missing 'question'"})
             return
 
-        backend = str(payload.get("backend") or "ollama")
-        model = str(payload.get("model") or "llama3.2:3b")
         execute = bool(payload.get("execute") if payload.get("execute") is not None else True)
         limit = int(payload.get("limit") or 200)
-        timeout_s = float(payload.get("timeout_s") or 30.0)
-        max_retries = int(payload.get("max_retries") or 2)
-        rules_first = bool(payload.get("rules_first") if payload.get("rules_first") is not None else False)
+        match_threshold = float(payload.get("match_threshold") or 0.35)
         examples_path = str(payload.get("examples_path") or "").strip() or None
-        prompt_file = str(payload.get("prompt_file") or "").strip() or None
+        synonyms_file = str(payload.get("synonyms_file") or "").strip() or None
+        classifier_model_file = str(payload.get("classifier_model_file") or "").strip() or None
+        classifier_min_prob = float(payload.get("classifier_min_prob") or 0.20)
         max_rows = int(payload.get("max_rows") or 200)
 
         if examples_path and not Path(examples_path).exists():
             examples_path = None
 
-        if prompt_file and not Path(prompt_file).exists():
-            prompt_file = None
+        if synonyms_file and not Path(synonyms_file).exists():
+          synonyms_file = None
+
+        if classifier_model_file and not Path(classifier_model_file).exists():
+          classifier_model_file = None
 
         start = time.perf_counter()
         try:
             g = state.ensure_graph()
             cfg = GenerationConfig(
-                backend=backend,
-                model=model,
-                max_retries=max_retries,
-                timeout_s=timeout_s,
                 limit=limit,
-                rules_first=rules_first,
-                prompt_file=prompt_file,
+                match_threshold=match_threshold,
+                synonyms_file=synonyms_file,
+                classifier_model_file=classifier_model_file,
+                classifier_min_prob=classifier_min_prob,
             )
 
             result: GenerationResult = generate_sparql(g, question, config=cfg, examples_path=examples_path)

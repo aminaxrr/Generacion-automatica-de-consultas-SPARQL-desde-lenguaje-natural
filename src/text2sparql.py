@@ -1,9 +1,7 @@
 import json
-import os
 import re
-import time
-import urllib.error
-import urllib.request
+import difflib
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -29,25 +27,41 @@ FORBIDDEN_KEYWORDS = (
 
 @dataclass(frozen=True)
 class GenerationConfig:
-    backend: str = "ollama"  # ollama | openai_compat | rules
-    model: str = "llama3.1"
-    max_retries: int = 2
-    timeout_s: float = 30.0
-    temperature: float = 0.1
     limit: int = 200
-    schema_max_items: int = 10
-    fewshot_max_examples: int = 3
-    ollama_num_predict: int = 400
-    rules_first: bool = False
-    prompt_file: str | None = None
+    match_threshold: float = 0.35
+    max_suggestions: int = 3
+    synonyms_file: str | None = None
+    classifier_model_file: str | None = None
+    classifier_min_prob: float = 0.60
 
 
 @dataclass(frozen=True)
 class GenerationResult:
     sparql: str
-    backend_used: str
     attempts: int
+    matched_nl: str | None = None
+    matched_id: str | None = None
+    match_score: float | None = None
     error: str | None = None
+
+
+@dataclass(frozen=True)
+class SynonymMap:
+    # normalized synonym phrase -> normalized canonical phrase
+    phrases: list[tuple[str, str]]
+    # normalized single token -> normalized canonical single token
+    words: dict[str, str]
+
+
+@dataclass(frozen=True)
+class NBModel:
+    version: int
+    classes: list[str]
+    vocab: dict[str, int]
+    log_prior: dict[str, float]
+    log_likelihood: dict[str, list[float]]
+    default_log_likelihood: dict[str, float]
+    class_example_nl: dict[str, str]
 
 
 def _read_jsonl(path: str) -> list[dict[str, Any]]:
@@ -98,10 +112,10 @@ def ensure_select_or_ask_only(sparql: str) -> None:
     upper = sparql.upper()
     for kw in FORBIDDEN_KEYWORDS:
         if re.search(rf"\b{re.escape(kw)}\b", upper):
-            raise ValueError(f"SPARQL no permitido: contiene '{kw}'")
+            raise ValueError(f"Forbidden SPARQL: contains '{kw}'")
 
     if not re.search(r"\b(SELECT|ASK)\b", upper):
-        raise ValueError("SPARQL no permitido: debe ser SELECT o ASK")
+        raise ValueError("Forbidden SPARQL: must be SELECT or ASK")
 
 
 def ensure_limit(sparql: str, limit: int) -> str:
@@ -116,6 +130,127 @@ def ensure_limit(sparql: str, limit: int) -> str:
         return s
 
     return s + f"\nLIMIT {int(limit)}\n"
+
+
+def _normalize_nl_basic(text: str) -> str:
+    s = text.lower()
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def _normalize_nl(text: str, synonyms: SynonymMap | None = None) -> str:
+    s = _normalize_nl_basic(text)
+    if not synonyms or not synonyms.phrases:
+        return s
+
+    padded = f" {s} "
+    # Replace longer phrases first (loader sorts by length).
+    for syn, canon in synonyms.phrases:
+        padded = padded.replace(f" {syn} ", f" {canon} ")
+    return re.sub(r"\s+", " ", padded).strip()
+
+
+_STOPWORDS = {
+    "a",
+    "an",
+    "the",
+    "which",
+    "what",
+    "how",
+    "many",
+    "are",
+    "there",
+    "do",
+    "does",
+    "did",
+    "not",
+    "have",
+    "has",
+    "any",
+    "associated",
+    "list",
+    "show",
+    "find",
+    "compute",
+    "give",
+    "me",
+    "from",
+    "in",
+    "on",
+    "of",
+    "for",
+    "to",
+    "by",
+    "with",
+    "at",
+    "least",
+    "one",
+    "more",
+    "than",
+    "and",
+    "or",
+    "their",
+    "its",
+    "without",
+    "missing",
+}
+
+
+def _token_set(text: str, synonyms: SynonymMap | None = None) -> set[str]:
+    s = _normalize_nl(text, synonyms=synonyms)
+    stop = {
+        *_STOPWORDS,
+    }
+    tokens: set[str] = set()
+    for t in s.split(" "):
+        if not t:
+            continue
+        # Cheap plural singularization for matching.
+        if len(t) > 3 and t.endswith("s") and not t.endswith("ss"):
+            t = t[:-1]
+        if synonyms and t in synonyms.words:
+            t = synonyms.words[t]
+        if t in stop:
+            continue
+        tokens.add(t)
+    return tokens
+
+
+def _token_counts(text: str, synonyms: SynonymMap | None = None) -> dict[str, int]:
+    # Similar to _token_set but keeps multiplicity for NB.
+    s = _normalize_nl(text, synonyms=synonyms)
+    counts: dict[str, int] = {}
+    for t in s.split(" "):
+        if not t:
+            continue
+        if len(t) > 3 and t.endswith("s") and not t.endswith("ss"):
+            t = t[:-1]
+        if synonyms and t in synonyms.words:
+            t = synonyms.words[t]
+        if t in _STOPWORDS:
+            continue
+        counts[t] = counts.get(t, 0) + 1
+    return counts
+
+
+def _jaccard(a: set[str], b: set[str]) -> float:
+    if not a and not b:
+        return 1.0
+    if not a or not b:
+        return 0.0
+    inter = len(a & b)
+    union = len(a | b)
+    return inter / union if union else 0.0
+
+
+def _similarity(a: str, b: str, synonyms: SynonymMap | None = None) -> float:
+    na = _normalize_nl(a, synonyms=synonyms)
+    nb = _normalize_nl(b, synonyms=synonyms)
+    seq = difflib.SequenceMatcher(None, na, nb).ratio()
+    jac = _jaccard(_token_set(na, synonyms=synonyms), _token_set(nb, synonyms=synonyms))
+    # Blend character-sequence similarity with token overlap.
+    return 0.40 * seq + 0.60 * jac
 
 
 def build_schema_summary(graph: Graph, max_items: int = 30) -> str:
@@ -158,136 +293,211 @@ def build_schema_summary(graph: Graph, max_items: int = 30) -> str:
     )
 
 
-def build_prompt(
-    question_es: str,
-    schema_summary: str,
-    examples: list[dict[str, Any]],
-    limit: int,
-    fewshot_max_examples: int,
-    system_prompt_override: str | None = None,
-) -> list[dict[str, str]]:
-    system = system_prompt_override or (
-        "You are a local 'Text2SPARQL' assistant for an RDF graph inspired by LOTAR P510. "
-        "Return ONLY one valid SPARQL query (no explanations) that answers the question in English.\n\n"
-        "STRICT RULES:\n"
-        "- Only SELECT or ASK is allowed.\n"
-        "- Include the required PREFIX declarations.\n"
-        "- Respect the traceability link-node model: p510:Satisfied_by / Verified_by / Validated_by / uses "
-        "point to a p510:Traceability_Link_Type node, and the real target is in p510:Link.\n"
-        "- Avoid problematic syntax: do NOT start lines with '!' and do not use '!EXISTS'. Prefer: FILTER NOT EXISTS { ... }.\n"
-        f"- If the query is SELECT and has no LIMIT, add LIMIT {limit}.\n"
-        "- Do not invent IRIs outside these typical prefixes: p510, rdf, foaf, ex.\n"
-        "- If you cannot answer exactly, produce the best safe approximation.\n"
-        "- Output format: a single ```sparql ...``` block\n"
-    )
-
-    fewshot_parts: list[str] = []
-    for ex in examples:
-        nl = ex.get("nl")
-        sp = ex.get("sparql")
-        if not isinstance(nl, str) or not isinstance(sp, str):
-            continue
-        fewshot_parts.append(f"Question: {nl}\nSPARQL:\n```sparql\n{sp.strip()}\n```\n")
-
-    user = (
-        f"{schema_summary}\n\n"
-        "FEW-SHOT EXAMPLES:\n"
-        + "\n".join(fewshot_parts[:fewshot_max_examples])
-        + "\n\n"
-        f"Question: {question_es}\n"
-        "SPARQL:\n"
-    )
-
-    return [
-        {"role": "system", "content": system},
-        {"role": "user", "content": user},
-    ]
-
-
-def _http_json(url: str, payload: dict[str, Any], timeout_s: float) -> dict[str, Any]:
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=data,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-    with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-        raw = resp.read().decode("utf-8")
-    return json.loads(raw)
-
-
-def ollama_chat(
-    messages: list[dict[str, str]],
-    model: str,
-    timeout_s: float,
-    temperature: float,
-    num_predict: int,
-) -> str:
-    # Ollama supports a chat API locally.
-    # https://github.com/ollama/ollama/blob/main/docs/api.md
-    url = os.environ.get("TEXT2SPARQL_OLLAMA_URL", "http://localhost:11434/api/chat")
-    payload = {
-        "model": model,
-        "messages": messages,
-        "stream": False,
-        "options": {"temperature": float(temperature), "num_predict": int(num_predict)},
-    }
-    obj = _http_json(url, payload, timeout_s=timeout_s)
-    msg = obj.get("message") or {}
-    content = msg.get("content")
-    if not isinstance(content, str):
-        raise RuntimeError("Respuesta inesperada de Ollama")
-    return content
-
-
-def openai_compat_chat(
-    messages: list[dict[str, str]],
-    model: str,
-    timeout_s: float,
-    temperature: float,
-) -> str:
-    base = os.environ.get("TEXT2SPARQL_OPENAI_BASE_URL", "http://localhost:1234")
-    api_key = os.environ.get("TEXT2SPARQL_OPENAI_API_KEY", "")
-    url = base.rstrip("/") + "/v1/chat/completions"
-
-    payload = {
-        "model": model,
-        "messages": messages,
-        "temperature": float(temperature),
-    }
-
-    data = json.dumps(payload).encode("utf-8")
-    headers = {"Content-Type": "application/json"}
-    if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
-
-    req = urllib.request.Request(url, data=data, headers=headers, method="POST")
-    with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-        raw = resp.read().decode("utf-8")
-    obj = json.loads(raw)
-
-    choices = obj.get("choices")
-    if not isinstance(choices, list) or not choices:
-        raise RuntimeError("Respuesta inesperada del servidor OpenAI-compatible")
-
-    msg = choices[0].get("message") or {}
-    content = msg.get("content")
-    if not isinstance(content, str):
-        raise RuntimeError("Respuesta inesperada del servidor OpenAI-compatible")
-
-    return content
-
-
 def validate_and_run(graph: Graph, sparql: str) -> Any:
     ensure_select_or_ask_only(sparql)
     return graph.query(sparql)
 
 
-def _load_prompt_file(path: str, limit: int) -> str:
-    text = Path(path).read_text(encoding="utf-8")
-    # Allow prompt templates to reference the LIMIT value.
-    return text.replace("{LIMIT}", str(int(limit)))
+def _extract_synonyms_block(text: str) -> str | None:
+    start = "### SYNONYMS START"
+    end = "### SYNONYMS END"
+    if start in text and end in text:
+        a = text.index(start) + len(start)
+        b = text.index(end)
+        if b > a:
+            return text[a:b]
+    return None
+
+
+def _load_synonyms_file(path: str) -> SynonymMap:
+    raw = Path(path).read_text(encoding="utf-8")
+    block = _extract_synonyms_block(raw)
+    if block is None:
+        # If markers are missing, assume the entire file is a synonyms file.
+        block = raw
+
+    phrases: list[tuple[str, str]] = []
+    words: dict[str, str] = {}
+
+    for line in block.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if ":" in line:
+            left, right = line.split(":", 1)
+        elif "=" in line:
+            left, right = line.split("=", 1)
+        else:
+            continue
+
+        canon = _normalize_nl_basic(left)
+        if not canon:
+            continue
+
+        syns = re.split(r"[,;|]", right)
+        for syn in syns:
+            syn = _normalize_nl_basic(syn)
+            if not syn or syn == canon:
+                continue
+            phrases.append((syn, canon))
+            if " " not in syn and " " not in canon:
+                words[syn] = canon
+
+    phrases.sort(key=lambda t: len(t[0]), reverse=True)
+    return SynonymMap(phrases=phrases, words=words)
+
+
+def _nb_train(
+    examples: list[dict[str, Any]],
+    synonyms: SynonymMap | None,
+    alpha: float = 1.0,
+) -> NBModel:
+    # Each example is treated as a class label = example id.
+    # This is intentionally simple and fully offline.
+    class_texts: list[tuple[str, str]] = []
+    for ex in examples:
+        ex_id = ex.get("id")
+        nl = ex.get("nl")
+        sp = ex.get("sparql")
+        if not isinstance(ex_id, str) or not ex_id.strip():
+            continue
+        if not isinstance(nl, str) or not nl.strip():
+            continue
+        if not isinstance(sp, str) or not sp.strip():
+            continue
+        class_texts.append((ex_id.strip(), nl.strip()))
+
+    if not class_texts:
+        raise ValueError("No trainable examples (need non-empty id, nl, sparql)")
+
+    classes = sorted({cid for cid, _ in class_texts})
+    class_counts: dict[str, int] = {c: 0 for c in classes}
+    token_counts_by_class: dict[str, dict[str, int]] = {c: {} for c in classes}
+    total_tokens_by_class: dict[str, int] = {c: 0 for c in classes}
+    class_example_nl: dict[str, str] = {}
+
+    vocab_set: set[str] = set()
+    for cid, text in class_texts:
+        class_counts[cid] += 1
+        if cid not in class_example_nl:
+            class_example_nl[cid] = text
+        counts = _token_counts(text, synonyms=synonyms)
+        for tok, n in counts.items():
+            vocab_set.add(tok)
+            token_counts_by_class[cid][tok] = token_counts_by_class[cid].get(tok, 0) + n
+            total_tokens_by_class[cid] += n
+
+    vocab = {tok: i for i, tok in enumerate(sorted(vocab_set))}
+    vsize = len(vocab)
+    total_docs = sum(class_counts.values())
+
+    log_prior: dict[str, float] = {}
+    log_likelihood: dict[str, list[float]] = {}
+    default_log_likelihood: dict[str, float] = {}
+
+    for c in classes:
+        log_prior[c] = math.log((class_counts[c] + alpha) / (total_docs + alpha * len(classes)))
+        denom = total_tokens_by_class[c] + alpha * vsize
+        default_log_likelihood[c] = math.log(alpha / denom)
+
+        arr = [default_log_likelihood[c]] * vsize
+        for tok, idx in vocab.items():
+            cnt = token_counts_by_class[c].get(tok, 0)
+            arr[idx] = math.log((cnt + alpha) / denom)
+        log_likelihood[c] = arr
+
+    return NBModel(
+        version=1,
+        classes=classes,
+        vocab=vocab,
+        log_prior=log_prior,
+        log_likelihood=log_likelihood,
+        default_log_likelihood=default_log_likelihood,
+        class_example_nl=class_example_nl,
+    )
+
+
+def nb_save(model: NBModel, path: str) -> None:
+    obj = {
+        "version": model.version,
+        "classes": model.classes,
+        "vocab": model.vocab,
+        "log_prior": model.log_prior,
+        "log_likelihood": model.log_likelihood,
+        "default_log_likelihood": model.default_log_likelihood,
+        "class_example_nl": model.class_example_nl,
+    }
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).write_text(json.dumps(obj, ensure_ascii=False), encoding="utf-8")
+
+
+def nb_load(path: str) -> NBModel:
+    obj = json.loads(Path(path).read_text(encoding="utf-8"))
+    return NBModel(
+        version=int(obj.get("version") or 1),
+        classes=list(obj.get("classes") or []),
+        vocab=dict(obj.get("vocab") or {}),
+        log_prior=dict(obj.get("log_prior") or {}),
+        log_likelihood=dict(obj.get("log_likelihood") or {}),
+        default_log_likelihood=dict(obj.get("default_log_likelihood") or {}),
+        class_example_nl=dict(obj.get("class_example_nl") or {}),
+    )
+
+
+def nb_predict(
+    model: NBModel,
+    text: str,
+    synonyms: SynonymMap | None,
+    top_k: int = 3,
+) -> list[tuple[str, float]]:
+    counts = _token_counts(text, synonyms=synonyms)
+    if not counts:
+        return []
+
+    scores: list[tuple[str, float]] = []
+    for c in model.classes:
+        lp = float(model.log_prior.get(c, -9999.0))
+        ll = model.log_likelihood.get(c)
+        if not isinstance(ll, list):
+            continue
+        s = lp
+        default_ll = float(model.default_log_likelihood.get(c, -20.0))
+        for tok, n in counts.items():
+            idx = model.vocab.get(tok)
+            if idx is None:
+                s += n * default_ll
+            else:
+                s += n * float(ll[idx])
+        scores.append((c, s))
+
+    scores.sort(key=lambda t: t[1], reverse=True)
+    scores = scores[: max(1, int(top_k))]
+
+    # Convert log-scores to normalized probabilities (softmax).
+    max_s = max(s for _, s in scores)
+    exps = [(c, math.exp(s - max_s)) for c, s in scores]
+    z = sum(v for _, v in exps) or 1.0
+    return [(c, v / z) for c, v in exps]
+
+
+def _best_catalog_match(
+    question: str,
+    examples: list[dict[str, Any]],
+    synonyms: SynonymMap | None,
+) -> tuple[dict[str, Any] | None, float, list[tuple[dict[str, Any], float]]]:
+    scored: list[tuple[dict[str, Any], float]] = []
+    for ex in examples:
+        nl = ex.get("nl")
+        sp = ex.get("sparql")
+        if not isinstance(nl, str) or not isinstance(sp, str) or not sp.strip():
+            continue
+        score = _similarity(question, nl, synonyms=synonyms)
+        scored.append((ex, score))
+
+    scored.sort(key=lambda t: t[1], reverse=True)
+    best_ex = scored[0][0] if scored else None
+    best_score = float(scored[0][1]) if scored else 0.0
+    return best_ex, best_score, scored
 
 
 def generate_sparql(
@@ -297,111 +507,117 @@ def generate_sparql(
     examples_path: str | None = None,
     examples: list[dict[str, Any]] | None = None,
 ) -> GenerationResult:
-    schema = build_schema_summary(graph, max_items=config.schema_max_items)
     if examples is None:
         examples = _read_jsonl(examples_path) if examples_path else []
+    if not isinstance(question_es, str) or not question_es.strip():
+        raise ValueError("Missing question")
 
-    system_prompt_override: str | None = None
-    if config.prompt_file:
+    if not examples:
+        raise ValueError(
+            "No examples loaded. Provide --examples (JSONL) with 'nl' and 'sparql' fields to enable catalog matching."
+        )
+
+    synonyms: SynonymMap | None = None
+    synonyms_path: str | None = config.synonyms_file
+    if synonyms_path is None:
+        default_prompt = Path("prompts") / "system_en.txt"
+        if default_prompt.exists():
+            synonyms_path = str(default_prompt)
+    if synonyms_path:
         try:
-            p = Path(config.prompt_file)
+            p = Path(synonyms_path)
             if p.exists():
-                system_prompt_override = _load_prompt_file(str(p), limit=config.limit)
+                synonyms = _load_synonyms_file(str(p))
         except Exception:
-            system_prompt_override = None
+            synonyms = None
 
-    last_error: str | None = None
-    sparql_candidate: str | None = None
-
-    # Hybrid shortcut: if the baseline rule parser can map the question to an existing
-    # query, prefer it. This matches real-world Text2Cypher-style systems where a
-    # catalog is used when possible, and LLM generation is a fallback.
-    if config.backend != "rules" and config.rules_first:
+    # Optional offline classifier: predict the best catalog id.
+    clf_preds: list[tuple[str, float]] = []
+    clf_best_ex: dict[str, Any] | None = None
+    clf_best_prob: float | None = None
+    clf_path = (config.classifier_model_file or "").strip() if config else ""
+    if clf_path:
         try:
-            from nl2sparql import parse_english_question
-            from nl2sparql_cli import build_query
-
-            parsed = parse_english_question(question_es)
-            sparql_candidate = build_query(parsed, "queries_p510")
-            sparql_candidate = ensure_limit(sparql_candidate, config.limit)
-            validate_and_run(graph, sparql_candidate)
-            return GenerationResult(
-                sparql=sparql_candidate,
-                backend_used="rules_first",
-                attempts=1,
-                error=None,
-            )
+            mp = Path(clf_path)
+            if mp.exists():
+                model = nb_load(str(mp))
+                clf_preds = nb_predict(model, question_es, synonyms=synonyms, top_k=3)
+                if clf_preds:
+                    best_id, best_prob = clf_preds[0]
+                    if float(best_prob) >= float(config.classifier_min_prob):
+                        for ex in examples:
+                            ex_id = ex.get("id")
+                            sp = ex.get("sparql")
+                            if ex_id == best_id and isinstance(sp, str) and sp.strip():
+                                clf_best_ex = ex
+                                clf_best_prob = float(best_prob)
+                                break
         except Exception:
-            sparql_candidate = None
+            clf_preds = []
+            clf_best_ex = None
+            clf_best_prob = None
 
-    for attempt in range(1, config.max_retries + 2):
-        if config.backend == "rules":
-            # Reuse the reproducible baseline.
-            from nl2sparql import parse_english_question
-            from nl2sparql_cli import build_query
+    if clf_best_ex is not None and clf_best_prob is not None:
+        sparql = str(clf_best_ex.get("sparql") or "").strip()
+        sparql = ensure_limit(sparql, config.limit)
+        validate_and_run(graph, sparql)
 
-            parsed = parse_english_question(question_es)
-            sparql_candidate = build_query(parsed, "queries_p510")
-        else:
-            messages = build_prompt(
-                question_es,
-                schema,
-                examples,
-                limit=config.limit,
-                fewshot_max_examples=config.fewshot_max_examples,
-                system_prompt_override=system_prompt_override,
-            )
+        matched_nl = clf_best_ex.get("nl") if isinstance(clf_best_ex.get("nl"), str) else None
+        matched_id = clf_best_ex.get("id") if isinstance(clf_best_ex.get("id"), str) else None
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_nl=matched_nl,
+            matched_id=matched_id,
+            match_score=float(clf_best_prob),
+            error=None,
+        )
 
-            if last_error and sparql_candidate:
-                messages.append(
-                    {
-                        "role": "user",
-                        "content": (
-                            "The previous query failed to validate/execute. "
-                            "Fix ONLY the SPARQL.\n\n"
-                            f"Error: {last_error}\n\n"
-                            f"Previous SPARQL:\n```sparql\n{_shorten(sparql_candidate, 3000)}\n```\n"
-                        ),
-                    }
-                )
+    best_ex, best_score, scored = _best_catalog_match(question_es, examples, synonyms=synonyms)
+    if best_ex is None:
+        raise ValueError("No usable examples found (need 'nl' and non-empty 'sparql').")
 
-            try:
-                if config.backend == "ollama":
-                    raw = ollama_chat(
-                        messages=messages,
-                        model=config.model,
-                        timeout_s=config.timeout_s,
-                        temperature=config.temperature,
-                        num_predict=config.ollama_num_predict,
-                    )
-                elif config.backend == "openai_compat":
-                    raw = openai_compat_chat(
-                        messages=messages,
-                        model=config.model,
-                        timeout_s=config.timeout_s,
-                        temperature=config.temperature,
-                    )
-                else:
-                    raise ValueError(f"Unknown backend: {config.backend}")
+    if best_score < float(config.match_threshold):
+        suggestions = []
+        for ex, score in scored[: int(config.max_suggestions)]:
+            nl = ex.get("nl")
+            ex_id = ex.get("id")
+            if isinstance(nl, str):
+                prefix = f"[{ex_id}] " if isinstance(ex_id, str) and ex_id else ""
+                suggestions.append(f"- {prefix}{nl} (score={score:.3f})")
+        hint = "\n".join(suggestions) if suggestions else "(no suggestions)"
 
-                sparql_candidate = extract_sparql(raw)
-            except (urllib.error.URLError, TimeoutError) as e:
-                last_error = f"Backend/network error: {e}"
-                continue
+        clf_hint = ""
+        if clf_preds:
+            rows = []
+            for cid, prob in clf_preds:
+                ex_nl = None
+                for ex in examples:
+                    if ex.get("id") == cid and isinstance(ex.get("nl"), str):
+                        ex_nl = ex.get("nl")
+                        break
+                label = ex_nl or cid
+                rows.append(f"- [{cid}] {label} (prob={prob:.3f})")
+            clf_hint = "\n\nClassifier top predictions:\n" + "\n".join(rows)
 
-        try:
-            if sparql_candidate is None:
-                raise RuntimeError("No query was generated")
-            sparql_candidate = ensure_limit(sparql_candidate, config.limit)
-            validate_and_run(graph, sparql_candidate)
-            return GenerationResult(
-                sparql=sparql_candidate,
-                backend_used=config.backend,
-                attempts=attempt,
-                error=None,
-            )
-        except Exception as e:  # noqa: BLE001 - surface error to retry loop
-            last_error = str(e)
-            time.sleep(0.1)
+        raise ValueError(
+            "Could not map the question to a known query in the catalog. "
+            "Add a new example to eval/text2sparql_examples.jsonl or rephrase.\n\n"
+            f"Top matches:\n{hint}{clf_hint}"
+        )
 
-    raise RuntimeError(f"Failed to generate valid SPARQL after retries. Last error: {last_error}")
+    sparql = str(best_ex.get("sparql") or "").strip()
+    sparql = ensure_limit(sparql, config.limit)
+    validate_and_run(graph, sparql)
+
+    matched_nl = best_ex.get("nl") if isinstance(best_ex.get("nl"), str) else None
+    matched_id = best_ex.get("id") if isinstance(best_ex.get("id"), str) else None
+
+    return GenerationResult(
+        sparql=sparql,
+        attempts=1,
+        matched_nl=matched_nl,
+        matched_id=matched_id,
+        match_score=float(best_score),
+        error=None,
+    )

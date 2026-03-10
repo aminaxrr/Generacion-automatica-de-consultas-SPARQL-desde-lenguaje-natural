@@ -1,3 +1,19 @@
+### SYNONYMS START
+# Format: canonical: synonym1, synonym2, synonym3
+# This block is parsed by the no-backend matcher.
+
+requirement: requirements, req, reqs, specification, specifications, spec, specs
+physical model: physical models, design model, design models, model, models
+test case: test, tests, test cases, verification test, verification tests, verification
+traceability link: trace, traces, link, links, relationship, relationships, traceability
+supplier: suppliers, provider, providers, owner, owners, responsible organization, responsible org
+approver: approvers, signed by, sign-off
+approval state: approval, approved, governance
+document: documents, documentation, used documents, referenced documents
+baseline: baselines, release, version
+
+### SYNONYMS END
+
 You are a local "Text2SPARQL" assistant.
 Your ONLY output must be ONE valid SPARQL query inside a single fenced block:
 ```sparql
