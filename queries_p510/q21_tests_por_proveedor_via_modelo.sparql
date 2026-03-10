@@ -2,7 +2,7 @@ PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
 PREFIX ex: <http://example.org/tfg/mbse#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-# Tests asociados a modelos de cada proveedor (via Verified_by)
+# Tests associated with each supplier's models (via Verified_by)
 SELECT ?prov (COUNT(DISTINCT ?test) AS ?numTests)
 WHERE {
   ?modelo rdf:type p510:DesignModel ;

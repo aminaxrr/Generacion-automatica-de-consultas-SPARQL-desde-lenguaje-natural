@@ -47,29 +47,29 @@ HTML = """<!doctype html>
 </head>
 <body>
   <div class=\"wrap\">
-    <h1>Text2SPARQL offline — demo visual</h1>
-    <div class=\"sub\">Pregunta en español → SPARQL → ejecución sobre grafo RDF P510-like (local)</div>
+    <h1>Text2SPARQL offline — visual demo</h1>
+    <div class=\"sub\">English question → SPARQL → execution over a local P510-like RDF graph</div>
 
     <div class=\"grid\">
       <div class=\"card\">
-        <h3 style=\"margin:0 0 6px 0\">Pregunta</h3>
-        <label>Ejemplos rápidos</label>
+        <h3 style=\"margin:0 0 6px 0\">Question</h3>
+        <label>Quick examples</label>
         <select id=\"examples\">
-          <option value=\"requisitos sin trazabilidad end to end\">requisitos sin trazabilidad end to end</option>
-          <option value=\"auditoría links duplicados\">auditoría links duplicados</option>
-          <option value=\"modelos sin test\">modelos sin test</option>
-          <option value=\"cuántos proveedores hay\">cuántos proveedores hay</option>
-          <option value=\"documentos usados\">documentos usados</option>
+          <option value=\"requirements without end-to-end traceability\">requirements without end-to-end traceability</option>
+          <option value=\"audit duplicate links\">audit duplicate links</option>
+          <option value=\"physical models without tests\">physical models without tests</option>
+          <option value=\"how many suppliers are there\">how many suppliers are there</option>
+          <option value=\"used documents\">used documents</option>
         </select>
 
-        <label>Pregunta (NL)</label>
+        <label>Question (NL)</label>
         <textarea id=\"question\" spellcheck=\"false\"></textarea>
 
-        <label><input id=\"execute\" type=\"checkbox\" checked /> Ejecutar sobre el grafo (si no, solo traducir)</label>
+        <label><input id=\"execute\" type=\"checkbox\" checked /> Execute on graph (otherwise translate only)</label>
 
         <div class=\"row\" style=\"margin-top:10px\">
-          <button id=\"run\">Generar</button>
-          <button class=\"secondary\" id=\"regen\">Regenerar grafo</button>
+          <button id=\"run\">Generate</button>
+          <button class=\"secondary\" id=\"regen\">Regenerate graph</button>
           <span class=\"status\" id=\"status\"></span>
         </div>
 
@@ -77,7 +77,7 @@ HTML = """<!doctype html>
       </div>
 
       <div class=\"card\">
-        <h3 style=\"margin:0 0 6px 0\">Configuración</h3>
+        <h3 style=\"margin:0 0 6px 0\">Settings</h3>
         <div class=\"row\">
           <div style=\"flex:1\">
             <label>Backend</label>
@@ -88,14 +88,14 @@ HTML = """<!doctype html>
             </select>
           </div>
           <div style=\"flex:1\">
-            <label>Modelo</label>
+            <label>Model</label>
             <input id=\"model\" value=\"llama3.2:3b\" />
           </div>
         </div>
 
         <div class=\"row\">
           <div style=\"flex:1\">
-            <label>LIMIT (si falta)</label>
+            <label>LIMIT (if missing)</label>
             <input id=\"limit\" type=\"number\" value=\"200\" />
           </div>
           <div style=\"flex:1\">
@@ -103,24 +103,24 @@ HTML = """<!doctype html>
             <input id=\"timeout\" type=\"number\" value=\"30\" />
           </div>
           <div style=\"flex:1\">
-            <label>Reintentos</label>
+            <label>Retries</label>
             <input id=\"retries\" type=\"number\" value=\"2\" />
           </div>
         </div>
 
-        <label><input id=\"rulesFirst\" type=\"checkbox\" checked /> Rules-first (catálogo → LLM)</label>
+        <label><input id=\"rulesFirst\" type=\"checkbox\" /> Rules-first (catalog → LLM)</label>
 
-        <label>Few-shot JSONL (opcional)</label>
+        <label>Few-shot JSONL (optional)</label>
         <input id=\"examplesPath\" value=\"eval/text2sparql_examples.jsonl\" />
 
         <label>Prompt file (system prompt)</label>
-        <input id=\"promptFile\" value=\"prompts/system_es.txt\" />
+        <input id=\"promptFile\" value=\"prompts/system_en.txt\" />
 
-        <label>Filas máx</label>
+        <label>Max rows</label>
         <input id=\"rows\" type=\"number\" value=\"200\" />
 
         <div class=\"status\" style=\"margin-top:10px\">
-          Variables de entorno:
+          Environment variables:
           <pre><code>TEXT2SPARQL_OLLAMA_URL=http://localhost:11434/api/chat
 TEXT2SPARQL_OPENAI_BASE_URL=http://localhost:1234
 TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
@@ -128,15 +128,15 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
       </div>
 
       <div class=\"card\" style=\"grid-column: 1 / -1\">
-        <h3 style=\"margin:0 0 6px 0\">SPARQL generada</h3>
+        <h3 style=\"margin:0 0 6px 0\">Generated SPARQL</h3>
         <pre><code id=\"sparql\"></code></pre>
       </div>
 
       <div class=\"card\" style=\"grid-column: 1 / -1\">
-        <h3 style=\"margin:0 0 6px 0\">Resultados</h3>
+        <h3 style=\"margin:0 0 6px 0\">Results</h3>
         <div id=\"error\" class=\"error\"></div>
         <details id=\"traceBox\" style=\"margin-top:10px; display:none\">
-          <summary class=\"status\">Detalles técnicos (trace)</summary>
+          <summary class=\"status\">Technical details (trace)</summary>
           <pre class=\"error\"><code id=\"trace\"></code></pre>
         </details>
         <div id=\"table\"></div>
@@ -154,7 +154,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     tableDiv.innerHTML = '';
 
     if (obj === null || obj === undefined) {
-      tableDiv.innerHTML = `<div class="status">(solo traducción)</div>`;
+      tableDiv.innerHTML = `<div class="status">(translate-only)</div>`;
       return;
     }
 
@@ -167,7 +167,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     const rows = obj.rows || [];
 
     if (!cols.length) {
-      tableDiv.innerHTML = `<div class="status">(sin columnas)</div>`;
+      tableDiv.innerHTML = `<div class="status">(no columns)</div>`;
       return;
     }
 
@@ -176,7 +176,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     html += '</tr></thead><tbody>';
 
     if (!rows.length) {
-      html += `<tr><td colspan="${cols.length}" class="status">(sin resultados)</td></tr>`;
+      html += `<tr><td colspan="${cols.length}" class="status">(no results)</td></tr>`;
     } else {
       for (const r of rows) {
         html += '<tr>';
@@ -193,7 +193,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const text = await resp.text();
     let data;
-    try { data = JSON.parse(text); } catch { data = { error: 'Respuesta no-JSON del servidor', raw: text }; }
+    try { data = JSON.parse(text); } catch { data = { error: 'Server returned non-JSON response', raw: text }; }
     if (!resp.ok) throw data;
     return data;
   }
@@ -212,10 +212,10 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
 
   el('regen').addEventListener('click', async () => {
     el('error').textContent = '';
-    setStatus('Regenerando grafo...');
+    setStatus('Regenerating graph...');
     try {
       const info = await postJson('/api/generate', {});
-      setStatus(`Grafo regenerado (${info.ttl_path})`);
+      setStatus(`Graph regenerated (${info.ttl_path})`);
     } catch (e) {
       el('error').textContent = e.error || JSON.stringify(e, null, 2);
       setStatus('Error');
@@ -229,7 +229,7 @@ TEXT2SPARQL_OPENAI_API_KEY=</code></pre>
     el('sparql').textContent = '';
     el('table').innerHTML = '';
 
-    setStatus('Generando/ejecutando...');
+    setStatus('Generating/running...');
 
     const payload = {
       question: el('question').value,
@@ -344,7 +344,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             payload = json.loads(raw.decode("utf-8")) if raw else {}
         except Exception:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "JSON inválido"})
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Invalid JSON"})
             return
 
         state: AppState = self.server.state  # type: ignore[attr-defined]
@@ -363,7 +363,7 @@ class Handler(BaseHTTPRequestHandler):
 
         question = str(payload.get("question") or "").strip()
         if not question:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Falta 'question'"})
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Missing 'question'"})
             return
 
         backend = str(payload.get("backend") or "ollama")
@@ -372,7 +372,7 @@ class Handler(BaseHTTPRequestHandler):
         limit = int(payload.get("limit") or 200)
         timeout_s = float(payload.get("timeout_s") or 30.0)
         max_retries = int(payload.get("max_retries") or 2)
-        rules_first = bool(payload.get("rules_first") if payload.get("rules_first") is not None else True)
+        rules_first = bool(payload.get("rules_first") if payload.get("rules_first") is not None else False)
         examples_path = str(payload.get("examples_path") or "").strip() or None
         prompt_file = str(payload.get("prompt_file") or "").strip() or None
         max_rows = int(payload.get("max_rows") or 200)
@@ -405,7 +405,7 @@ class Handler(BaseHTTPRequestHandler):
                 {
                     **asdict(result),
                     "elapsed_s": elapsed,
-                  "result": _query_result_to_json(qres, max_rows=max_rows) if qres is not None else None,
+                    "result": _query_result_to_json(qres, max_rows=max_rows) if qres is not None else None,
                 },
             )
         except Exception as e:  # noqa: BLE001

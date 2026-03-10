@@ -53,22 +53,22 @@ def main() -> None:
     st.set_page_config(page_title="TFG · Text2SPARQL (offline)", layout="wide")
 
     st.title("Text2SPARQL offline (demo visual)")
-    st.caption("Pregunta en español → SPARQL → ejecución sobre el grafo RDF P510-like")
+    st.caption("English question → SPARQL → execution over the P510-like RDF graph")
 
     with st.sidebar:
-        st.header("Datos")
+        st.header("Data")
         default_ttl = os.path.join("data", "p510_sintetico.ttl")
-        ttl_path = st.text_input("Ruta TTL", value=default_ttl)
+        ttl_path = st.text_input("TTL path", value=default_ttl)
 
         col_gen_a, col_gen_b = st.columns(2)
         with col_gen_a:
-            n_req = st.number_input("#Req", min_value=5, max_value=500, value=50, step=5)
-            n_models = st.number_input("#Modelos", min_value=5, max_value=500, value=30, step=5)
+            n_req = st.number_input("#Requirements", min_value=5, max_value=500, value=50, step=5)
+            n_models = st.number_input("#Models", min_value=5, max_value=500, value=30, step=5)
         with col_gen_b:
             n_tests = st.number_input("#Tests", min_value=1, max_value=500, value=20, step=5)
-            n_suppliers = st.number_input("#Proveedores", min_value=1, max_value=50, value=6, step=1)
+            n_suppliers = st.number_input("#Suppliers", min_value=1, max_value=50, value=6, step=1)
 
-        if st.button("Generar/Regenerar grafo", use_container_width=True):
+        if st.button("Generate/regenerate graph", use_container_width=True):
             out = generar_grafo_p510(
                 out_path=ttl_path,
                 n_requisitos=int(n_req),
@@ -76,16 +76,16 @@ def main() -> None:
                 n_tests=int(n_tests),
                 n_proveedores=int(n_suppliers),
             )
-            st.success(f"Generado: {out}")
+            st.success(f"Generated: {out}")
             st.cache_resource.clear()
 
         st.divider()
 
         st.header("Backend")
         backend = st.selectbox("Backend", options=["rules", "ollama", "openai_compat"], index=1)
-        model = st.text_input("Modelo", value="llama3.2:3b" if backend == "ollama" else "llama3.1")
+        model = st.text_input("Model", value="llama3.2:3b" if backend == "ollama" else "llama3.1")
 
-        st.caption("Variables de entorno útiles")
+        st.caption("Useful environment variables")
         st.code(
             "\n".join(
                 [
@@ -98,46 +98,46 @@ def main() -> None:
 
         st.divider()
 
-        st.header("Generación")
+        st.header("Generation")
         examples_path = st.text_input("Few-shot JSONL", value=os.path.join("eval", "text2sparql_examples.jsonl"))
-        rules_first = st.checkbox("Rules-first (catálogo → LLM)", value=True)
-        max_retries = st.number_input("Reintentos", min_value=0, max_value=5, value=2, step=1)
+        rules_first = st.checkbox("Rules-first (catalog → LLM)", value=False)
+        max_retries = st.number_input("Retries", min_value=0, max_value=5, value=2, step=1)
         timeout_s = st.number_input("Timeout backend (s)", min_value=1.0, max_value=600.0, value=30.0, step=5.0)
-        temperature = st.number_input("Temperatura", min_value=0.0, max_value=2.0, value=0.1, step=0.05)
-        limit = st.number_input("LIMIT (si falta)", min_value=1, max_value=5000, value=200, step=50)
+        temperature = st.number_input("Temperature", min_value=0.0, max_value=2.0, value=0.1, step=0.05)
+        limit = st.number_input("LIMIT (if missing)", min_value=1, max_value=5000, value=200, step=50)
 
         st.divider()
 
-        st.header("Ejecución")
-        max_rows = st.number_input("Filas máx", min_value=1, max_value=5000, value=200, step=50)
+        st.header("Execution")
+        max_rows = st.number_input("Max rows", min_value=1, max_value=5000, value=200, step=50)
 
     left, right = st.columns([1, 1])
 
     with left:
-        st.subheader("Pregunta")
+        st.subheader("Question")
         question = st.text_area(
             "",
-            value="requisitos sin trazabilidad end to end",
+            value="requirements missing end-to-end traceability",
             height=120,
-            placeholder="Ej: 'modelos sin test' o 'auditoría links duplicados'",
+            placeholder="E.g. 'models without tests' or 'audit duplicate links'",
         )
 
-        run = st.button("Generar y ejecutar", type="primary", use_container_width=True)
+        run = st.button("Generate and run", type="primary", use_container_width=True)
 
-        st.subheader("Grafo")
+        st.subheader("Graph")
         if not Path(ttl_path).exists():
-            st.warning("No existe el TTL. Pulsa 'Generar/Regenerar grafo' en la barra lateral.")
+            st.warning("TTL not found. Click 'Generate/regenerate graph' in the sidebar.")
         else:
             st.info(f"TTL: {ttl_path}")
 
     with right:
-        st.subheader("Resultado")
+        st.subheader("Results")
 
         if run:
             if not Path(ttl_path).exists():
-                st.error("No existe el TTL. Genera el grafo primero.")
+                st.error("TTL not found. Generate the graph first.")
             elif not question.strip():
-                st.error("Escribe una pregunta en español.")
+                st.error("Write a question in English.")
             else:
                 start = time.perf_counter()
                 try:
@@ -159,18 +159,18 @@ def main() -> None:
                     elapsed = time.perf_counter() - start
                     st.success(f"OK · backend={result.backend_used} · attempts={result.attempts} · {elapsed:.2f}s")
 
-                    with st.expander("SPARQL generada", expanded=True):
+                    with st.expander("Generated SPARQL", expanded=True):
                         st.code(result.sparql.strip(), language="sparql")
 
                     qres = g.query(result.sparql)
                     df = _result_to_df(qres, max_rows=int(max_rows))
 
-                    with st.expander("Resultados", expanded=True):
+                    with st.expander("Query results", expanded=True):
                         st.dataframe(df, use_container_width=True)
 
                 except Exception as e:  # noqa: BLE001
                     elapsed = time.perf_counter() - start
-                    st.error(f"Fallo tras {elapsed:.2f}s: {e}")
+                    st.error(f"Failed after {elapsed:.2f}s: {e}")
 
 
 if __name__ == "__main__":

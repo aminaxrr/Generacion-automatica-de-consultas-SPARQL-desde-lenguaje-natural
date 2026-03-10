@@ -1,6 +1,6 @@
 PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
 
-# Misma traza repetida: mismo source + predicate + target en más de un link-node
+# Duplicate trace: same source + predicate + target in more than one link-node
 SELECT ?src ?pred ?target (COUNT(DISTINCT ?link) AS ?numLinks)
 WHERE {
   VALUES ?pred { p510:Satisfied_by p510:Verified_by p510:Validated_by p510:uses }

@@ -38,7 +38,7 @@ class GenerationConfig:
     schema_max_items: int = 10
     fewshot_max_examples: int = 3
     ollama_num_predict: int = 400
-    rules_first: bool = True
+    rules_first: bool = False
     prompt_file: str | None = None
 
 
@@ -148,12 +148,12 @@ def build_schema_summary(graph: Graph, max_items: int = 30) -> str:
         return "\n".join([f"- {k} ({v})" for k, v in items])
 
     return (
-        "RESUMEN DEL ESQUEMA/DATOS (extraído del grafo actual)\n"
-        "\nCLASES (rdf:type) más frecuentes:\n"
+        "SCHEMA/DATA SUMMARY (extracted from the current graph)\n"
+        "\nMost frequent CLASSES (rdf:type):\n"
         f"{fmt(top_types)}\n"
-        "\nPROPIEDADES (predicados) más frecuentes:\n"
+        "\nMost frequent PROPERTIES (predicates):\n"
         f"{fmt(top_preds)}\n"
-        "\nVALORES comunes de p510:ContentType:\n"
+        "\nCommon values for p510:ContentType:\n"
         f"{fmt(top_ct)}\n"
     )
 
@@ -167,18 +167,18 @@ def build_prompt(
     system_prompt_override: str | None = None,
 ) -> list[dict[str, str]]:
     system = system_prompt_override or (
-        "Eres un asistente local 'Text2SPARQL' para un grafo RDF inspirado en LOTAR P510. "
-        "Devuelves SOLO una consulta SPARQL válida (sin explicaciones) que responda a la pregunta en español.\n\n"
-        "REGLAS ESTRICTAS:\n"
-        "- Solo se permite SELECT o ASK.\n"
-        "- Incluye PREFIX necesarios.\n"
-        "- Respeta el modelo de trazabilidad por nodo-enlace: p510:Satisfied_by / Verified_by / Validated_by / uses "
-        "apuntan a un nodo p510:Traceability_Link_Type, y el destino real está en p510:Link.\n"
-        "- Evita sintaxis problemática: NO empieces líneas con '!' ni uses '!EXISTS'. Prefiere: FILTER NOT EXISTS { ... }.\n"
-        f"- Si la consulta es SELECT y no tiene LIMIT, añade LIMIT {limit}.\n"
-        "- No inventes IRIs fuera de estos prefijos típicos: p510, rdf, foaf, ex.\n"
-        "- Si no puedes responder con exactitud, produce la mejor aproximación segura y explícita.\n"
-        "- Formato de salida: un único bloque ```sparql ...```\n"
+        "You are a local 'Text2SPARQL' assistant for an RDF graph inspired by LOTAR P510. "
+        "Return ONLY one valid SPARQL query (no explanations) that answers the question in English.\n\n"
+        "STRICT RULES:\n"
+        "- Only SELECT or ASK is allowed.\n"
+        "- Include the required PREFIX declarations.\n"
+        "- Respect the traceability link-node model: p510:Satisfied_by / Verified_by / Validated_by / uses "
+        "point to a p510:Traceability_Link_Type node, and the real target is in p510:Link.\n"
+        "- Avoid problematic syntax: do NOT start lines with '!' and do not use '!EXISTS'. Prefer: FILTER NOT EXISTS { ... }.\n"
+        f"- If the query is SELECT and has no LIMIT, add LIMIT {limit}.\n"
+        "- Do not invent IRIs outside these typical prefixes: p510, rdf, foaf, ex.\n"
+        "- If you cannot answer exactly, produce the best safe approximation.\n"
+        "- Output format: a single ```sparql ...``` block\n"
     )
 
     fewshot_parts: list[str] = []
@@ -187,14 +187,14 @@ def build_prompt(
         sp = ex.get("sparql")
         if not isinstance(nl, str) or not isinstance(sp, str):
             continue
-        fewshot_parts.append(f"Pregunta: {nl}\nSPARQL:\n```sparql\n{sp.strip()}\n```\n")
+        fewshot_parts.append(f"Question: {nl}\nSPARQL:\n```sparql\n{sp.strip()}\n```\n")
 
     user = (
         f"{schema_summary}\n\n"
-        "EJEMPLOS (few-shot):\n"
+        "FEW-SHOT EXAMPLES:\n"
         + "\n".join(fewshot_parts[:fewshot_max_examples])
         + "\n\n"
-        f"Pregunta: {question_es}\n"
+        f"Question: {question_es}\n"
         "SPARQL:\n"
     )
 
@@ -318,10 +318,10 @@ def generate_sparql(
     # catalog is used when possible, and LLM generation is a fallback.
     if config.backend != "rules" and config.rules_first:
         try:
-            from nl2sparql import parse_spanish_question
+            from nl2sparql import parse_english_question
             from nl2sparql_cli import build_query
 
-            parsed = parse_spanish_question(question_es)
+            parsed = parse_english_question(question_es)
             sparql_candidate = build_query(parsed, "queries_p510")
             sparql_candidate = ensure_limit(sparql_candidate, config.limit)
             validate_and_run(graph, sparql_candidate)
@@ -337,10 +337,10 @@ def generate_sparql(
     for attempt in range(1, config.max_retries + 2):
         if config.backend == "rules":
             # Reuse the reproducible baseline.
-            from nl2sparql import parse_spanish_question
+            from nl2sparql import parse_english_question
             from nl2sparql_cli import build_query
 
-            parsed = parse_spanish_question(question_es)
+            parsed = parse_english_question(question_es)
             sparql_candidate = build_query(parsed, "queries_p510")
         else:
             messages = build_prompt(
@@ -357,10 +357,10 @@ def generate_sparql(
                     {
                         "role": "user",
                         "content": (
-                            "La consulta anterior dio error al validar/ejecutar. "
-                            "Corrige SOLO la SPARQL.\n\n"
+                            "The previous query failed to validate/execute. "
+                            "Fix ONLY the SPARQL.\n\n"
                             f"Error: {last_error}\n\n"
-                            f"SPARQL previa:\n```sparql\n{_shorten(sparql_candidate, 3000)}\n```\n"
+                            f"Previous SPARQL:\n```sparql\n{_shorten(sparql_candidate, 3000)}\n```\n"
                         ),
                     }
                 )
@@ -382,16 +382,16 @@ def generate_sparql(
                         temperature=config.temperature,
                     )
                 else:
-                    raise ValueError(f"Backend desconocido: {config.backend}")
+                    raise ValueError(f"Unknown backend: {config.backend}")
 
                 sparql_candidate = extract_sparql(raw)
             except (urllib.error.URLError, TimeoutError) as e:
-                last_error = f"Error de red/backend: {e}"
+                last_error = f"Backend/network error: {e}"
                 continue
 
         try:
             if sparql_candidate is None:
-                raise RuntimeError("No se generó ninguna consulta")
+                raise RuntimeError("No query was generated")
             sparql_candidate = ensure_limit(sparql_candidate, config.limit)
             validate_and_run(graph, sparql_candidate)
             return GenerationResult(
@@ -404,4 +404,4 @@ def generate_sparql(
             last_error = str(e)
             time.sleep(0.1)
 
-    raise RuntimeError(f"No se pudo generar SPARQL válida tras reintentos. Último error: {last_error}")
+    raise RuntimeError(f"Failed to generate valid SPARQL after retries. Last error: {last_error}")

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from rdflib import Graph
 
-from nl2sparql import ParsedNLQuery, parse_spanish_question
+from nl2sparql import ParsedNLQuery, parse_english_question
 from run_queries_p510 import load_graph
 
 
@@ -16,15 +16,15 @@ def _escape_sparql_string(value: str) -> str:
 def build_query(parsed: ParsedNLQuery, queries_dir: str) -> str:
     if parsed.kind == "file":
         if not parsed.query_file:
-            raise ValueError("parsed.query_file requerido")
+            raise ValueError("parsed.query_file is required")
         qpath = Path(queries_dir) / parsed.query_file
         if not qpath.exists():
-            raise FileNotFoundError(f"No existe la query {qpath}")
+            raise FileNotFoundError(f"Query file not found: {qpath}")
         return qpath.read_text(encoding="utf-8")
 
     if parsed.kind == "supplier_models":
         if not parsed.supplier_name:
-            raise ValueError("parsed.supplier_name requerido")
+            raise ValueError("parsed.supplier_name is required")
         supplier = _escape_sparql_string(parsed.supplier_name)
         return f"""PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -42,7 +42,7 @@ WHERE {{
 ORDER BY ?id
 """
 
-    raise ValueError(f"kind desconocido: {parsed.kind}")
+    raise ValueError(f"Unknown kind: {parsed.kind}")
 
 
 def run_query(graph: Graph, query: str, limit: int | None = None) -> None:
@@ -60,25 +60,25 @@ def run_query(graph: Graph, query: str, limit: int | None = None) -> None:
             break
 
     if rows_printed == 0:
-        print("(sin resultados)")
+        print("(no results)")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Demo NL→SPARQL sobre el grafo P510-like")
-    parser.add_argument("text", help="Pregunta en español")
-    parser.add_argument("--ttl", default=os.path.join("data", "p510_sintetico.ttl"), help="Ruta al TTL")
-    parser.add_argument("--queries", default="queries_p510", help="Carpeta con .sparql")
-    parser.add_argument("--limit", type=int, default=50, help="Máximo de filas a imprimir")
+    parser = argparse.ArgumentParser(description="Baseline NL→SPARQL demo over the P510-like graph")
+    parser.add_argument("text", help="Question in English")
+    parser.add_argument("--ttl", default=os.path.join("data", "p510_sintetico.ttl"), help="Path to the TTL file")
+    parser.add_argument("--queries", default="queries_p510", help="Folder containing .sparql files")
+    parser.add_argument("--limit", type=int, default=50, help="Max rows to print")
     args = parser.parse_args()
 
-    parsed = parse_spanish_question(args.text)
+    parsed = parse_english_question(args.text)
     sparql = build_query(parsed, args.queries)
 
     print(f"Intent: {parsed.kind}")
     if parsed.query_file:
         print(f"Query: {parsed.query_file}")
     if parsed.supplier_name:
-        print(f"Proveedor: {parsed.supplier_name}")
+        print(f"Supplier: {parsed.supplier_name}")
     print("-" * 80)
 
     g = load_graph(args.ttl)

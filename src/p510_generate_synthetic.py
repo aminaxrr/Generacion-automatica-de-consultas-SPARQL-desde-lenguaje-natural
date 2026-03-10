@@ -39,7 +39,7 @@ def _mk_link(
     prob_missing_description: float = 0.0,
     content_type_universe: list[str] | None = None,
 ) -> URIRef:
-    """Crea un nodo `p510:Traceability_Link_Type` y lo cuelga desde `source` con `link_predicate`."""
+    """Create a `p510:Traceability_Link_Type` node and attach it from `source` using `link_predicate`."""
     instances_base = Namespace(str(source).rsplit("/", 1)[0] + "/")
     link = _new_instance_uri(instances_base, str(link_predicate).split("#")[-1])
 
@@ -59,7 +59,7 @@ def _mk_link(
 
     ts = _now_iso()
     if random.random() < prob_missing_timestamp:
-        # omitimos uno de los dos timestamps
+        # Omit one of the two timestamps
         if random.random() < 0.5:
             g.add((link, P510.Timestamp_Archiving, Literal(ts, datatype=XSD.dateTime)))
         else:
@@ -90,14 +90,7 @@ def generar_grafo_p510(
     prob_link_duplicate: float = 0.05,
     prob_link_missing_description: float = 0.05,
 ) -> str:
-    """Genera un grafo RDF "P510-like".
-
-    Puntos clave del perfil (para el TFG):
-    - Entidades: Requirement, DesignModel (Physical Model), VerificationTest (Test Case)
-    - Trazas: en vez de aristas directas, se crean nodos `p510:Traceability_Link_Type`.
-      Ejemplo: `?req p510:Satisfied_by ?link . ?link p510:Link ?modelo`.
-    - Responsables: los modelos tienen `ex:providedBy ?supplier`.
-    """
+    """Generate a "P510-like" RDF graph."""
 
     random.seed(42)
 
@@ -121,7 +114,7 @@ def generar_grafo_p510(
     g.bind("dcterms", DCTERMS)
     g.bind("prov", PROV)
 
-    # Para parecerse al TTL del profe: URIs en /p510/instances/<seed>/... y nodos contenedor.
+    # To resemble the professor's TTL: URIs under /p510/instances/<seed>/... plus container nodes.
     seed = str(random.randint(1_000_000_000, 9_999_999_999))
     instances_base = Namespace(f"{INSTANCES_ROOT}{seed}/")
 
@@ -129,13 +122,13 @@ def generar_grafo_p510(
     g.add((manifest, RDF.type, P510.P510_ManifestType))
     g.add((manifest, RDFS.label, Literal("P510_Manifest")))
     g.add((manifest, P510.Id, Literal(f"P510-MANIFEST-{seed}")))
-    g.add((manifest, P510.Description, Literal("Manifest sintético P510-like para el TFG")))
+    g.add((manifest, P510.Description, Literal("Synthetic P510-like manifest for the TFG")))
 
-    # Nodo dataset (metadatos editoriales / reproducibilidad)
+    # Dataset node (editorial metadata / reproducibility)
     dataset = _new_instance_uri(instances_base, "Dataset")
     g.add((dataset, RDF.type, EX.Dataset))
     g.add((dataset, RDFS.label, Literal("Dataset")))
-    g.add((dataset, DCTERMS.title, Literal("Dataset sintético P510-like")))
+    g.add((dataset, DCTERMS.title, Literal("Synthetic P510-like dataset")))
     g.add((dataset, DCTERMS.created, Literal(_now_iso(), datatype=XSD.dateTime)))
     g.add((dataset, EX.seed, Literal(seed)))
     g.add((dataset, EX.generator, Literal("p510_generate_synthetic.py")))
@@ -146,25 +139,25 @@ def generar_grafo_p510(
     g.add((general_info, RDF.type, P510.GeneralPLMInfoType))
     g.add((general_info, RDFS.label, Literal("GeneralPLMInfo")))
     g.add((manifest, P510.has_GeneralPLMInfo, general_info))
-    # también añadimos una relación "tipo elemento" para parecerse más a la serialización del ejemplo
+    # Also add a "typed element" relation to better resemble the reference serialization.
     g.add((manifest, P510.GeneralPLMInfo, general_info))
 
-    # Propiedades típicas del XSD (más completas)
+    # Typical XSD fields (more complete)
     g.add((general_info, P510.Unique_object_id, Literal(str(uuid.uuid4()))))
     g.add((general_info, P510.Unique_baseline_id, Literal(str(uuid.uuid4()))))
     g.add((general_info, P510.Version_identifier, Literal("1.0")))
     created_ts = _now_iso()
     g.add((general_info, P510.Created_on, Literal(created_ts, datatype=XSD.dateTime)))
     g.add((general_info, P510.Last_Modified_Date, Literal(created_ts, datatype=XSD.dateTime)))
-    g.add((general_info, P510.Model_Purpose, Literal("TFG: consultas SPARQL desde Lenguaje Natural")))
-    g.add((general_info, P510.Model_Objective, Literal("Auditar trazabilidad y responsables")))
-    g.add((general_info, P510.Organization, Literal("Universidad")))
+    g.add((general_info, P510.Model_Purpose, Literal("TFG: SPARQL queries from Natural Language")))
+    g.add((general_info, P510.Model_Objective, Literal("Audit traceability and responsibilities")))
+    g.add((general_info, P510.Organization, Literal("University")))
     g.add((general_info, EX.project_code, Literal("TFG-MBSE-P510")))
     g.add((general_info, EX.product, Literal("Aircraft System (synthetic)")))
     g.add((general_info, P510.Maturity_State, Literal(random.choice(["Draft", "Released", "InWork"])) ))
     g.add((general_info, P510.Approval_State, Literal(random.choice(["Pending", "Approved"])) ))
-    g.add((general_info, P510.Created_by, Literal(random.choice(["Amina", "Tutor", "Equipo MBSE"]))))
-    g.add((general_info, P510.Author_Organization, Literal("Universidad")))
+    g.add((general_info, P510.Created_by, Literal(random.choice(["Amina", "Supervisor", "MBSE Team"]))))
+    g.add((general_info, P510.Author_Organization, Literal("University")))
 
     baseline = _new_instance_uri(instances_base, "Baseline")
     g.add((baseline, RDF.type, EX.Baseline))
@@ -180,7 +173,7 @@ def generar_grafo_p510(
     g.add((manifest, P510.has_RequirementsDevStructure, dev_struct))
     g.add((manifest, P510.RequirementsDevStructure, dev_struct))
 
-    # Campos del XSD: RequirementsDevStructureType
+    # XSD fields: RequirementsDevStructureType
     g.add((dev_struct, P510.DevTool_Name, Literal("ReqTool")))
     g.add((dev_struct, P510.DevTool_Version, Literal("3.2")))
     g.add((dev_struct, P510.DevTool_License, Literal("Academic")))
@@ -191,7 +184,7 @@ def generar_grafo_p510(
     g.add((dev_struct, P510.Format_name, Literal(random.choice(["ReqIF", "SysML", "SysMLV2", "SpecIF"]))))
     g.add((dev_struct, P510.Format_version, Literal("1.0")))
     g.add((dev_struct, P510.Specification_level, Literal("SyRS")))
-    g.add((dev_struct, P510.Language, Literal("es-ES")))
+    g.add((dev_struct, P510.Language, Literal("en-US")))
 
     vnv = _new_instance_uri(instances_base, "Requirements_Verification_Validation")
     g.add((vnv, RDF.type, P510.Requirements_Verification_Validation_Type))
@@ -199,7 +192,7 @@ def generar_grafo_p510(
     g.add((manifest, P510.has_Requirements_Verification_Validation, vnv))
     g.add((manifest, P510.Requirements_Verification_Validation, vnv))
 
-    # Campos del XSD: Requirements_Verification_Validation_Type
+    # XSD fields: Requirements_Verification_Validation_Type
     g.add((vnv, P510.Specification_Consistency, Literal(True)))
     g.add((vnv, P510.Specification_Completeness, Literal(True)))
 
@@ -209,14 +202,14 @@ def generar_grafo_p510(
     g.add((manifest, P510.has_Requirements_Traceability, traceability))
     g.add((manifest, P510.Requirements_Traceability, traceability))
 
-    # Crear algunos documentos (para `RequirementsDevStructureType/uses`)
+    # Create some documents (for `RequirementsDevStructureType/uses`)
     documentos: list[URIRef] = []
     for i in range(1, 6):
         doc = instances_base[f"_Document_{i:02d}"]
         g.add((doc, RDF.type, EX.Document))
         g.add((doc, RDFS.label, Literal(f"Document {i:02d}")))
         g.add((doc, P510.ContentType, Literal("Document")))
-        g.add((doc, P510.Description, Literal(f"Documento de apoyo {i:02d}")))
+        g.add((doc, P510.Description, Literal(f"Supporting document {i:02d}")))
         g.add((doc, DCTERMS.title, Literal(f"Supporting Document {i:02d}")))
         g.add((doc, DCTERMS.issued, Literal(_now_iso(), datatype=XSD.dateTime)))
         g.add((doc, DCTERMS["format"], Literal(random.choice(["application/pdf", "text/plain", "application/xml"]))))
@@ -230,29 +223,29 @@ def generar_grafo_p510(
             source=dev_struct,
             target=doc,
             content_type="Document",
-            description="Artefacto usado en la ingeniería de requisitos",
+            description="Artifact used in requirements engineering",
             prob_missing_timestamp=prob_link_missing_timestamp,
             prob_wrong_contenttype=prob_link_wrong_contenttype,
             prob_missing_description=prob_link_missing_description,
             content_type_universe=content_type_universe,
         )
 
-    # Personas (responsables) y proveedores (organizaciones)
+    # People (responsible roles) and suppliers (organizations)
     personas = [
         "Amina",
-        "Lucía",
+        "Lucia",
         "Mario",
         "Sara",
-        "Álvaro",
+        "Alvaro",
         "Noelia",
-        "Equipo MBSE",
+        "MBSE Team",
     ]
 
     proveedores: list[URIRef] = []
     for i in range(1, n_proveedores + 1):
         prov = instances_base[f"_Supplier_{i:02d}"]
         g.add((prov, RDF.type, FOAF.Organization))
-        g.add((prov, FOAF.name, Literal(f"Proveedor {i:02d}")))
+        g.add((prov, FOAF.name, Literal(f"Supplier {i:02d}")))
         g.add((prov, RDFS.label, Literal(f"Supplier_{i:02d}")))
         proveedores.append(prov)
 
@@ -270,29 +263,29 @@ def generar_grafo_p510(
         g.add((req, RDF.type, P510.Requirement))
         g.add((req, RDFS.label, Literal(f"Requirement {i:03d}")))
         g.add((req, P510.Id, Literal(f"REQ-{i:03d}")))
-        g.add((req, P510.Description, Literal(f"El sistema debe cumplir la función {i}")))
+        g.add((req, P510.Description, Literal(f"The system shall satisfy function {i}")))
         g.add((req, P510.ContentType, Literal("Requirement")))
 
-        # Metadatos/responsables (útiles para consultas)
+        # Responsibility/governance metadata (useful for queries)
         g.add((req, P510.Created_on, Literal(_now_iso(), datatype=XSD.dateTime)))
         g.add((req, P510.Created_by, Literal(random.choice(personas))))
         g.add((req, P510.Maturity_State, Literal(random.choice(["Draft", "Released", "InWork", "Obsolete"]))))
         g.add((req, P510.Approval_State, Literal(random.choice(["Pending", "Approved", "Rejected"]))))
 
-        # Metadatos adicionales (para preguntas más ricas en NL)
+        # Additional metadata (for richer NL questions)
         g.add((req, EX.subsystem, Literal(random.choice(subsistemas))))
         g.add((req, EX.priority, Literal(random.randint(1, 5), datatype=XSD.integer)))
         g.add((req, EX.verification_method, Literal(random.choice(["Test", "Analysis", "Inspection", "Demonstration"]))))
         g.add((req, EX.criticality, Literal(random.choice(["Low", "Medium", "High"]))))
         if random.random() > 0.35:
-            g.add((req, EX.rationale, Literal("Rationale sintetizada para justificar el requisito")))
+            g.add((req, EX.rationale, Literal("Synthesized rationale to justify the requirement")))
 
         if random.random() > prob_req_sin_aprobador:
             g.add((req, P510.Approver, Literal(random.choice(personas))))
 
         if random.random() > prob_req_sin_org_autora:
-            # en el XSD es xs:string, aquí guardamos el nombre de la organización
-            g.add((req, P510.Author_Organization, Literal(f"Proveedor {random.randint(1, n_proveedores):02d}")))
+            # In the XSD it is xs:string; here we store the organization name.
+            g.add((req, P510.Author_Organization, Literal(f"Supplier {random.randint(1, n_proveedores):02d}")))
 
         requisitos.append(req)
 
@@ -302,7 +295,7 @@ def generar_grafo_p510(
         g.add((model, RDF.type, P510.DesignModel))
         g.add((model, RDFS.label, Literal(f"PhysicalModel {i:03d}")))
         g.add((model, P510.Id, Literal(f"MOD-{i:03d}")))
-        g.add((model, P510.Description, Literal(f"Modelo físico {i}")))
+        g.add((model, P510.Description, Literal(f"Physical model {i}")))
         g.add((model, P510.ContentType, Literal("Physical Model")))
 
         g.add((model, P510.Created_on, Literal(_now_iso(), datatype=XSD.dateTime)))
@@ -315,12 +308,12 @@ def generar_grafo_p510(
         g.add((model, EX.part_number, Literal(f"PN-{random.randint(1000, 9999)}-{i:03d}")))
         g.add((model, EX.subsystem, Literal(random.choice(subsistemas))))
         if random.random() > 0.15:
-            g.add((model, P510.Author_Organization, Literal(f"Proveedor {random.randint(1, n_proveedores):02d}")))
-        # Aprover solo algunas veces incluso si está Approved (para auditar incoherencias)
+            g.add((model, P510.Author_Organization, Literal(f"Supplier {random.randint(1, n_proveedores):02d}")))
+        # Add Approver only sometimes even if state is Approved (to audit inconsistencies)
         if approval_state == "Approved" and random.random() > 0.12:
             g.add((model, P510.Approver, Literal(random.choice(personas))))
 
-        # A veces faltará proveedor para poder auditarlo
+        # Sometimes omit supplier to enable audit queries
         if random.random() > prob_modelo_sin_proveedor:
             g.add((model, EX.providedBy, random.choice(proveedores)))
         modelos.append(model)
@@ -331,7 +324,7 @@ def generar_grafo_p510(
         g.add((test, RDF.type, P510.VerificationTest))
         g.add((test, RDFS.label, Literal(f"TestCase {i:03d}")))
         g.add((test, P510.Id, Literal(f"TST-{i:03d}")))
-        g.add((test, P510.Description, Literal(f"Test de verificación {i}")))
+        g.add((test, P510.Description, Literal(f"Verification test {i}")))
         g.add((test, P510.ContentType, Literal("Test Case")))
         g.add((test, P510.Created_on, Literal(_now_iso(), datatype=XSD.dateTime)))
         g.add((test, P510.Created_by, Literal(random.choice(personas))))
@@ -350,7 +343,7 @@ def generar_grafo_p510(
                 source=req,
                 target=modelo_target,
                 content_type="Physical Model",
-                description="El requisito queda satisfecho por este modelo físico",
+                description="This requirement is satisfied by this physical model",
                 traceability_root=traceability,
                 prob_missing_timestamp=prob_link_missing_timestamp,
                 prob_wrong_contenttype=prob_link_wrong_contenttype,
@@ -365,7 +358,7 @@ def generar_grafo_p510(
                     source=req,
                     target=modelo_target,
                     content_type="Physical Model",
-                    description="(duplicado) El requisito queda satisfecho por este modelo físico",
+                    description="(duplicate) This requirement is satisfied by this physical model",
                     traceability_root=traceability,
                     prob_missing_timestamp=prob_link_missing_timestamp,
                     prob_wrong_contenttype=prob_link_wrong_contenttype,
@@ -382,7 +375,7 @@ def generar_grafo_p510(
                 source=modelo,
                 target=test_target,
                 content_type="Test Case",
-                description="El modelo queda verificado por este caso de prueba",
+                description="This model is verified by this test case",
                 traceability_root=traceability,
                 prob_missing_timestamp=prob_link_missing_timestamp,
                 prob_wrong_contenttype=prob_link_wrong_contenttype,
@@ -397,7 +390,7 @@ def generar_grafo_p510(
                     source=modelo,
                     target=test_target,
                     content_type="Test Case",
-                    description="(duplicado) El modelo queda verificado por este caso de prueba",
+                    description="(duplicate) This model is verified by this test case",
                     traceability_root=traceability,
                     prob_missing_timestamp=prob_link_missing_timestamp,
                     prob_wrong_contenttype=prob_link_wrong_contenttype,
@@ -405,17 +398,17 @@ def generar_grafo_p510(
                     content_type_universe=content_type_universe,
                 )
 
-    # --- Escenarios de verificación/validación (XSD: Verification_Validation_Scenario_Type) ---
+    # --- Verification/validation scenarios (XSD: Verification_Validation_Scenario_Type) ---
     evidencias: list[URIRef] = []
     for i in range(1, 6):
         ev = instances_base[f"_Evidence_{i:02d}"]
         g.add((ev, RDF.type, EX.Evidence))
-        # En P510 real esto suele ser un tipo específico; lo incluimos como señal semántica.
+        # In real P510 this is often a specific type; include it as a semantic cue.
         g.add((ev, RDF.type, P510.Verification_Validation_Evidence_Type))
         g.add((ev, RDFS.label, Literal(f"Evidence {i:02d}")))
         g.add((ev, P510.Id, Literal(f"EVD-{i:03d}")))
         g.add((ev, P510.ContentType, Literal("Evidence")))
-        g.add((ev, P510.Description, Literal(f"Evidencia de validación {i:02d}")))
+        g.add((ev, P510.Description, Literal(f"Validation evidence {i:02d}")))
         g.add((ev, P510.Created_on, Literal(_now_iso(), datatype=XSD.dateTime)))
         g.add((ev, PROV.wasAttributedTo, Literal(random.choice(personas))))
         g.add((ev, EX.evidence_kind, Literal(random.choice(["Report", "Log", "Checklist", "Screenshot"]))))
@@ -431,11 +424,11 @@ def generar_grafo_p510(
         g.add((sc, P510.Verification_Credibility_Level, Literal(random.choice(cred_levels))))
         g.add((sc, P510.Validation_Credibility_Level, Literal(random.choice(cred_levels))))
 
-        # Enlazar el escenario desde el bloque V&V
+        # Link the scenario from the V&V block
         g.add((vnv, P510.Scenario, sc))
 
-        # A veces dejamos escenarios "incompletos" para poder auditarlos con SPARQL.
-        # Con seed fija, esta regla determinista garantiza al menos 1 caso en la mayoría de tamaños.
+        # Sometimes leave scenarios "incomplete" to enable SPARQL audit queries.
+        # With a fixed seed, this deterministic rule ensures at least 1 case for most sizes.
         if (i % 7 == 0) or (random.random() < 0.12):
             continue
 
@@ -446,7 +439,7 @@ def generar_grafo_p510(
                 source=sc,
                 target=random.choice(tests),
                 content_type="Test Case",
-                description="Evidencia de verificación (test case)",
+                description="Verification evidence (test case)",
                 prob_missing_timestamp=prob_link_missing_timestamp,
                 prob_wrong_contenttype=prob_link_wrong_contenttype,
                 prob_missing_description=prob_link_missing_description,
@@ -459,7 +452,7 @@ def generar_grafo_p510(
                 source=sc,
                 target=random.choice(evidencias),
                 content_type="Evidence",
-                description="Evidencia de validación",
+                description="Validation evidence",
                 prob_missing_timestamp=prob_link_missing_timestamp,
                 prob_wrong_contenttype=prob_link_wrong_contenttype,
                 prob_missing_description=prob_link_missing_description,
@@ -476,4 +469,4 @@ def generar_grafo_p510(
 
 if __name__ == "__main__":
     out = generar_grafo_p510()
-    print(f"✅ Grafo P510-like generado: {out}")
+    print(f"✅ Generated P510-like graph: {out}")

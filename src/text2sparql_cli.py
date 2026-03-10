@@ -25,65 +25,73 @@ def _print_results(qres, max_rows: int) -> None:
     if rows_printed == 0:
         # ASK queries will show one row with a boolean in rdflib,
         # but keep this fallback for empty resultsets.
-        print("(sin resultados)")
+        print("(no results)")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Text2SPARQL offline: genera (y opcionalmente ejecuta) SPARQL desde una pregunta en español"
+        description="Text2SPARQL offline: generate (and optionally run) SPARQL from an English question"
     )
-    parser.add_argument("text", help="Pregunta en español")
+    parser.add_argument("text", help="Question in English")
     parser.add_argument(
         "--ttl",
         default=os.path.join("data", "p510_sintetico.ttl"),
-        help="Ruta al TTL",
+        help="Path to the TTL file",
     )
     parser.add_argument(
         "--mode",
         choices=["translate", "run"],
         default="run",
-        help="Solo generar SPARQL (translate) o generar + ejecutar (run)",
+        help="Only generate SPARQL (translate) or generate + run it (run)",
     )
     parser.add_argument(
         "--backend",
         choices=["ollama", "openai_compat", "rules"],
         default="ollama",
-        help="Backend local: ollama | openai_compat | rules",
+        help="Local backend: ollama | openai_compat | rules",
     )
     parser.add_argument(
         "--model",
         default="llama3.1",
-        help="Nombre del modelo (depende del backend)",
+        help="Model name (depends on backend)",
     )
     parser.add_argument(
         "--examples",
         default=os.path.join("eval", "text2sparql_examples.jsonl"),
-        help="JSONL few-shot con pares NL↔SPARQL",
+        help="Few-shot JSONL with NL↔SPARQL pairs",
     )
     parser.add_argument(
         "--prompt-file",
         default=None,
-        help="Ruta a un system prompt (texto) con glosario/sinónimos. Puede usar {LIMIT}.",
+        help="Path to a system prompt text file with glossary/synonyms. Can use {LIMIT}.",
     )
-    parser.add_argument("--max-retries", type=int, default=2, help="Reintentos si falla validación/ejecución")
-    parser.add_argument("--timeout", type=float, default=30.0, help="Timeout del backend (segundos)")
-    parser.add_argument("--temperature", type=float, default=0.1, help="Temperatura")
+    parser.add_argument(
+        "--rules-first",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="If enabled, try the deterministic catalog mapping before using the LLM.",
+    )
+    parser.add_argument("--max-retries", type=int, default=2, help="Retries if validation/execution fails")
+    parser.add_argument("--timeout", type=float, default=30.0, help="Backend timeout (seconds)")
+    parser.add_argument("--temperature", type=float, default=0.1, help="Sampling temperature")
     parser.add_argument(
         "--limit",
         type=int,
         default=200,
-        help="LIMIT a forzar si falta (solo SELECT)",
+        help="LIMIT to enforce if missing (SELECT only)",
     )
     parser.add_argument(
         "--rows",
         type=int,
         default=50,
-        help="Máximo de filas a imprimir cuando se ejecuta",
+        help="Max rows to print when running",
     )
     args = parser.parse_args()
 
     if not os.path.exists(args.ttl):
-        raise SystemExit(f"No existe {args.ttl}. Ejecuta primero: python src/p510_generate_synthetic.py")
+        raise SystemExit(
+            f"File not found: {args.ttl}. Generate it first: python src/p510_generate_synthetic.py"
+        )
 
     examples_path: str | None = args.examples
     if examples_path and not Path(examples_path).exists():
@@ -93,9 +101,9 @@ def main() -> None:
 
     prompt_file: str | None = args.prompt_file
     if prompt_file is None:
-        default_prompt = Path("prompts") / "system_es.txt"
-        if default_prompt.exists():
-            prompt_file = str(default_prompt)
+        default_en = Path("prompts") / "system_en.txt"
+        if default_en.exists():
+            prompt_file = str(default_en)
 
     config = GenerationConfig(
         backend=args.backend,
@@ -104,6 +112,7 @@ def main() -> None:
         timeout_s=args.timeout,
         temperature=args.temperature,
         limit=args.limit,
+        rules_first=bool(args.rules_first),
         prompt_file=prompt_file,
     )
 

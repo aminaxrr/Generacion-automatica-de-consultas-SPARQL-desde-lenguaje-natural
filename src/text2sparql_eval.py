@@ -25,53 +25,55 @@ def _run_query(graph, sparql: str) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Auto-eval Text2SPARQL: ejecuta ejemplos JSONL y reporta pass/fail (RDFLib)"
+        description="Text2SPARQL auto-eval: run JSONL examples and report pass/fail (RDFLib)"
     )
     parser.add_argument(
         "--ttl",
         default=os.path.join("data", "p510_sintetico.ttl"),
-        help="Ruta al TTL",
+        help="Path to the TTL file",
     )
     parser.add_argument(
         "--examples",
         default=os.path.join("eval", "text2sparql_examples.jsonl"),
-        help="JSONL con ejemplos (nl + sparql)",
+        help="JSONL with examples (nl + sparql)",
     )
     parser.add_argument(
         "--mode",
         choices=["reference", "generate"],
         default="reference",
-        help="reference: valida SPARQL de referencia; generate: genera desde NL y valida ejecución",
+        help="reference: validate reference SPARQL; generate: generate from NL and validate execution",
     )
     parser.add_argument(
         "--backend",
         choices=["ollama", "openai_compat", "rules"],
         default="rules",
-        help="Backend para mode=generate",
+        help="Backend for mode=generate",
     )
-    parser.add_argument("--model", default="llama3.1", help="Modelo para mode=generate")
-    parser.add_argument("--max-retries", type=int, default=1, help="Reintentos en generación")
-    parser.add_argument("--timeout", type=float, default=30.0, help="Timeout backend")
-    parser.add_argument("--temperature", type=float, default=0.1, help="Temperatura")
-    parser.add_argument("--limit", type=int, default=200, help="LIMIT a forzar si falta")
-    parser.add_argument("--max", type=int, default=0, help="Máximo de ejemplos a evaluar (0=todos)")
+    parser.add_argument("--model", default="llama3.1", help="Model for mode=generate")
+    parser.add_argument("--max-retries", type=int, default=1, help="Retries during generation")
+    parser.add_argument("--timeout", type=float, default=30.0, help="Backend timeout")
+    parser.add_argument("--temperature", type=float, default=0.1, help="Sampling temperature")
+    parser.add_argument("--limit", type=int, default=200, help="LIMIT to enforce if missing")
+    parser.add_argument("--max", type=int, default=0, help="Max examples to evaluate (0=all)")
     parser.add_argument(
         "--on-unmapped",
         choices=["auto", "skip", "fail"],
         default="auto",
         help=(
-            "Qué hacer si el backend no puede mapear la pregunta (solo aplica a backend=rules): "
+            "What to do if the backend cannot map the question (only applies to backend=rules): "
             "auto=skip, skip=SKIP, fail=FAIL"
         ),
     )
     args = parser.parse_args()
 
     if not os.path.exists(args.ttl):
-        raise SystemExit(f"No existe {args.ttl}. Ejecuta primero: python src/p510_generate_synthetic.py")
+        raise SystemExit(
+            f"File not found: {args.ttl}. Generate it first: python src/p510_generate_synthetic.py"
+        )
 
     examples_path = Path(args.examples)
     if not examples_path.exists():
-        raise SystemExit(f"No existe {examples_path}")
+        raise SystemExit(f"File not found: {examples_path}")
 
     examples = _read_jsonl(str(examples_path))
     if args.max and args.max > 0:
@@ -106,11 +108,11 @@ def main() -> None:
             try:
                 if args.mode == "reference":
                     if not isinstance(ref, str) or not ref.strip():
-                        raise ValueError("Ejemplo sin 'sparql'")
+                        raise ValueError("Example missing 'sparql'")
                     rows = _run_query(g, ref)
                 else:
                     if not isinstance(nl, str) or not nl.strip():
-                        raise ValueError("Ejemplo sin 'nl'")
+                        raise ValueError("Example missing 'nl'")
 
                     # Leave-one-out few-shot: do not include the current example in the prompt.
                     other_examples = [e for e in examples if e is not ex]
@@ -143,7 +145,7 @@ def main() -> None:
                 msg = str(e).replace("\n", " ")
                 print(f"[FAIL] {ex_id}  {elapsed_ms:.1f}ms  {msg}")
     except KeyboardInterrupt:
-        print("\n[INTERRUPTED] Detenido por KeyboardInterrupt.")
+        print("\n[INTERRUPTED] Interrupted by KeyboardInterrupt.")
 
     total = ok + fail + skipped
     attempted = ok + fail

@@ -1,6 +1,6 @@
 PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
 
-# Conteos globales por tipo de entidad (rápido en rdflib)
+# Global counts by entity type (fast in rdflib)
 SELECT ?entity (COUNT(DISTINCT ?s) AS ?count)
 WHERE {
   {

@@ -1,7 +1,7 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
 
-# Requisitos que NO llegan a test a través de modelo físico
+# Requirements that do NOT reach a test via a physical model
 SELECT ?req ?id
 WHERE {
   ?req rdf:type p510:Requirement ;

@@ -9,158 +9,124 @@ class ParsedNLQuery:
     supplier_name: str | None = None
 
 
-def parse_spanish_question(text: str) -> ParsedNLQuery:
-    """Parsea una pregunta (ES) y la mapea a una consulta SPARQL.
+def parse_english_question(text: str) -> ParsedNLQuery:
+    """Parse an English question and map it to a SPARQL query.
 
-    Esta demo está pensada para el TFG: muestra un baseline reproducible de NL→SPARQL
-    mediante reglas + plantillas, sin ML.
+    This baseline is intended for the TFG: it demonstrates a reproducible NL→SPARQL
+    approach using rules + templates (no ML).
     """
 
     normalized = " ".join(text.strip().split())
     lower = normalized.casefold()
 
     # --- Exact-ish intent rules to existing query catalogue ---
-    if any(k in lower for k in ["cuántos proveedores", "cuantos proveedores", "número de proveedores", "numero de proveedores"]):
+    if any(k in lower for k in ["how many suppliers", "number of suppliers", "count suppliers"]):
         return ParsedNLQuery(kind="file", query_file="q6_cuantos_proveedores.sparql")
 
-    if any(k in lower for k in ["requisitos sin modelo", "requisitos que no tienen modelo", "requisitos sin modelo físico", "requisitos sin modelo fisico"]):
+    if any(k in lower for k in ["requirements without model", "requirements without a model", "requirements missing a model", "requirements without physical model"]):
         return ParsedNLQuery(kind="file", query_file="q1_req_sin_modelo_fisico.sparql")
 
     if any(
         k in lower
         for k in [
-            "modelos sin test",
-            "modelos sin pruebas",
-            "modelos no verificados",
-            "modelos que no tienen test",
-            "modelos que no tienen ningún test",
-            "modelos que no tienen ningun test",
-            "no tienen test asociado",
-            "sin ningún test asociado",
-            "sin ningun test asociado",
+            "models without tests",
+            "models without a test",
+            "physical models without tests",
+            "models not verified",
+            "no associated test",
+            "no test associated",
+            "missing verification test",
         ]
     ):
         return ParsedNLQuery(kind="file", query_file="q2_modelos_sin_test.sparql")
 
-    if any(k in lower for k in ["porcentaje", "cobertura"]) and any(k in lower for k in ["requisitos", "req"]):
+    if any(k in lower for k in ["percentage", "coverage"]) and any(k in lower for k in ["requirements", "req"]):
         return ParsedNLQuery(kind="file", query_file="q3_porcentaje_req_con_modelo.sparql")
 
-    if any(k in lower for k in ["trazabilidad completa", "end to end", "end-to-end", "extremo a extremo", "e2e"]):
+    if any(k in lower for k in ["end to end", "end-to-end", "end-to end", "e2e", "end to end traceability"]):
         return ParsedNLQuery(kind="file", query_file="q4_req_sin_traza_end_to_end.sparql")
 
     # --- New metadata queries (enriched dataset) ---
-    if any(k in lower for k in ["baseline", "código de proyecto", "codigo de proyecto", "project code", "producto"]):
+    if any(k in lower for k in ["baseline", "project code", "project id", "product"]):
         return ParsedNLQuery(kind="file", query_file="q26_baseline_y_proyecto.sparql")
 
-    if "requisit" in lower and any(k in lower for k in ["subsistema", "subsystem"]):
+    if "requir" in lower and any(k in lower for k in ["subsystem", "module", "domain"]):
         return ParsedNLQuery(kind="file", query_file="q27_requisitos_por_subsistema.sparql")
 
-    if "requisit" in lower and any(
+    if "requir" in lower and any(
         k in lower
         for k in [
-            "método de verificación",
-            "metodo de verificacion",
             "verification_method",
-            "se verifican por",
-            "método de verificacion",
+            "verification method",
+            "verified by method",
+            "how are requirements verified",
         ]
     ):
         return ParsedNLQuery(kind="file", query_file="q28_requisitos_por_metodo_verificacion.sparql")
 
-    if any(k in lower for k in ["resumen plm", "plm resumen", "metadatos plm"]):
+    if any(k in lower for k in ["plm summary", "plm overview", "manifest summary"]):
         return ParsedNLQuery(kind="file", query_file="q8_plm_resumen.sparql")
 
-    if any(
-        k in lower
-        for k in [
-            "entorno de desarrollo",
-            "development environment",
-            "herramientas",
-            "sistema operativo",
-        ]
-    ):
+    if any(k in lower for k in ["development environment", "dev environment", "tool version", "operating system", "os version"]):
         return ParsedNLQuery(kind="file", query_file="q9_dev_environment.sparql")
 
-    # Avoid false positives: match 'OS' as a standalone token, not as part of words like 'requisitos'.
+    # Match 'OS' as a standalone token.
     if re.search(r"\bos\b", lower):
         return ParsedNLQuery(kind="file", query_file="q9_dev_environment.sparql")
 
-    if any(
-        k in lower
-        for k in [
-            "documentos usados",
-            "documentos se usan",
-            "qué documentos se usan",
-            "que documentos se usan",
-            "documentos en el entorno de desarrollo",
-        ]
-    ):
+    if any(k in lower for k in ["used documents", "documents used", "referenced documents", "which documents are used"]):
         return ParsedNLQuery(kind="file", query_file="q10_documentos_usados.sparql")
 
-    if any(k in lower for k in ["resumen v&v", "resumen vnv", "escenarios v&v", "escenarios vnv", "credibilidad"]):
+    if any(k in lower for k in ["v&v scenarios", "vnv scenarios", "scenario summary", "credibility level"]):
         return ParsedNLQuery(kind="file", query_file="q11_vnv_escenarios_resumen.sparql")
 
-    if any(
-        k in lower
-        for k in [
-            "escenarios incompletos",
-            "v&v incompletos",
-            "vnv incompletos",
-            "sin verified_by",
-            "sin validated_by",
-        ]
-    ):
+    if any(k in lower for k in ["incomplete scenarios", "scenarios without verified_by", "scenarios without validated_by"]):
         return ParsedNLQuery(kind="file", query_file="q12_vnv_escenarios_incompletos.sparql")
 
-    if any(k in lower for k in ["entidades", "conteo de entidades", "cuántas entidades", "cuantas entidades"]):
+    if any(k in lower for k in ["entity count", "count entities", "how many entities"]):
         return ParsedNLQuery(kind="file", query_file="q14_conteo_entidades.sparql")
 
-    if any(k in lower for k in ["enlaces sin timestamp", "links sin timestamp", "falta timestamp"]):
+    if any(k in lower for k in ["links without timestamp", "missing timestamp", "links missing timestamp"]):
         return ParsedNLQuery(kind="file", query_file="q13_links_sin_timestamp.sparql")
 
-    if any(k in lower for k in ["links sin descripción", "links sin descripcion", "enlaces sin descripción", "enlaces sin descripcion"]):
+    if any(k in lower for k in ["links without description", "missing description"]):
         return ParsedNLQuery(kind="file", query_file="q25_links_sin_description.sparql")
 
-    if any(k in lower for k in ["enlaces duplicados", "links duplicados", "duplicados"]):
+    if any(k in lower for k in ["duplicate links", "duplicate traces", "duplicated links"]):
         return ParsedNLQuery(kind="file", query_file="q24_links_duplicados.sparql")
 
-    if any(k in lower for k in ["trazas duplicadas", "links duplicadas", "duplicadas"]):
+    if any(k in lower for k in ["repeated links", "repeated traces"]):
         return ParsedNLQuery(kind="file", query_file="q24_links_duplicados.sparql")
 
-    if any(k in lower for k in ["aprobados sin aprobador", "approved sin approver", "sin aprobador"]):
+    if any(k in lower for k in ["approved without approver", "approved but no approver", "missing approver"]):
         return ParsedNLQuery(kind="file", query_file="q22_aprobados_sin_aprobador.sparql")
 
-    if any(
-        k in lower
-        for k in [
-            "contenttype incoherente",
-            "content type incoherente",
-            "incoherente con el destino",
-            "no coincide con el destino",
-            "no coincide con el contenttype",
-        ]
-    ):
+    if any(k in lower for k in ["contenttype mismatch", "content type mismatch", "inconsistent contenttype", "contenttype inconsistent"]):
         return ParsedNLQuery(kind="file", query_file="q23_link_contenttype_incoherente.sparql")
 
-    if any(k in lower for k in ["sin proveedor", "modelos sin proveedor", "proveedor faltante", "responsable faltante"]):
+    if any(k in lower for k in ["models without supplier", "missing supplier", "missing responsibility"]):
         return ParsedNLQuery(kind="file", query_file="q15_modelos_sin_proveedor.sparql")
 
     # --- Parameterized intent: models by supplier ---
-    # Examples: "modelos del proveedor 03", "modelos del proveedor 3", "modelos de Proveedor 02"
-    m = re.search(r"modelos\s+(?:del|de)\s+proveedor\s*0*(\d{1,2})\b", lower)
+    # Examples: "models of supplier 03", "models for supplier 3"
+    m = re.search(r"models\s+(?:of|for)\s+supplier\s*0*(\d{1,2})\b", lower)
     if m:
         supplier_num = int(m.group(1))
-        supplier_name = f"Proveedor {supplier_num:02d}"
+        supplier_name = f"Supplier {supplier_num:02d}"
         return ParsedNLQuery(kind="supplier_models", supplier_name=supplier_name)
 
-    # More flexible variant: "modelos de un proveedor ... Proveedor 03"
-    m2 = re.search(r"\bproveedor\s*0*(\d{1,2})\b", lower)
-    if m2 and "modelo" in lower:
+    # More flexible variant: "supplier 03" + mentions model
+    m2 = re.search(r"\bsupplier\s*0*(\d{1,2})\b", lower)
+    if m2 and "model" in lower:
         supplier_num = int(m2.group(1))
-        supplier_name = f"Proveedor {supplier_num:02d}"
+        supplier_name = f"Supplier {supplier_num:02d}"
         return ParsedNLQuery(kind="supplier_models", supplier_name=supplier_name)
 
     raise ValueError(
-        "No pude mapear la pregunta a una consulta. "
-        "Prueba con: '¿Cuántos proveedores hay?', 'requisitos sin modelo', 'modelos del proveedor 03', etc."
+        "I could not map the question to a query. "
+        "Try: 'How many suppliers are there?', 'requirements without model', 'models of supplier 03', etc."
     )
+
+
+# Backwards-compatibility: keep old name removed in English-only refactor.
+# (Intentionally not provided.)

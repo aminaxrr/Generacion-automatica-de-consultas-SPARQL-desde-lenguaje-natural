@@ -1,187 +1,176 @@
-# TFG — NL → SPARQL sobre trazabilidad (P510-like)
+# TFG — NL → SPARQL traceability (P510-like)
 
-Este repositorio está pensado para un TFG de **generación/selección de consultas SPARQL a partir de Lenguaje Natural**, acotado a **trazabilidad** y **responsables** (proveedores/owners).
+This repository is a TFG project about **generating/selecting SPARQL queries from Natural Language**, focused on **traceability** and **responsibility** (suppliers/owners).
 
-La idea es trabajar con un grafo RDF inspirado en el estándar **LOTAR P510** (no es necesario copiarlo literal):
+It uses a synthetic RDF graph inspired by **LOTAR P510** (it is not a literal copy):
 
-- Las relaciones de trazabilidad se modelan como **nodos de enlace** `p510:Traceability_Link_Type`.
-- Ejemplo de patrón:
+- Traceability relationships are modeled as **link nodes** of type `p510:Traceability_Link_Type`.
+- Pattern example:
 
 	- `?req p510:Satisfied_by ?link .`
-	- `?link p510:Link ?modelo ; p510:ContentType "Physical Model" .`
+	- `?link p510:Link ?model ; p510:ContentType "Physical Model" .`
 
-Esto permite formular preguntas típicas del tutor: “¿existen enlaces?”, “¿están todos trazados?”, “¿cuántos X tengo?”, “¿quién es responsable?”
+This enables typical questions like: "are there links?", "is everything traced?", "how many X do I have?", "who is responsible?".
 
-## Empezar (núcleo limpio)
+## Quickstart
 
-1) Generar un grafo sintético P510-like:
+1) Generate a synthetic P510-like graph:
 
 `python src/p510_generate_synthetic.py`
 
-Salida: `data/p510_sintetico.ttl`
+Output: `data/p510_sintetico.ttl`
 
-2) Ejecutar el set inicial de consultas SPARQL:
+2) Run the SPARQL query catalog:
 
 `python src/run_queries_p510.py`
 
-Consultas en `queries_p510/`.
+Queries live in `queries_p510/`.
 
-## Demo NL→SPARQL (baseline reproducible)
+## NL → SPARQL baseline (deterministic)
 
-Incluye una demo **sin ML** (reglas + plantillas) que convierte preguntas en español a SPARQL y las ejecuta.
+Includes a **no-ML** baseline (rules + templates) that converts **English questions** into SPARQL and runs them.
 
-Ejemplos:
+Examples:
 
-`python src/nl2sparql_cli.py "¿Cuántos proveedores hay?"`
+`python src/nl2sparql_cli.py "How many suppliers are there?"`
 
-`python src/nl2sparql_cli.py "requisitos sin modelo"`
+`python src/nl2sparql_cli.py "requirements without a physical model"`
 
-`python src/nl2sparql_cli.py "modelos del proveedor 03"`
+`python src/nl2sparql_cli.py "models from Supplier 03"`
 
-Esto te da un punto de partida para el TFG: luego puedes sustituir/expandir el parser por un clasificador, LLM, etc.
+This is a reproducible starting point; you can later replace/extend the parser with a classifier, an LLM, etc.
 
-## Text2SPARQL offline (estilo NeoDash Text2Cypher)
+## Text2SPARQL offline (NeoDash Text2Cypher style)
 
-Además del baseline por reglas, hay un modo **LLM-like** pero **local/offline**: genera SPARQL a partir de una pregunta y la valida/ejecuta sobre el grafo.
+In addition to the rules baseline, there is an **LLM-like** but **local/offline** mode: it generates SPARQL from a question and validates/runs it on the RDF graph.
 
 Script: `python src/text2sparql_cli.py "..."`
 
-Modos:
+Modes:
 
-- `--mode translate`: solo genera la SPARQL
-- `--mode run`: genera + ejecuta (por defecto)
+- `--mode translate`: only generate SPARQL
+- `--mode run`: generate + run (default)
 
-Backends soportados:
+Supported backends:
 
-1) **Rules (sin modelos, 100% reproducible)**
+1) **Rules (no models, 100% reproducible)**
 
-`python src/text2sparql_cli.py "¿Cuántos proveedores hay?" --backend rules --mode run`
+`python src/text2sparql_cli.py "How many suppliers are there?" --backend rules --mode run`
 
 2) **Ollama (local)**
 
-- Instala/arranca Ollama y descarga un modelo, por ejemplo:
+- Install/run Ollama and pull a model, for example:
 	- `ollama pull llama3.1`
 
-Ejemplo:
+Example:
 
-`python src/text2sparql_cli.py "requisitos sin trazabilidad end to end" --backend ollama --model llama3.1 --mode run`
+`python src/text2sparql_cli.py "requirements missing end-to-end traceability" --backend ollama --model llama3.1 --mode run`
 
-Por defecto usa `http://localhost:11434/api/chat`. Puedes cambiarlo con:
+Default endpoint is `http://localhost:11434/api/chat`. Override with:
 
 - `TEXT2SPARQL_OLLAMA_URL`
 
-3) **Servidor OpenAI-compatible local** (por ejemplo LM Studio, LocalAI, etc.)
+3) **Local OpenAI-compatible server** (e.g., LM Studio, LocalAI, ...)
 
-Configura:
+Configure:
 
-- `TEXT2SPARQL_OPENAI_BASE_URL` (ej: `http://localhost:1234`)
-- `TEXT2SPARQL_OPENAI_API_KEY` (si aplica; puede estar vacío)
+- `TEXT2SPARQL_OPENAI_BASE_URL` (e.g., `http://localhost:1234`)
+- `TEXT2SPARQL_OPENAI_API_KEY` (if applicable; can be empty)
 
-Ejemplo:
+Example:
 
-`python src/text2sparql_cli.py "auditoría links duplicados" --backend openai_compat --model <tu_modelo> --mode run`
+`python src/text2sparql_cli.py "audit duplicate links" --backend openai_compat --model <your_model> --mode run`
 
-### Prompt “grande” con sinónimos (estilo tutor)
+### Single “mega prompt” with synonyms (supervisor style)
 
-Si tu tutor quiere que “todo esté en un prompt” (glosario + sinónimos + reglas), edita:
+If you want the mapping/glossary/synonym logic to live fully in a prompt, edit:
 
-- [prompts/system_es.txt](prompts/system_es.txt)
+- [prompts/system_en.txt](prompts/system_en.txt)
 
-Y ejecútalo así:
+And run:
 
-`python src/text2sparql_cli.py "modelos físicos sin test" --backend ollama --model llama3.1 --prompt-file prompts/system_es.txt --mode run`
+`python src/text2sparql_cli.py "physical models without tests" --backend ollama --model llama3.1 --prompt-file prompts/system_en.txt --mode run`
 
-Notas:
+Notes:
 
-- El prompt puede incluir el placeholder `{LIMIT}`, que se sustituye por el valor de `--limit`.
-- Si no pasas `--prompt-file` y existe `prompts/system_es.txt`, se usa automáticamente.
+- The prompt may include a `{LIMIT}` placeholder, replaced by `--limit`.
+- If you do not pass `--prompt-file` and `prompts/system_en.txt` exists, it is used automatically.
 
-### Seguridad / restricciones
+### Safety / constraints
 
-- Solo se permiten consultas `SELECT` o `ASK` (se bloquean `CONSTRUCT/DESCRIBE/INSERT/DELETE/...`).
-- Si es `SELECT` y no incluye `LIMIT`, se añade `LIMIT 200` (configurable con `--limit`).
-- Se incluye un conjunto few-shot en `eval/text2sparql_examples.jsonl` para anclar el estilo a tu catálogo `queries_p510/`.
+- Only `SELECT` or `ASK` queries are allowed (blocks `CONSTRUCT/DESCRIBE/INSERT/DELETE/...`).
+- If a `SELECT` query has no `LIMIT`, the tool adds `LIMIT 200` (configurable via `--limit`).
+- Few-shot examples are in `eval/text2sparql_examples.jsonl` to anchor generation to the `queries_p510/` catalog.
 
-## Demo visual (web local)
+## Visual demo (local web)
 
-Hay una demo visual tipo “NeoDash” (web local) **sin dependencias extra**: HTML+JS servido por Python estándar.
+There is a lightweight "NeoDash-like" visual demo **with no extra dependencies**: HTML+JS served by the Python standard library.
 
-1) Ejecutar la demo:
+1) Run the demo:
 
 `python src/demo_server.py`
 
-2) Abrir:
+2) Open:
 
 `http://127.0.0.1:8000`
 
-Notas:
+Notes:
 
-- Si no existe `data/p510_sintetico.ttl`, la demo puede regenerarlo (botón “Regenerar grafo”).
-- Para usar Ollama: servidor levantado (`ollama serve`) y un modelo descargado.
+- If `data/p510_sintetico.ttl` is missing, the demo can regenerate it ("Regenerate graph" button).
+- To use Ollama: run `ollama serve` and ensure a model is pulled.
 
-### (Opcional) Demo Streamlit
+### (Optional) Streamlit demo
 
-También hay una versión con Streamlit en `src/demo_visual.py`, pero depende de `streamlit/pandas` (puede requerir Python ≤ 3.12 según wheels disponibles).
+There is also a Streamlit version in `src/demo_visual.py`, but it depends on `streamlit/pandas` (may require Python ≤ 3.12 depending on wheel availability).
 
 `pip install -r requirements.txt`
 
 `python -m streamlit run src/demo_visual.py`
 
-## Auto-evaluación (para el capítulo de evaluación)
+## Auto-evaluation
 
 Script: `python src/text2sparql_eval.py`
 
-1) Validar que las SPARQL de referencia del JSONL ejecutan (sanity check):
+1) Validate that reference SPARQL from JSONL executes (sanity check):
 
 `python src/text2sparql_eval.py --mode reference`
 
-2) Evaluar el generador (genera desde NL y comprueba que se ejecuta):
+2) Evaluate the generator (generate from NL and check execution):
 
 `python src/text2sparql_eval.py --mode generate --backend rules`
 
-Si usas un LLM local:
+With a local LLM:
 
 `python src/text2sparql_eval.py --mode generate --backend ollama --model llama3.1`
 
-## Consultas incluidas (ejemplos)
+## Included queries (examples)
 
-- Requisitos sin modelo físico (falta de `Satisfied_by`)
-- Modelos físicos sin test (falta de `Verified_by`)
-- Porcentaje de requisitos con modelo
-- Requisitos sin trazabilidad end-to-end (Req → Model → Test)
-- Requisitos sobre-especificados (más de un modelo)
-- Cuántos proveedores hay
-- Modelos por proveedor
+- Requirements without physical model (missing `Satisfied_by`)
+- Physical models without tests (missing `Verified_by`)
+- Percentage of requirements with a model
+- Requirements missing end-to-end traceability (Req → Model → Test)
+- Over-specified requirements (more than one model)
+- Supplier count
+- Models per supplier
 
-Además (más cercano al XSD):
+Also (closer to the XSD):
 
-- Resumen de metadatos PLM (GeneralPLMInfo)
-- Info del entorno de desarrollo (RequirementsDevStructure)
-- Documentos usados (`uses`)
-- Escenarios de V&V con credibilidad (Requirements_Verification_Validation / Scenario)
-	- Las evidencias incluyen `p510:Id` (así los resúmenes no quedan en `None`)
-- Auditoría de links sin timestamps
+- PLM metadata summary (GeneralPLMInfo)
+- Development environment info (RequirementsDevStructure)
+- Used documents (`uses`)
+- V&V scenarios with credibility (Requirements_Verification_Validation / Scenario)
+- Audit: links missing timestamps
 
-Auditorías de calidad de dato (para hacer el TFG más sólido):
+Data quality audits:
 
-- Aprobados sin aprobador (incoherencia de aprobación)
-- Links con `ContentType` incoherente con el destino
-- Trazas duplicadas (mismo origen/predicado/destino repetido)
-- Links sin `Description`
+- Approved without approver (approval inconsistency)
+- Links with `ContentType` inconsistent with the real target
+- Duplicate traces (same source/predicate/target repeated)
+- Links without `Description`
 
-Y más completo para "responsables"/"owners":
+## Next step
 
-- Conteo de entidades (requisitos/modelos/tests/escenarios/documentos/links)
-- Modelos sin proveedor (responsable faltante)
-- Requisitos sin aprobador
-- Distribución de requisitos por maturity
-- Requisitos por organización autora
-- Proveedor con más modelos sin test
-- Tests por proveedor (vía modelos)
+Once the graph and the query catalog are stable, NL → SPARQL can be implemented at two levels:
 
-## Siguiente paso (TFG)
-
-Una vez el grafo y las queries estén bien definidos, la parte de NL→SPARQL se puede plantear en 2 niveles:
-
-- **Clasificación a intent** (elige una query predefinida).
-- **Relleno de plantillas** (por ejemplo filtros por tipo/proveedor/keyword).
+- **Intent classification** (choose a predefined query).
+- **Template filling** (e.g., filters by type/supplier/keyword).
