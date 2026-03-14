@@ -531,31 +531,36 @@ def generate_sparql(
         except Exception:
             synonyms = None
 
-    # Optional offline classifier: predict the best catalog id.
+    best_ex, best_score, scored = _best_catalog_match(question_es, examples, synonyms=synonyms)
+    if best_ex is None:
+        raise ValueError("No usable examples found (need 'nl' and non-empty 'sparql').")
+
+    # Optional offline classifier (fallback): only used when similarity is below threshold.
     clf_preds: list[tuple[str, float]] = []
     clf_best_ex: dict[str, Any] | None = None
     clf_best_prob: float | None = None
-    clf_path = (config.classifier_model_file or "").strip() if config else ""
-    if clf_path:
-        try:
-            mp = Path(clf_path)
-            if mp.exists():
-                model = nb_load(str(mp))
-                clf_preds = nb_predict(model, question_es, synonyms=synonyms, top_k=3)
-                if clf_preds:
-                    best_id, best_prob = clf_preds[0]
-                    if float(best_prob) >= float(config.classifier_min_prob):
-                        for ex in examples:
-                            ex_id = ex.get("id")
-                            sp = ex.get("sparql")
-                            if ex_id == best_id and isinstance(sp, str) and sp.strip():
-                                clf_best_ex = ex
-                                clf_best_prob = float(best_prob)
-                                break
-        except Exception:
-            clf_preds = []
-            clf_best_ex = None
-            clf_best_prob = None
+    if float(best_score) < float(config.match_threshold):
+        clf_path = (config.classifier_model_file or "").strip() if config else ""
+        if clf_path:
+            try:
+                mp = Path(clf_path)
+                if mp.exists():
+                    model = nb_load(str(mp))
+                    clf_preds = nb_predict(model, question_es, synonyms=synonyms, top_k=3)
+                    if clf_preds:
+                        best_id, best_prob = clf_preds[0]
+                        if float(best_prob) >= float(config.classifier_min_prob):
+                            for ex in examples:
+                                ex_id = ex.get("id")
+                                sp = ex.get("sparql")
+                                if ex_id == best_id and isinstance(sp, str) and sp.strip():
+                                    clf_best_ex = ex
+                                    clf_best_prob = float(best_prob)
+                                    break
+            except Exception:
+                clf_preds = []
+                clf_best_ex = None
+                clf_best_prob = None
 
     if clf_best_ex is not None and clf_best_prob is not None:
         sparql = str(clf_best_ex.get("sparql") or "").strip()
@@ -572,10 +577,6 @@ def generate_sparql(
             match_score=float(clf_best_prob),
             error=None,
         )
-
-    best_ex, best_score, scored = _best_catalog_match(question_es, examples, synonyms=synonyms)
-    if best_ex is None:
-        raise ValueError("No usable examples found (need 'nl' and non-empty 'sparql').")
 
     if best_score < float(config.match_threshold):
         suggestions = []
