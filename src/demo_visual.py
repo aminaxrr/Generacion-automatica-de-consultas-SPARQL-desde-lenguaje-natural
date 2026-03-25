@@ -82,7 +82,12 @@ def main() -> None:
         st.divider()
 
         st.header("Mode")
-        st.caption("Deterministic catalog matching (no backend, no server)")
+        engine = st.selectbox(
+            "Engine",
+            options=["dynamic", "catalog"],
+            index=0,
+            help="dynamic builds SPARQL on-the-fly; catalog selects from JSONL examples",
+        )
 
         st.divider()
 
@@ -138,6 +143,7 @@ def main() -> None:
                     g = _load_graph_cached(ttl_path, _ttl_mtime_key(ttl_path))
 
                     cfg = GenerationConfig(
+                        engine=str(engine),
                         limit=int(limit),
                         match_threshold=float(threshold),
                         synonyms_file=(synonyms_file if Path(synonyms_file).exists() else None),
@@ -145,7 +151,9 @@ def main() -> None:
                         classifier_min_prob=float(classifier_min_prob),
                     )
 
-                    examples_path_eff = examples_path if Path(examples_path).exists() else None
+                    examples_path_eff = None
+                    if str(engine) == "catalog":
+                        examples_path_eff = examples_path if Path(examples_path).exists() else None
                     result = generate_sparql(g, question.strip(), config=cfg, examples_path=examples_path_eff)
 
                     elapsed = time.perf_counter() - start

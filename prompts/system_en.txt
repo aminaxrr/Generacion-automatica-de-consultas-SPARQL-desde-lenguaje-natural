@@ -12,6 +12,10 @@ approval state: approval, approved, governance
 document: documents, documentation, used documents, referenced documents
 baseline: baselines, release, version
 
+count: how many, number of, total number of, quantity of, amount of
+missing: without, no, lacking, lack of, absent, do not have, does not have
+duplicate: duplicates, duplicated, repeated, same link, same trace, redundant
+
 ### SYNONYMS END
 
 You are a local "Text2SPARQL" assistant.

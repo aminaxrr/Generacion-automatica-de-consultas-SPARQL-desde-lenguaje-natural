@@ -26,9 +26,14 @@ Output: `data/p510_sintetico.ttl`
 
 Queries live in `queries_p510/`.
 
-## Text2SPARQL offline (NeoDash Text2Cypher style)
+## Text2SPARQL offline (dynamic generator + checker)
 
-This tool maps an English question to a SPARQL query using a **deterministic catalog matcher** (no backend, no server) and validates/runs it on the RDF graph.
+This tool generates SPARQL **dynamically** from an English question (no backend, no server) by:
+
+- tokenizing/normalizing the question (with a synonyms/glossary file),
+- mapping terms to real **classes/properties present in the RDF graph**,
+- building a SPARQL query on-the-fly,
+- and running a checker to avoid invented terms.
 
 Script: `python src/text2sparql_cli.py "..."`
 
@@ -37,7 +42,7 @@ Modes:
 - `--mode translate`: only generate SPARQL
 - `--mode run`: generate + run (default)
 
-Catalog source:
+Optional catalog mode (legacy):
 
 - `eval/text2sparql_examples.jsonl` (fields: `nl`, `sparql`, optional `id`)
 
@@ -48,7 +53,11 @@ Synonyms / glossary ("prompt" file):
 
 Example:
 
-`python src/text2sparql_cli.py "requirements missing end-to-end traceability" --mode run`
+`python src/text2sparql_cli.py "requirements missing end-to-end traceability" --mode run --engine dynamic`
+
+Catalog mode example:
+
+`python src/text2sparql_cli.py "requirements missing end-to-end traceability" --mode run --engine catalog --examples eval/text2sparql_examples.jsonl`
 
 ### (Optional) Offline classifier ("own model")
 
@@ -68,7 +77,7 @@ If a question does not match any known example above a similarity threshold, the
 
 - Only `SELECT` or `ASK` queries are allowed (blocks `CONSTRUCT/DESCRIBE/INSERT/DELETE/...`).
 - If a `SELECT` query has no `LIMIT`, the tool adds `LIMIT 200` (configurable via `--limit`).
-- Catalog examples are in `eval/text2sparql_examples.jsonl` to anchor selection to the `queries_p510/` catalog.
+- Checker: blocks queries that reference QNames not present in the graph schema (prevents invented classes/properties).
 
 ## Visual demo (local web)
 

@@ -43,6 +43,12 @@ def main() -> None:
         default="reference",
         help="reference: validate reference SPARQL; generate: generate from NL and validate execution",
     )
+    parser.add_argument(
+        "--engine",
+        choices=["dynamic", "catalog"],
+        default="dynamic",
+        help="Generator engine for mode=generate",
+    )
     parser.add_argument("--limit", type=int, default=200, help="LIMIT to enforce if missing")
     parser.add_argument(
         "--threshold",
@@ -89,6 +95,7 @@ def main() -> None:
     skipped = 0
 
     config = GenerationConfig(
+        engine=args.engine,
         limit=args.limit,
         match_threshold=float(args.threshold),
         synonyms_file=args.synonyms_file,

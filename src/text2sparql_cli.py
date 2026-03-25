@@ -30,7 +30,7 @@ def _print_results(qres, max_rows: int) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Text2SPARQL offline (no backend): map an English question to a known SPARQL query from a JSONL catalog"
+        description="Text2SPARQL offline (no backend): generate SPARQL dynamically from an English question (with optional catalog mode)"
     )
     parser.add_argument("text", help="Question in English")
     parser.add_argument(
@@ -43,6 +43,12 @@ def main() -> None:
         choices=["translate", "run"],
         default="run",
         help="Only generate SPARQL (translate) or generate + run it (run)",
+    )
+    parser.add_argument(
+        "--engine",
+        choices=["dynamic", "catalog"],
+        default="dynamic",
+        help="SPARQL generator engine: dynamic builds queries on-the-fly; catalog selects from JSONL examples",
     )
     parser.add_argument(
         "--examples",
@@ -103,12 +109,17 @@ def main() -> None:
         )
 
     examples_path: str | None = args.examples
-    if examples_path and not Path(examples_path).exists():
+    if args.engine == "catalog":
+        if examples_path and not Path(examples_path).exists():
+            examples_path = None
+    else:
+        # Dynamic engine does not require examples.
         examples_path = None
 
     g: Graph = load_graph(args.ttl)
 
     config = GenerationConfig(
+        engine=args.engine,
         limit=args.limit,
         match_threshold=float(args.threshold),
         max_suggestions=int(args.suggestions),

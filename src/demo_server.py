@@ -88,6 +88,12 @@ HTML = """<!doctype html>
             <input id=\"threshold\" type=\"number\" step=\"0.01\" value=\"0.35\" />
           </div>
         </div>
+
+        <label>Engine</label>
+        <select id=\"engine\">
+          <option value=\"dynamic\" selected>dynamic (build SPARQL on-the-fly)</option>
+          <option value=\"catalog\">catalog (select from JSONL examples)</option>
+        </select>
         <label>Catalog JSONL (optional)</label>
         <input id=\"examplesPath\" value=\"eval/text2sparql_examples.jsonl\" />
 
@@ -215,6 +221,7 @@ HTML = """<!doctype html>
     const payload = {
       question: el('question').value,
       execute: el('execute').checked,
+      engine: el('engine').value,
       limit: Number(el('limit').value || 200),
       match_threshold: Number(el('threshold').value || 0.35),
       examples_path: el('examplesPath').value,
@@ -348,6 +355,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         execute = bool(payload.get("execute") if payload.get("execute") is not None else True)
+        engine = str(payload.get("engine") or "dynamic").strip().lower() or "dynamic"
         limit = int(payload.get("limit") or 200)
         match_threshold = float(payload.get("match_threshold") or 0.35)
         examples_path = str(payload.get("examples_path") or "").strip() or None
@@ -356,7 +364,10 @@ class Handler(BaseHTTPRequestHandler):
         classifier_min_prob = float(payload.get("classifier_min_prob") or 0.20)
         max_rows = int(payload.get("max_rows") or 200)
 
-        if examples_path and not Path(examples_path).exists():
+        if engine != "catalog":
+          examples_path = None
+        else:
+          if examples_path and not Path(examples_path).exists():
             examples_path = None
 
         if synonyms_file and not Path(synonyms_file).exists():
@@ -369,6 +380,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             g = state.ensure_graph()
             cfg = GenerationConfig(
+              engine=engine,
                 limit=limit,
                 match_threshold=match_threshold,
                 synonyms_file=synonyms_file,
