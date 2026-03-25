@@ -47,6 +47,7 @@ class GenerationResult:
     matched_id: str | None = None
     match_score: float | None = None
     error: str | None = None
+    explanation: list[str] | None = None
 
 
 @dataclass(frozen=True)
@@ -419,6 +420,10 @@ def _compositional_generate(
     tokens = set(qn.split())
     tokens_sig = _token_set(question, synonyms=synonyms)
 
+    explain: list[str] = []
+    explain.append(f"normalized: {qn}")
+    explain.append("tokens_sig: " + ", ".join(sorted(tokens_sig))[:200])
+
     def has_any(options: set[str]) -> bool:
         return bool(tokens_sig & options)
 
@@ -436,6 +441,10 @@ def _compositional_generate(
         or qn.startswith("list ")
         or qn.startswith("show ")
     )
+    if is_count:
+        explain.append("query_form: COUNT")
+    elif is_list:
+        explain.append("query_form: LIST")
 
     wants_missing = bool(
         (tokens_sig & {"without", "missing", "lack", "lacking", "absent", "none"})
@@ -443,6 +452,8 @@ def _compositional_generate(
         or "no" in tokens_raw
         or re.search(r"\b(do\s+not\s+have|does\s+not\s+have|not\s+having)\b", qn)
     )
+    if wants_missing:
+        explain.append("constraint: missing/negation")
 
     # Defer to specialized logic for patterns that require aggregation or multi-hop semantics.
     is_duplicate = bool(
@@ -490,12 +501,16 @@ def _compositional_generate(
         want_document and ("use" in tokens_sig or "used" in tokens_sig)
     ):
         rel_pred = pred_uses
+        explain.append("relation: uses")
     elif has_any({"verify", "verification", "test", "testcase"}):
         rel_pred = pred_verified
+        explain.append("relation: Verified_by")
     elif has_any({"validate", "validation", "evidence"}):
         rel_pred = pred_validated
+        explain.append("relation: Validated_by")
     elif has_any({"satisfy", "satisfied"}) or (want_model and want_req):
         rel_pred = pred_satisfied
+        explain.append("relation: Satisfied_by")
 
     # Choose source and target classes.
     src_class: str | None = None
@@ -503,24 +518,31 @@ def _compositional_generate(
     if want_req and cls_req:
         src_class = cls_req
         src_var = "?req"
+        explain.append("source_class: Requirement")
     elif want_model and cls_model:
         src_class = cls_model
         src_var = "?m"
+        explain.append("source_class: DesignModel")
     elif want_test and cls_test:
         src_class = cls_test
         src_var = "?t"
+        explain.append("source_class: VerificationTest")
     elif want_supplier and cls_org:
         src_class = cls_org
         src_var = "?prov"
+        explain.append("source_class: Organization")
     elif want_link and cls_link:
         src_class = cls_link
         src_var = "?l"
+        explain.append("source_class: Traceability_Link_Type")
 
     target_class: str | None = None
     if rel_pred in {pred_verified, pred_validated} and want_test and cls_test:
         target_class = cls_test
+        explain.append("target_class: VerificationTest")
     elif rel_pred == pred_satisfied and want_model and cls_model:
         target_class = cls_model
+        explain.append("target_class: DesignModel")
 
     # If we can't even decide a source entity, bail.
     if not src_class:
@@ -574,7 +596,14 @@ def _compositional_generate(
     sparql = ensure_limit(sparql, config.limit)
     check_no_invented_terms(graph, sparql)
     validate_and_run(graph, sparql)
-    return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+    return GenerationResult(
+        sparql=sparql,
+        attempts=1,
+        matched_id="dynamic",
+        matched_nl=None,
+        match_score=None,
+        explanation=explain,
+    )
 
 
 def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, synonyms: SynonymMap | None) -> GenerationResult:
@@ -652,6 +681,29 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
     pred_validated = _find_pred(index, "Validated_by")
     pred_uses = _find_pred(index, "uses")
 
+    def _base_explain() -> list[str]:
+        lines: list[str] = []
+        lines.append(f"normalized: {qn}")
+        lines.append("tokens_sig: " + ", ".join(sorted(tokens_sig))[:200])
+        if is_count:
+            lines.append("query_form: COUNT")
+        elif any(t in tokens for t in {"list", "show"}) or qn.startswith("list ") or qn.startswith("show "):
+            lines.append("query_form: LIST")
+        if wants_missing:
+            lines.append("constraint: missing/negation")
+        if is_audit:
+            lines.append("operator_hint: audit")
+        if is_duplicate:
+            lines.append("operator_hint: duplicate")
+        if want_author:
+            lines.append("constraint: authored-by")
+        return lines
+
+    def _term(uri: str | None) -> str:
+        if not uri:
+            return "<missing>"
+        return _local_name(uri)
+
     # Special: duplicate traces audit ("audit" optional; duplicates imply an audit-style query)
     if is_duplicate and (want_link or "trace" in tokens or "traceability" in tokens or "traceability" in qn):
         preds = [p for p in [pred_satisfied, pred_verified, pred_validated, pred_uses] if p]
@@ -678,32 +730,51 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
-        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+        explain = _base_explain()
+        explain.append("operator: DUPLICATE_TRACES_AUDIT")
+        explain.append("pattern: VALUES ?pred {Satisfied_by Verified_by Validated_by uses} + GROUP BY/HAVING")
+        explain.append("uses_predicates: " + ", ".join([_term(p) for p in preds]))
+        explain.append("link_target: " + _term(pred_link))
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_id="dynamic",
+            matched_nl=None,
+            match_score=None,
+            explanation=explain,
+        )
 
     # Count queries
     if is_count:
         pfx = _prefix_lines(index)
+        explain = _base_explain()
+        explain.append("operator: COUNT_ENTITIES")
         if want_supplier and cls_org:
+            explain.append("entity_class: " + _term(cls_org))
             sparql = (
                 f"{pfx}\n"
                 f"SELECT (COUNT(DISTINCT ?prov) AS ?count) WHERE {{ ?prov a <{cls_org}> . }}"
             )
         elif want_req and cls_req:
+            explain.append("entity_class: " + _term(cls_req))
             sparql = (
                 f"{pfx}\n"
                 f"SELECT (COUNT(DISTINCT ?req) AS ?count) WHERE {{ ?req a <{cls_req}> . }}"
             )
         elif want_model and cls_model:
+            explain.append("entity_class: " + _term(cls_model))
             sparql = (
                 f"{pfx}\n"
                 f"SELECT (COUNT(DISTINCT ?m) AS ?count) WHERE {{ ?m a <{cls_model}> . }}"
             )
         elif want_test and cls_test:
+            explain.append("entity_class: " + _term(cls_test))
             sparql = (
                 f"{pfx}\n"
                 f"SELECT (COUNT(DISTINCT ?t) AS ?count) WHERE {{ ?t a <{cls_test}> . }}"
             )
         elif want_link and cls_link:
+            explain.append("entity_class: " + _term(cls_link))
             sparql = (
                 f"{pfx}\n"
                 f"SELECT (COUNT(DISTINCT ?l) AS ?count) WHERE {{ ?l a <{cls_link}> . }}"
@@ -716,7 +787,14 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
-        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_id="dynamic",
+            matched_nl=None,
+            match_score=None,
+            explanation=explain,
+        )
 
     # Missing tests for models
     if want_model and wants_missing and want_test:
@@ -739,7 +817,19 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
-        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+        explain = _base_explain()
+        explain.append("operator: MODELS_WITHOUT_TESTS")
+        explain.append("source_class: " + _term(cls_model))
+        explain.append("relation: " + _term(pred_verified) + " / link-node pattern")
+        explain.append("filter: NOT EXISTS verification link")
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_id="dynamic",
+            matched_nl=None,
+            match_score=None,
+            explanation=explain,
+        )
 
     # Used documents (generic: list targets of uses links)
     if want_document and (
@@ -764,7 +854,18 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
-        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+        explain = _base_explain()
+        explain.append("operator: USED_DOCUMENTS")
+        explain.append("relation: " + _term(pred_uses) + " / link-node pattern")
+        explain.append("target: Link -> ?doc")
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_id="dynamic",
+            matched_nl=None,
+            match_score=None,
+            explanation=explain,
+        )
 
     # Links for entities authored by a given organization (Author_Organization)
     # Example: "show links for requirements authored by Supplier 03"
@@ -802,7 +903,19 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
-        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+        explain = _base_explain()
+        explain.append("operator: LINKS_BY_AUTHOR_ORG")
+        explain.append("author_org_literal: " + org)
+        explain.append("pattern: ?src Author_Organization \"...\"; ?src ?pred ?link; ?link Link ?target")
+        explain.append("uses_predicates: " + ", ".join([_term(p) for p in preds]))
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_id="dynamic",
+            matched_nl=None,
+            match_score=None,
+            explanation=explain,
+        )
 
     # Requirements without end-to-end traceability (Req -> Model -> Test)
     if want_req and wants_missing and ("end" in tokens and "traceability" in tokens or "endtoend" in tokens):
@@ -830,7 +943,18 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
-        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", matched_nl=None, match_score=None)
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_MISSING_END_TO_END")
+        explain.append("path: Requirement -Satisfied_by-> Model -Verified_by-> Test (via link nodes)")
+        explain.append("filter: NOT EXISTS full path")
+        return GenerationResult(
+            sparql=sparql,
+            attempts=1,
+            matched_id="dynamic",
+            matched_nl=None,
+            match_score=None,
+            explanation=explain,
+        )
 
     # List/show queries (fallback when a domain is clear but no special intent matches)
     is_list = bool(

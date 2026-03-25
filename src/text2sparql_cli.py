@@ -101,6 +101,11 @@ def main() -> None:
         default=50,
         help="Max rows to print when running",
     )
+    parser.add_argument(
+        "--explain",
+        action="store_true",
+        help="Print step-by-step generation trace (detected classes/predicates/constraints)",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.ttl):
@@ -141,6 +146,17 @@ def main() -> None:
     print("-" * 80)
     print(result.sparql.strip())
     print("-" * 80)
+
+    if args.explain:
+        if result.explanation:
+            print("EXPLANATION")
+            for line in result.explanation:
+                print(f"- {line}")
+            print("-" * 80)
+        else:
+            print("EXPLANATION")
+            print("- (no trace available)")
+            print("-" * 80)
 
     if args.mode == "translate":
         return
