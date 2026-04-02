@@ -166,6 +166,10 @@ def main() -> None:
                     with st.expander("Generated SPARQL", expanded=True):
                         st.code(result.sparql.strip(), language="sparql")
 
+                    if result.explanation:
+                        with st.expander("Generation explanation", expanded=False):
+                            st.text("\n".join(f"- {line}" for line in result.explanation))
+
                     qres = g.query(result.sparql)
                     df = _result_to_df(qres, max_rows=int(max_rows))
 
