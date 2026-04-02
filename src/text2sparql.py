@@ -78,6 +78,30 @@ class SchemaIndex:
     pred_by_local: dict[str, str]
 
 
+@dataclass(frozen=True)
+class GroundingHit:
+    phrase: str
+    kind: str  # operator|entity|predicate|attribute|literal
+    mapped_to: str
+
+
+@dataclass(frozen=True)
+class GroundingResult:
+    normalized: str
+    tokens_sig: set[str]
+    hits: list[GroundingHit]
+
+    def explain_lines(self, max_hits: int = 30) -> list[str]:
+        lines: list[str] = []
+        lines.append(f"normalized: {self.normalized}")
+        lines.append("tokens_sig: " + ", ".join(sorted(self.tokens_sig))[:200])
+        for h in self.hits[:max_hits]:
+            lines.append(f"ground: '{h.phrase}' -> {h.kind}={h.mapped_to}")
+        if len(self.hits) > max_hits:
+            lines.append(f"ground: (+{len(self.hits) - max_hits} more)")
+        return lines
+
+
 _STD_OK_PREFIXES = {
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -396,6 +420,160 @@ def _split_local_tokens(name: str) -> list[str]:
     return [t.lower() for t in re.findall(r"[A-Za-z0-9]+", s) if t]
 
 
+def _ground_question(question: str, normalized: str, tokens_sig: set[str], index: SchemaIndex) -> GroundingResult:
+    """Ground NL tokens/phrases to operators and schema concepts.
+
+    This stays deterministic and conservative: it only emits a hit when there is a clear
+    mapping to a known schema term or a known query operator.
+    """
+
+    q_raw = _normalize_nl_basic(question)
+    q = normalized
+
+    hits: list[GroundingHit] = []
+
+    def add(phrase: str, kind: str, mapped_to: str) -> None:
+        hits.append(GroundingHit(phrase=phrase, kind=kind, mapped_to=mapped_to))
+
+    # Operators (language-level).
+    if re.search(r"\b(how\s+many|count(\s+of)?|number\s+of|total\s+number\s+of|quantity\s+of|amount\s+of)\b", q):
+        add("count/how-many", "operator", "COUNT")
+    if re.search(r"\b(percent|percentage|ratio)\b", q):
+        add("percentage", "operator", "PERCENT")
+    if re.search(r"\b(list|show|display|give|return)\b", q):
+        add("list/show", "operator", "LIST")
+    if re.search(r"\b(without|missing|lack|lacking|absent)\b", q) or "no" in q_raw.split() or re.search(
+        r"\b(do\s+not\s+have|does\s+not\s+have|not\s+having)\b", q
+    ):
+        add("missing/without", "operator", "NOT_EXISTS")
+    if re.search(r"\b(duplicate|duplicates|duplicated|repeated|redundant|same\s+link|same\s+trace)\b", q):
+        add("duplicate", "operator", "DUPLICATE")
+    if re.search(r"\b(audit|check|detect|validate)\b", q):
+        add("audit/check", "operator", "AUDIT")
+    if re.search(r"\b(summary|overview|resume|resumen)\b", q):
+        add("summary", "operator", "SUMMARY")
+    if re.search(r"\b(by|per|grouped\s+by)\b", q):
+        add("by/per", "operator", "GROUP_BY")
+    if re.search(r"\b(top|most)\b", q):
+        add("top/most", "operator", "TOP")
+
+    # Domain entities (schema-level classes).
+    cls_req = _find_class(index, "Requirement")
+    cls_model = _find_class(index, "DesignModel")
+    cls_test = _find_class(index, "VerificationTest", "TestCase", "Test")
+    cls_link = _find_class(index, "Traceability_Link_Type")
+    cls_scn = _find_class(index, "Verification_Validation_Scenario_Type", "VnVScenario")
+    cls_manifest = _find_class(index, "P510_ManifestType")
+    cls_org = _find_class(index, "Organization")
+
+    if re.search(r"\b(requirement|requirements|reqs?|spec|specification)\b", q) and cls_req:
+        add("requirement", "entity", _local_name(cls_req))
+    if re.search(r"\b(model|models|design\s*model|physical\s*model)\b", q) and cls_model:
+        add("model", "entity", _local_name(cls_model))
+    if re.search(r"\b(test|tests|test\s*case|verification)\b", q) and cls_test:
+        add("test", "entity", _local_name(cls_test))
+    if re.search(r"\b(link|links|trace|traceability)\b", q) and cls_link:
+        add("link", "entity", _local_name(cls_link))
+    if re.search(r"\b(scenario|scenarios|vnv)\b", q) and cls_scn:
+        add("scenario", "entity", _local_name(cls_scn))
+    if re.search(r"\b(manifest)\b", q) and cls_manifest:
+        add("manifest", "entity", _local_name(cls_manifest))
+    if re.search(r"\b(supplier|provider|vendor|organization|org)\b", q) and cls_org:
+        add("supplier/org", "entity", _local_name(cls_org))
+
+    # Key schema predicates/attributes.
+    pred_id = _find_pred(index, "Id")
+    pred_ct = _find_pred(index, "ContentType")
+    pred_desc = _find_pred(index, "Description")
+    pred_approver = _find_pred(index, "Approver")
+    pred_approval = _find_pred(index, "Approval_State")
+    pred_maturity = _find_pred(index, "Maturity_State")
+    pred_author_org = _find_pred(index, "Author_Organization")
+    pred_subsystem = _find_pred(index, "subsystem")
+    pred_verif_method = _find_pred(index, "verification_method")
+    pred_ts_arch = _find_pred(index, "Timestamp_Archiving")
+    pred_ts_plm = _find_pred(index, "Timestamp_PLM")
+
+    pred_project_code = _find_pred(index, "project_code")
+    pred_product = _find_pred(index, "product")
+    pred_has_baseline = _find_pred(index, "hasBaseline")
+    pred_baseline_name = _find_pred(index, "baseline_name")
+    pred_baseline_id = _find_pred(index, "baseline_id")
+    pred_created = _find_pred(index, "created")
+
+    if pred_id and re.search(r"\b(id|identifier)\b", q):
+        add("id", "attribute", _local_name(pred_id))
+    if pred_ct and re.search(r"\b(content\s*type|contenttype|type)\b", q):
+        add("contenttype", "attribute", _local_name(pred_ct))
+    if pred_desc and re.search(r"\b(description|desc)\b", q):
+        add("description", "attribute", _local_name(pred_desc))
+    if pred_approver and re.search(r"\b(approver)\b", q):
+        add("approver", "attribute", _local_name(pred_approver))
+    if pred_approval and re.search(r"\b(approval|approved)\b", q):
+        add("approval", "attribute", _local_name(pred_approval))
+    if pred_maturity and re.search(r"\b(maturity)\b", q):
+        add("maturity", "attribute", _local_name(pred_maturity))
+    if pred_author_org and re.search(r"\b(author|authored|creator|created|written)\b", q):
+        add("author_org", "attribute", _local_name(pred_author_org))
+    if pred_subsystem and re.search(r"\b(subsystem)\b", q):
+        add("subsystem", "attribute", _local_name(pred_subsystem))
+    if pred_verif_method and re.search(r"\b(verification\s+method|method\s+of\s+verification)\b", q):
+        add("verification_method", "attribute", _local_name(pred_verif_method))
+    if (pred_ts_arch or pred_ts_plm) and re.search(r"\b(timestamp|timestamps)\b", q):
+        add("timestamp", "attribute", "Timestamp_*")
+
+    if pred_project_code and re.search(r"\b(project\s+code|project)\b", q):
+        add("project code", "attribute", _local_name(pred_project_code))
+    if pred_product and re.search(r"\b(product)\b", q):
+        add("product", "attribute", _local_name(pred_product))
+    if (pred_has_baseline or pred_baseline_name or pred_baseline_id) and re.search(r"\b(baseline|release|version)\b", q):
+        add("baseline", "attribute", "baseline_*")
+    if pred_created and re.search(r"\b(created|creation\s+date|date)\b", q):
+        add("created", "attribute", _local_name(pred_created))
+
+    # Literals commonly used in P510 synthetic content types.
+    if re.search(r"\bphysical\s+model\b", q):
+        add("Physical Model", "literal", "Physical Model")
+    if re.search(r"\btest\s+case\b", q):
+        add("Test Case", "literal", "Test Case")
+    if re.search(r"\bdocument(s)?\b", q):
+        add("Document", "literal", "Document")
+    if re.search(r"\bapproved\b", q):
+        add("Approved", "literal", "Approved")
+
+    return GroundingResult(normalized=q, tokens_sig=tokens_sig, hits=hits)
+
+
+def _compile_group_count_by_attr(
+    *,
+    graph: Graph,
+    index: SchemaIndex,
+    subject_class: str,
+    subject_var: str,
+    attr_pred: str,
+    attr_var: str,
+    count_var: str = "?num",
+    order_desc: bool = True,
+    limit: int = 200,
+) -> str:
+    pfx = _prefix_lines(index)
+    order = f"ORDER BY {'DESC' if order_desc else ''}({count_var})".strip()
+    sparql = (
+        f"{pfx}\n"
+        f"SELECT {attr_var} (COUNT(DISTINCT {subject_var}) AS {count_var})\n"
+        "WHERE {\n"
+        f"  {subject_var} a <{subject_class}> .\n"
+        f"  OPTIONAL {{ {subject_var} <{attr_pred}> {attr_var} }}\n"
+        "}\n"
+        f"GROUP BY {attr_var}\n"
+        f"{order}"
+    )
+    sparql = ensure_limit(sparql, limit)
+    check_no_invented_terms(graph, sparql)
+    validate_and_run(graph, sparql)
+    return sparql
+
+
 def _compositional_generate(
     graph: Graph,
     question: str,
@@ -420,9 +598,8 @@ def _compositional_generate(
     tokens = set(qn.split())
     tokens_sig = _token_set(question, synonyms=synonyms)
 
-    explain: list[str] = []
-    explain.append(f"normalized: {qn}")
-    explain.append("tokens_sig: " + ", ".join(sorted(tokens_sig))[:200])
+    grounding = _ground_question(question, qn, tokens_sig, index=index)
+    explain: list[str] = grounding.explain_lines()
 
     def has_any(options: set[str]) -> bool:
         return bool(tokens_sig & options)
@@ -464,6 +641,33 @@ def _compositional_generate(
         return None
 
     if re.search(r"\bend\s*-?\s*to\s*-?\s*end\b", qn) or "endtoend" in tokens_sig:
+        return None
+
+    # Defer to specialized operators for audit-style data quality checks, manifest summaries,
+    # and GROUP BY/HAVING style questions (compositional generator is intentionally simple).
+    if tokens_sig & {
+        "timestamp",
+        "description",
+        "approval",
+        "approver",
+        "approved",
+        "maturity",
+        "subsystem",
+        "verification_method",
+        "scenario",
+        "vnv",
+        "baseline",
+        "project",
+        "environment",
+        "tool",
+        "os",
+        "format",
+        "plm",
+    }:
+        return None
+    if re.search(r"\b(content\s*type\s+mismatch|contenttype\s+mismatch|inconsistent\s+content\s*type)\b", qn):
+        return None
+    if ("supplier" in tokens_sig or "provider" in tokens_sig) and ("per" in tokens or "by" in tokens or "group" in tokens):
         return None
 
     # Resolve common schema terms.
@@ -544,6 +748,20 @@ def _compositional_generate(
         target_class = cls_model
         explain.append("target_class: DesignModel")
 
+    # ContentType constraint hint (these appear in your reference queries).
+    # When the user explicitly says "physical model" or "test case" or "document",
+    # restrict the link-node ContentType accordingly.
+    ct_filter: str | None = None
+    if "physical" in tokens_sig and "model" in tokens_sig:
+        ct_filter = "Physical Model"
+        explain.append("linknode_contenttype: Physical Model")
+    elif "test" in tokens_sig and "case" in tokens_sig:
+        ct_filter = "Test Case"
+        explain.append("linknode_contenttype: Test Case")
+    elif want_document:
+        ct_filter = "Document"
+        explain.append("linknode_contenttype: Document")
+
     # If we can't even decide a source entity, bail.
     if not src_class:
         return None
@@ -569,6 +787,8 @@ def _compositional_generate(
         ]
         if cls_link:
             inner.insert(1, f"    ?ln a <{cls_link}> .")
+        if ct_filter and pred_ct:
+            inner.insert(2 if cls_link else 1, f"    ?ln <{pred_ct}> \"{ct_filter}\" .")
         if target_class:
             inner.append(f"    ?target a <{target_class}> .")
 
@@ -625,10 +845,12 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
     # Significant tokens: normalized, stopwords removed, cheap singularization applied.
     tokens_sig = _token_set(question, synonyms=synonyms)
 
+    grounding = _ground_question(question, qn, tokens_sig, index=index)
+
     def has_any(token_set: set[str], options: set[str]) -> bool:
         return bool(token_set & options)
 
-    # Intent detection
+    # Intent detection (kept for backward compatibility; grounding is the primary trace source).
     # Count phrasing is varied: "how many", "what is the number of", "total number of", etc.
     is_count = bool(
         re.search(
@@ -637,6 +859,7 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         )
         or has_any(tokens_sig, {"count", "number", "total", "quantity", "amount"})
     )
+    is_percent = bool(re.search(r"\b(percent|percentage|ratio)\b", qn) or "percentage" in tokens_sig)
 
     # Core domain terms (mapped to schema local names)
     want_req = has_any(tokens_sig, {"requirement", "req", "spec", "specification"})
@@ -668,11 +891,21 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
     cls_model = _find_class(index, "DesignModel")
     cls_test = _find_class(index, "VerificationTest", "TestCase", "Test")
     cls_link = _find_class(index, "Traceability_Link_Type")
+    cls_manifest = _find_class(index, "P510_ManifestType")
+    cls_scn = _find_class(index, "Verification_Validation_Scenario_Type", "Verification_Validation_Scenario_Type")
     cls_org = _find_class(index, "Organization")  # foaf:Organization
 
     pred_id = _find_pred(index, "Id")
     pred_link = _find_pred(index, "Link")
     pred_ct = _find_pred(index, "ContentType")
+    pred_desc = _find_pred(index, "Description")
+    pred_ts_arch = _find_pred(index, "Timestamp_Archiving")
+    pred_ts_plm = _find_pred(index, "Timestamp_PLM")
+    pred_approver = _find_pred(index, "Approver")
+    pred_approval = _find_pred(index, "Approval_State")
+    pred_maturity = _find_pred(index, "Maturity_State")
+    pred_subsystem = _find_pred(index, "subsystem")
+    pred_verif_method = _find_pred(index, "verification_method")
 
     pred_author_org = _find_pred(index, "Author_Organization")
 
@@ -681,28 +914,123 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
     pred_validated = _find_pred(index, "Validated_by")
     pred_uses = _find_pred(index, "uses")
 
+    pred_provided_by = _find_pred(index, "providedBy", "provided_by", "providedby")
+
+    pred_manifest_dev = _find_pred(index, "has_RequirementsDevStructure")
+    pred_manifest_plm = _find_pred(index, "has_GeneralPLMInfo")
+    pred_manifest_vnv = _find_pred(index, "has_Requirements_Verification_Validation")
+    pred_vnv_scenario = _find_pred(index, "Scenario")
+    pred_ver_level = _find_pred(index, "Verification_Credibility_Level")
+    pred_val_level = _find_pred(index, "Validation_Credibility_Level")
+    pred_created_on = _find_pred(index, "Created_on")
+    pred_org = _find_pred(index, "Organization")
+    pred_model_purpose = _find_pred(index, "Model_Purpose")
+    pred_model_objective = _find_pred(index, "Model_Objective")
+    pred_version_identifier = _find_pred(index, "Version_identifier")
+    pred_dev_tool_name = _find_pred(index, "DevTool_Name")
+    pred_dev_tool_ver = _find_pred(index, "DevTool_Version")
+    pred_dev_os_name = _find_pred(index, "DevOS_Name")
+    pred_dev_os_ver = _find_pred(index, "DevOS_Version")
+    pred_format_name = _find_pred(index, "Format_name")
+    pred_format_ver = _find_pred(index, "Format_version")
+    pred_req_authoring = _find_pred(index, "RequirementAuthoringTechnique")
+    pred_language = _find_pred(index, "Language")
+
+    pred_project_code = _find_pred(index, "project_code")
+    pred_product = _find_pred(index, "product")
+    pred_has_baseline = _find_pred(index, "hasBaseline")
+    pred_baseline_name = _find_pred(index, "baseline_name")
+    pred_baseline_id = _find_pred(index, "baseline_id")
+    pred_baseline_created = _find_pred(index, "created")
+
     def _base_explain() -> list[str]:
-        lines: list[str] = []
-        lines.append(f"normalized: {qn}")
-        lines.append("tokens_sig: " + ", ".join(sorted(tokens_sig))[:200])
-        if is_count:
-            lines.append("query_form: COUNT")
-        elif any(t in tokens for t in {"list", "show"}) or qn.startswith("list ") or qn.startswith("show "):
-            lines.append("query_form: LIST")
-        if wants_missing:
-            lines.append("constraint: missing/negation")
-        if is_audit:
-            lines.append("operator_hint: audit")
-        if is_duplicate:
-            lines.append("operator_hint: duplicate")
-        if want_author:
-            lines.append("constraint: authored-by")
-        return lines
+        return grounding.explain_lines()
 
     def _term(uri: str | None) -> str:
         if not uri:
             return "<missing>"
         return _local_name(uri)
+
+    # ---------------------------------------------------------------------
+    # Operator registry (implemented as ordered branches for clarity)
+    # ---------------------------------------------------------------------
+
+    # Link quality: missing timestamps
+    if want_link and ("timestamp" in tokens or "timestamp" in qn) and wants_missing:
+        if not cls_link:
+            raise ValueError("Dynamic generator: could not find Traceability_Link_Type class.")
+        if not (pred_ts_arch and pred_ts_plm):
+            raise ValueError("Dynamic generator: graph missing Timestamp_Archiving/Timestamp_PLM predicates.")
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?link WHERE {\n"
+            f"  ?link a <{cls_link}> .\n"
+            "  FILTER(\n"
+            f"    !EXISTS {{ ?link <{pred_ts_arch}> ?ta }} ||\n"
+            f"    !EXISTS {{ ?link <{pred_ts_plm}> ?tp }}\n"
+            "  )\n"
+            "}"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: LINKS_MISSING_TIMESTAMP")
+        explain.append("source_class: " + _term(cls_link))
+        explain.append("missing: Timestamp_Archiving or Timestamp_PLM")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Link quality: missing description
+    if want_link and ("description" in tokens or "description" in qn or "desc" in tokens) and wants_missing:
+        if not cls_link:
+            raise ValueError("Dynamic generator: could not find Traceability_Link_Type class.")
+        if not pred_desc:
+            raise ValueError("Dynamic generator: graph missing Description predicate.")
+        pfx = _prefix_lines(index)
+        opt_ct = f"OPTIONAL {{ ?link <{pred_ct}> ?ct . }}" if pred_ct else ""
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?link ?ct WHERE {\n"
+            f"  ?link a <{cls_link}> .\n"
+            f"  {opt_ct}\n"
+            f"  FILTER NOT EXISTS {{ ?link <{pred_desc}> ?d }}\n"
+            "}\nORDER BY ?ct"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: LINKS_WITHOUT_DESCRIPTION")
+        explain.append("source_class: " + _term(cls_link))
+        explain.append("missing: Description")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Link quality: ContentType mismatch (link CT vs target CT)
+    if want_link and ("mismatch" in tokens or "inconsistent" in tokens or "incoherent" in tokens or "mismatch" in qn) and (
+        "contenttype" in tokens or "content type" in qn or "contenttype" in qn
+    ):
+        if not cls_link:
+            raise ValueError("Dynamic generator: could not find Traceability_Link_Type class.")
+        if not (pred_ct and pred_link):
+            raise ValueError("Dynamic generator: graph missing ContentType/Link predicates.")
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?link ?linkCT ?target ?targetCT WHERE {\n"
+            f"  ?link a <{cls_link}> ; <{pred_ct}> ?linkCT ; <{pred_link}> ?target .\n"
+            f"  OPTIONAL {{ ?target <{pred_ct}> ?targetCT }}\n"
+            "  FILTER(BOUND(?targetCT) && ?linkCT != ?targetCT)\n"
+            "}\nORDER BY ?linkCT"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: LINK_CONTENTTYPE_MISMATCH")
+        explain.append("source_class: " + _term(cls_link))
+        explain.append("compare: link.ContentType vs target.ContentType")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Special: duplicate traces audit ("audit" optional; duplicates imply an audit-style query)
     if is_duplicate and (want_link or "trace" in tokens or "traceability" in tokens or "traceability" in qn):
@@ -743,6 +1071,61 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
             match_score=None,
             explanation=explain,
         )
+
+    # Requirements missing a physical model (Satisfied_by link-node of ContentType="Physical Model")
+    if want_req and wants_missing and (want_model or "physical" in tokens_sig or "model" in tokens_sig) and not want_test:
+        if not (cls_req and pred_id and pred_satisfied and pred_link and pred_ct):
+            raise ValueError("Dynamic generator: graph missing required schema terms for 'requirements without physical model'.")
+        pfx = _prefix_lines(index)
+        select_vars = "?req ?id" + (" ?desc" if pred_desc else "")
+        where_lines: list[str] = [
+            f"  ?req a <{cls_req}> ; <{pred_id}> ?id .",
+        ]
+        if pred_desc:
+            where_lines.append(f"  OPTIONAL {{ ?req <{pred_desc}> ?desc }}")
+        where_lines.extend(
+            [
+                "  FILTER NOT EXISTS {",
+                f"    ?req <{pred_satisfied}> ?link .",
+                f"    ?link <{pred_link}> ?modelo .",
+                f"    ?link <{pred_ct}> \"Physical Model\" .",
+                "  }",
+            ]
+        )
+        sparql = f"{pfx}\nSELECT {select_vars} WHERE {{\n" + "\n".join(where_lines) + "\n}"
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_WITHOUT_PHYSICAL_MODEL")
+        explain.append("source_class: " + _term(cls_req))
+        explain.append("missing: Satisfied_by -> link(ContentType=Physical Model) -> model")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Percentage of requirements with a model (ratio query)
+    if want_req and is_percent:
+        if not (cls_req and pred_satisfied and pred_link and pred_ct):
+            raise ValueError("Dynamic generator: graph missing required schema terms for 'percentage requirements with model'.")
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT (100.0 * COUNT(DISTINCT ?reqWithModel) / COUNT(DISTINCT ?req) AS ?percentage)\n"
+            "WHERE {\n"
+            f"  ?req a <{cls_req}> .\n"
+            "  OPTIONAL {\n"
+            f"    ?req <{pred_satisfied}> ?link .\n"
+            f"    ?link <{pred_ct}> \"Physical Model\" ; <{pred_link}> ?modelo .\n"
+            "    BIND(?req AS ?reqWithModel)\n"
+            "  }\n"
+            "}"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_PERCENT_WITH_MODEL")
+        explain.append("ratio: COUNT(reqWithModel)/COUNT(req)")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Count queries
     if is_count:
@@ -796,6 +1179,71 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
             explanation=explain,
         )
 
+    # Requirements grouped by maturity / author org / subsystem / verification method
+    if want_req and ("maturity" in tokens_sig) and cls_req and pred_maturity:
+        sparql = _compile_group_count_by_attr(
+            graph=graph,
+            index=index,
+            subject_class=cls_req,
+            subject_var="?req",
+            attr_pred=pred_maturity,
+            attr_var="?maturity",
+            count_var="?num",
+            limit=config.limit,
+        )
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_BY_MATURITY")
+        explain.append("group_by: Maturity_State")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if want_req and ("author" in tokens_sig or "authored" in tokens_sig or "creator" in tokens_sig or "owner" in tokens_sig) and cls_req and pred_author_org:
+        sparql = _compile_group_count_by_attr(
+            graph=graph,
+            index=index,
+            subject_class=cls_req,
+            subject_var="?req",
+            attr_pred=pred_author_org,
+            attr_var="?org",
+            count_var="?numRequisitos",
+            limit=config.limit,
+        )
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_BY_AUTHOR_ORG")
+        explain.append("group_by: Author_Organization")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if want_req and ("subsystem" in tokens_sig) and cls_req and pred_subsystem:
+        sparql = _compile_group_count_by_attr(
+            graph=graph,
+            index=index,
+            subject_class=cls_req,
+            subject_var="?req",
+            attr_pred=pred_subsystem,
+            attr_var="?subsystem",
+            count_var="?numRequisitos",
+            limit=config.limit,
+        )
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_BY_SUBSYSTEM")
+        explain.append("group_by: ex:subsystem")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if want_req and ("method" in tokens_sig or "verification" in tokens_sig) and ("verification_method" in tokens_sig or "method" in tokens_sig) and cls_req and pred_verif_method:
+        sparql = _compile_group_count_by_attr(
+            graph=graph,
+            index=index,
+            subject_class=cls_req,
+            subject_var="?req",
+            attr_pred=pred_verif_method,
+            attr_var="?method",
+            count_var="?numRequisitos",
+            limit=config.limit,
+        )
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_BY_VERIFICATION_METHOD")
+        explain.append("group_by: ex:verification_method")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
     # Missing tests for models
     if want_model and wants_missing and want_test:
         if not (cls_model and pred_id and pred_verified and pred_link):
@@ -831,7 +1279,44 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
             explanation=explain,
         )
 
-    # Used documents (generic: list targets of uses links)
+    # Models without supplier/provider
+    if want_model and wants_missing and ("supplier" in tokens_sig or "provider" in tokens_sig or "vendor" in tokens_sig) and pred_provided_by:
+        if not (cls_model and pred_id and pred_ct):
+            raise ValueError("Dynamic generator: graph missing required schema terms for 'models without provider'.")
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?modelo ?id WHERE {\n"
+            f"  ?modelo a <{cls_model}> ; <{pred_id}> ?id ; <{pred_ct}> \"Physical Model\" .\n"
+            f"  FILTER NOT EXISTS {{ ?modelo <{pred_provided_by}> ?prov }}\n"
+            "}"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: MODELS_WITHOUT_PROVIDER")
+        explain.append("missing: providedBy")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Models grouped by approval state
+    if want_model and ("approval" in tokens_sig or "approved" in tokens_sig) and cls_model and pred_approval:
+        sparql = _compile_group_count_by_attr(
+            graph=graph,
+            index=index,
+            subject_class=cls_model,
+            subject_var="?modelo",
+            attr_pred=pred_approval,
+            attr_var="?approval",
+            count_var="?numModelos",
+            limit=config.limit,
+        )
+        explain = _base_explain()
+        explain.append("operator: MODELS_BY_APPROVAL_STATE")
+        explain.append("group_by: Approval_State")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Used documents (manifest dev structure -> uses -> link-node contenttype Document)
     if want_document and (
         has_any(tokens_sig, {"use", "used", "using", "reference", "referenced", "cite", "cited"})
         or "used" in tokens
@@ -841,16 +1326,29 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         or "referenced" in tokens_raw
         or re.search(r"\b(used\s+by|referenced\s+by|depends\s+on)\b", qn)
     ):
-        if not (pred_uses and pred_link):
-            raise ValueError("Dynamic generator: graph missing required schema terms for 'used documents'.")
         pfx = _prefix_lines(index)
-        sparql = (
-            f"{pfx}\n"
-            "SELECT DISTINCT ?doc WHERE {\n"
-            f"  ?src <{pred_uses}> ?ul .\n"
-            f"  ?ul <{pred_link}> ?doc .\n"
-            "}\nORDER BY ?doc"
-        )
+        if cls_manifest and pred_manifest_dev and pred_uses and pred_link and cls_link and pred_ct:
+            opt_desc = f"OPTIONAL {{ ?doc <{pred_desc}> ?desc }}" if pred_desc else ""
+            sparql = (
+                f"{pfx}\n"
+                "SELECT ?doc ?desc WHERE {\n"
+                f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_dev}> ?dev .\n"
+                f"  ?dev <{pred_uses}> ?link .\n"
+                f"  ?link a <{cls_link}> ; <{pred_ct}> \"Document\" ; <{pred_link}> ?doc .\n"
+                f"  {opt_desc}\n"
+                "}"
+            )
+        else:
+            # Fallback: generic uses targets
+            if not (pred_uses and pred_link):
+                raise ValueError("Dynamic generator: graph missing required schema terms for 'used documents'.")
+            sparql = (
+                f"{pfx}\n"
+                "SELECT DISTINCT ?doc WHERE {\n"
+                f"  ?src <{pred_uses}> ?ul .\n"
+                f"  ?ul <{pred_link}> ?doc .\n"
+                "}\nORDER BY ?doc"
+            )
         sparql = ensure_limit(sparql, config.limit)
         check_no_invented_terms(graph, sparql)
         validate_and_run(graph, sparql)
@@ -866,6 +1364,266 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
             match_score=None,
             explanation=explain,
         )
+
+    # Requirements without approver
+    if want_req and wants_missing and ("approver" in tokens_sig or "approver" in tokens) and cls_req and pred_approver:
+        if not pred_id:
+            raise ValueError("Dynamic generator: graph missing Id predicate for requirements.")
+        pfx = _prefix_lines(index)
+        opt_state = f"OPTIONAL {{ ?req <{pred_approval}> ?state }}" if pred_approval else ""
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?req ?id ?state WHERE {\n"
+            f"  ?req a <{cls_req}> ; <{pred_id}> ?id .\n"
+            f"  {opt_state}\n"
+            f"  FILTER NOT EXISTS {{ ?req <{pred_approver}> ?a }}\n"
+            "}\nORDER BY ?id"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: REQUIREMENTS_WITHOUT_APPROVER")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Approved but without approver (requirements + models)
+    is_approved_state = bool(
+        re.search(r"\bapproved\b", q_raw, flags=re.IGNORECASE)
+        or re.search(r"\bapproval\b", q_raw, flags=re.IGNORECASE)
+        or has_any(tokens_sig, {"approval", "governance"})
+        or "approval" in qn
+        or "approval state" in qn
+    )
+    if is_approved_state and wants_missing and ("approver" in tokens_sig or "approver" in tokens) and pred_approver and pred_approval:
+        if not pred_id:
+            raise ValueError("Dynamic generator: graph missing Id predicate.")
+        if not (cls_req and cls_model):
+            raise ValueError("Dynamic generator: graph missing Requirement/DesignModel classes.")
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?entity ?id ?type WHERE {\n"
+            "  {\n"
+            f"    ?entity a <{cls_req}> ; <{pred_id}> ?id ; <{pred_approval}> \"Approved\" .\n"
+            "    BIND(\"Requirement\" AS ?type)\n"
+            "  }\n"
+            "  UNION\n"
+            "  {\n"
+            f"    ?entity a <{cls_model}> ; <{pred_id}> ?id ; <{pred_approval}> \"Approved\" .\n"
+            "    BIND(\"DesignModel\" AS ?type)\n"
+            "  }\n"
+            f"  FILTER NOT EXISTS {{ ?entity <{pred_approver}> ?a }}\n"
+            "}\nORDER BY ?type ?id"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: APPROVED_WITHOUT_APPROVER")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Supplier rollups: models per supplier / tests per supplier / top suppliers with models w/o tests
+    if ("supplier" in tokens_sig or "provider" in tokens_sig) and pred_provided_by and cls_model and pred_ct and want_model and ("by" in qn or "per" in qn or "group" in qn):
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?prov (COUNT(DISTINCT ?modelo) AS ?numModelos) WHERE {\n"
+            f"  ?modelo a <{cls_model}> ; <{pred_ct}> \"Physical Model\" ; <{pred_provided_by}> ?prov .\n"
+            "}\nGROUP BY ?prov\nORDER BY DESC(?numModelos)"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: MODELS_BY_SUPPLIER")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if ("supplier" in tokens_sig or "provider" in tokens_sig) and pred_provided_by and cls_model and pred_ct and want_test and pred_verified and pred_link and ("test" in tokens_sig or "verification" in tokens_sig):
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?prov (COUNT(DISTINCT ?test) AS ?numTests) WHERE {\n"
+            f"  ?modelo a <{cls_model}> ; <{pred_ct}> \"Physical Model\" ; <{pred_provided_by}> ?prov .\n"
+            f"  ?modelo <{pred_verified}> ?link .\n"
+            f"  ?link <{pred_ct}> \"Test Case\" ; <{pred_link}> ?test .\n"
+            "}\nGROUP BY ?prov\nORDER BY DESC(?numTests)"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: TESTS_BY_SUPPLIER_VIA_MODEL")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if ("supplier" in tokens_sig or "provider" in tokens_sig) and ("most" in qn or "top" in qn) and pred_provided_by and cls_model and pred_ct and pred_verified and pred_link:
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?prov (COUNT(DISTINCT ?modelo) AS ?numModelosSinTest) WHERE {\n"
+            f"  ?modelo a <{cls_model}> ; <{pred_ct}> \"Physical Model\" ; <{pred_provided_by}> ?prov .\n"
+            "  FILTER NOT EXISTS {\n"
+            f"    ?modelo <{pred_verified}> ?link .\n"
+            f"    ?link <{pred_ct}> \"Test Case\" ; <{pred_link}> ?test .\n"
+            "  }\n"
+            "}\nGROUP BY ?prov\nORDER BY DESC(?numModelosSinTest)"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: SUPPLIERS_TOP_MODELS_WITHOUT_TESTS")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Manifest summaries: PLM info, dev environment, VnV scenarios
+    if (
+        ("baseline" in tokens_sig or "project" in tokens_sig or "product" in tokens_sig or "release" in tokens_sig)
+        and cls_manifest
+        and pred_manifest_plm
+        and (pred_project_code or pred_product or pred_has_baseline)
+    ):
+        pfx = _prefix_lines(index)
+        where_lines: list[str] = [
+            f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_plm}> ?info .",
+        ]
+        if pred_project_code:
+            where_lines.append(f"  OPTIONAL {{ ?info <{pred_project_code}> ?projectCode }}")
+        if pred_product:
+            where_lines.append(f"  OPTIONAL {{ ?info <{pred_product}> ?product }}")
+        if pred_has_baseline:
+            where_lines.append(f"  OPTIONAL {{ ?info <{pred_has_baseline}> ?bl .")
+            if pred_baseline_name:
+                where_lines.append(f"    OPTIONAL {{ ?bl <{pred_baseline_name}> ?baselineName }}")
+            if pred_baseline_id:
+                where_lines.append(f"    OPTIONAL {{ ?bl <{pred_baseline_id}> ?baselineId }}")
+            if pred_baseline_created:
+                where_lines.append(f"    OPTIONAL {{ ?bl <{pred_baseline_created}> ?baselineCreated }}")
+            where_lines.append("  }")
+
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?projectCode ?product ?baselineName ?baselineId ?baselineCreated WHERE {\n"
+            + "\n".join(where_lines)
+            + "\n}"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: MANIFEST_PROJECT_BASELINE")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if ("plm" in tokens_sig or "purpose" in tokens_sig or "objective" in tokens_sig or "version" in tokens_sig) and cls_manifest and pred_manifest_plm:
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?org ?created ?purpose ?objective ?version WHERE {\n"
+            f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_plm}> ?info .\n"
+            + (f"  OPTIONAL {{ ?info <{pred_org}> ?org }}\n" if pred_org else "")
+            + (f"  OPTIONAL {{ ?info <{pred_created_on}> ?created }}\n" if pred_created_on else "")
+            + (f"  OPTIONAL {{ ?info <{pred_model_purpose}> ?purpose }}\n" if pred_model_purpose else "")
+            + (f"  OPTIONAL {{ ?info <{pred_model_objective}> ?objective }}\n" if pred_model_objective else "")
+            + (f"  OPTIONAL {{ ?info <{pred_version_identifier}> ?version }}\n" if pred_version_identifier else "")
+            + "}"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: PLM_SUMMARY")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if ("environment" in tokens_sig or "tool" in tokens_sig or "os" in tokens_sig or "language" in tokens_sig or "format" in tokens_sig) and cls_manifest and pred_manifest_dev:
+        pfx = _prefix_lines(index)
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?tool ?toolVer ?os ?osVer ?format ?formatVer ?tech ?lang WHERE {\n"
+            f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_dev}> ?dev .\n"
+            + (f"  OPTIONAL {{ ?dev <{pred_dev_tool_name}> ?tool }}\n" if pred_dev_tool_name else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_dev_tool_ver}> ?toolVer }}\n" if pred_dev_tool_ver else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_dev_os_name}> ?os }}\n" if pred_dev_os_name else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_dev_os_ver}> ?osVer }}\n" if pred_dev_os_ver else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_format_name}> ?format }}\n" if pred_format_name else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_format_ver}> ?formatVer }}\n" if pred_format_ver else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_req_authoring}> ?tech }}\n" if pred_req_authoring else "")
+            + (f"  OPTIONAL {{ ?dev <{pred_language}> ?lang }}\n" if pred_language else "")
+            + "}"
+        )
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: DEV_ENVIRONMENT")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    if ("scenario" in tokens_sig or "vnv" in tokens_sig) and cls_manifest and pred_manifest_vnv and pred_vnv_scenario and pred_id and cls_scn:
+        pfx = _prefix_lines(index)
+        if wants_missing:
+            where_lines: list[str] = [
+                f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_vnv}> ?vnv .",
+                f"  ?vnv <{pred_vnv_scenario}> ?sc .",
+                f"  ?sc <{pred_id}> ?scenarioId .",
+            ]
+            if pred_verified:
+                where_lines.append("  FILTER NOT EXISTS {")
+                where_lines.append(f"    ?sc <{pred_verified}> ?_v .")
+                where_lines.append("  }")
+            if pred_validated:
+                where_lines.append("  FILTER NOT EXISTS {")
+                where_lines.append(f"    ?sc <{pred_validated}> ?_a .")
+                where_lines.append("  }")
+            sparql = f"{pfx}\nSELECT ?scenarioId WHERE {{\n" + "\n".join(where_lines) + "\n}\nORDER BY ?scenarioId"
+            op_name = "VNV_SCENARIOS_INCOMPLETE"
+        else:
+            # Summary
+            union_blocks: list[str] = []
+            if pred_verified:
+                union_blocks.append(
+                    f"    {{ ?sc <{pred_verified}> ?link . BIND(\"Verified_by\" AS ?tipoEnlace) }}"
+                )
+            if pred_validated:
+                union_blocks.append(
+                    f"    {{ ?sc <{pred_validated}> ?link . BIND(\"Validated_by\" AS ?tipoEnlace) }}"
+                )
+            union = "\n    UNION\n".join(union_blocks) if union_blocks else ""
+            opt_target_id = f"OPTIONAL {{ ?target <{pred_id}> ?targetId }}" if pred_id else ""
+            opt_v = f"OPTIONAL {{ ?sc <{pred_ver_level}> ?verLevel }}" if pred_ver_level else ""
+            opt_a = f"OPTIONAL {{ ?sc <{pred_val_level}> ?valLevel }}" if pred_val_level else ""
+            if not union:
+                raise ValueError("Dynamic generator: graph missing Verified_by/Validated_by predicates for scenarios.")
+
+            opt_target_line = f"    ?link <{pred_link}> ?target ." if pred_link else ""
+            optional_lines: list[str] = ["  OPTIONAL {", union]
+            if opt_target_line:
+                optional_lines.append(opt_target_line)
+            if opt_target_id:
+                optional_lines.append(f"    {opt_target_id}")
+            optional_lines.append("  }")
+
+            where_lines = [
+                f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_vnv}> ?vnv .",
+                f"  ?vnv <{pred_vnv_scenario}> ?sc .",
+                f"  ?sc <{pred_id}> ?scenarioId .",
+            ]
+            if opt_v:
+                where_lines.append(f"  {opt_v}")
+            if opt_a:
+                where_lines.append(f"  {opt_a}")
+            where_lines.extend(optional_lines)
+
+            sparql = (
+                f"{pfx}\n"
+                "SELECT ?scenarioId ?verLevel ?valLevel ?tipoEnlace ?targetId WHERE {\n"
+                + "\n".join(where_lines)
+                + "\n}\nORDER BY ?scenarioId"
+            )
+            op_name = "VNV_SCENARIOS_SUMMARY"
+
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append(f"operator: {op_name}")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Links for entities authored by a given organization (Author_Organization)
     # Example: "show links for requirements authored by Supplier 03"

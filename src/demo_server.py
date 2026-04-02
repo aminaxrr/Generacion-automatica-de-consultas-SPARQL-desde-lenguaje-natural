@@ -16,7 +16,7 @@ from text2sparql import GenerationConfig, GenerationResult, generate_sparql
 
 
 HTML = """<!doctype html>
-<html lang=\"es\">
+<html lang=\"en\">
 <head>
   <meta charset=\"utf-8\" />
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
@@ -126,6 +126,10 @@ HTML = """<!doctype html>
           <summary class=\"status\">Technical details (trace)</summary>
           <pre class=\"error\"><code id=\"trace\"></code></pre>
         </details>
+        <details id=\"explainBox\" style=\"margin-top:10px; display:none\">
+          <summary class=\"status\">Generation explanation</summary>
+          <pre class=\"error\"><code id=\"explain\"></code></pre>
+        </details>
         <div id=\"table\"></div>
       </div>
 
@@ -213,6 +217,8 @@ HTML = """<!doctype html>
     el('error').textContent = '';
     el('traceBox').style.display = 'none';
     el('trace').textContent = '';
+    el('explainBox').style.display = 'none';
+    el('explain').textContent = '';
     el('sparql').textContent = '';
     el('table').innerHTML = '';
 
@@ -234,6 +240,10 @@ HTML = """<!doctype html>
     try {
       const res = await postJson('/api/ask', payload);
       el('sparql').textContent = res.sparql;
+      if (Array.isArray(res.explanation) && res.explanation.length) {
+        el('explain').textContent = res.explanation.map(x => `- ${x}`).join('\n');
+        el('explainBox').style.display = 'block';
+      }
       renderTable(res.result);
       const mode = (payload.execute ? 'run' : 'translate');
       const mid = (res.matched_id || 'catalog');
@@ -365,22 +375,22 @@ class Handler(BaseHTTPRequestHandler):
         max_rows = int(payload.get("max_rows") or 200)
 
         if engine != "catalog":
-          examples_path = None
-        else:
-          if examples_path and not Path(examples_path).exists():
             examples_path = None
+        else:
+            if examples_path and not Path(examples_path).exists():
+                examples_path = None
 
         if synonyms_file and not Path(synonyms_file).exists():
-          synonyms_file = None
+            synonyms_file = None
 
         if classifier_model_file and not Path(classifier_model_file).exists():
-          classifier_model_file = None
+            classifier_model_file = None
 
         start = time.perf_counter()
         try:
             g = state.ensure_graph()
             cfg = GenerationConfig(
-              engine=engine,
+                engine=engine,
                 limit=limit,
                 match_threshold=match_threshold,
                 synonyms_file=synonyms_file,
