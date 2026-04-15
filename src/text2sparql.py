@@ -395,6 +395,18 @@ def _extract_author_org_literal(question: str) -> str | None:
     return None
 
 
+def _extract_supplier_name_literal(question: str) -> str | None:
+    """Extract a supplier name literal (e.g., "Supplier 03") from a question.
+
+    Current synthetic data uses values like "Supplier 03".."Supplier 06" (via foaf:name).
+    """
+
+    m = re.search(r"\bsupplier\s*(\d{1,2})\b", question, flags=re.IGNORECASE)
+    if m:
+        return f"Supplier {int(m.group(1)):02d}"
+    return None
+
+
 def _find_class(index: SchemaIndex, *candidates: str) -> str | None:
     for cand in candidates:
         k = _norm_key(cand)
@@ -541,6 +553,10 @@ def _ground_question(question: str, normalized: str, tokens_sig: set[str], index
     if re.search(r"\bapproved\b", q):
         add("Approved", "literal", "Approved")
 
+    supp = _extract_supplier_name_literal(question)
+    if supp:
+        add(supp, "literal", supp)
+
     return GroundingResult(normalized=q, tokens_sig=tokens_sig, hits=hits)
 
 
@@ -604,6 +620,8 @@ def _compositional_generate(
     def has_any(options: set[str]) -> bool:
         return bool(tokens_sig & options)
 
+    has_group_intent = bool(re.search(r"\b(per|by|each)\b", qn) or "distribution" in tokens_sig or "group" in qn)
+
     # Determine query form.
     is_count = bool(
         re.search(
@@ -612,6 +630,14 @@ def _compositional_generate(
         )
         or (tokens_sig & {"count", "number", "total", "quantity", "amount"})
     )
+
+    if (
+        ("supplier" in tokens_sig or "provider" in tokens_sig)
+        and ("model" in tokens_sig or "designmodel" in tokens_sig or "physicalmodel" in tokens_sig)
+        and (is_count or "count" in tokens_sig)
+        and ("provide" in tokens_sig or "provided" in tokens_sig)
+    ):
+        has_group_intent = True
 
     is_list = bool(
         any(t in tokens for t in {"list", "show", "display", "give", "return", "which", "what"})
@@ -628,6 +654,8 @@ def _compositional_generate(
         or any(t in tokens for t in {"without", "missing", "lack", "lacking", "absent", "none", "no"})
         or "no" in tokens_raw
         or re.search(r"\b(do\s+not\s+have|does\s+not\s+have|not\s+having)\b", qn)
+        or re.search(r"\bneither\b", qn)
+        or re.search(r"\bnot\s+(verified|validated|approved|tested|linked|associated|have|has)\b", qn)
     )
     if wants_missing:
         explain.append("constraint: missing/negation")
@@ -643,6 +671,16 @@ def _compositional_generate(
     if re.search(r"\bend\s*-?\s*to\s*-?\s*end\b", qn) or "endtoend" in tokens_sig:
         return None
 
+    # Also defer end-to-end style phrasing without the literal "end-to-end" token.
+    if (
+        "traceability" in tokens_sig
+        and "requirement" in tokens_sig
+        and ("test" in tokens_sig or "testcase" in tokens_sig)
+    ):
+        return None
+    if "chain" in tokens_sig and "requirement" in tokens_sig and ("test" in tokens_sig or "testcase" in tokens_sig):
+        return None
+
     # Defer to specialized operators for audit-style data quality checks, manifest summaries,
     # and GROUP BY/HAVING style questions (compositional generator is intentionally simple).
     if tokens_sig & {
@@ -651,9 +689,11 @@ def _compositional_generate(
         "approval",
         "approver",
         "approved",
+        "author",
         "maturity",
         "subsystem",
         "verification_method",
+        "method",
         "scenario",
         "vnv",
         "baseline",
@@ -665,9 +705,30 @@ def _compositional_generate(
         "plm",
     }:
         return None
-    if re.search(r"\b(content\s*type\s+mismatch|contenttype\s+mismatch|inconsistent\s+content\s*type)\b", qn):
+    if ("contenttype" in tokens or "content type" in qn or "contenttype" in qn) and re.search(
+        r"\b(mismatch(?:es)?|inconsistent|incoherent|differ|differs|different|does\s+not\s+match|doesn't\s+match|not\s+match)\b",
+        qn,
+    ):
         return None
-    if ("supplier" in tokens_sig or "provider" in tokens_sig) and ("per" in tokens or "by" in tokens or "group" in tokens):
+    if ("supplier" in tokens_sig or "provider" in tokens_sig) and (
+        "per" in tokens
+        or "by" in tokens
+        or "group" in tokens
+        or re.search(r"\bnumber\s+of\b", qn)
+        or (has_group_intent and ("model" in tokens_sig or "designmodel" in tokens_sig or "physicalmodel" in tokens_sig))
+    ):
+        return None
+
+    # Defer common group-by requirements questions to specialized dynamic operators.
+    if has_group_intent and "requirement" in tokens_sig and (
+        "author" in tokens_sig
+        or "organization" in tokens_sig
+        or "method" in tokens_sig
+        or "verified" in tokens_sig
+        or "verify" in tokens_sig
+        or "verification" in tokens_sig
+        or re.search(r"\bverification\s+method\b", q_raw, flags=re.IGNORECASE)
+    ):
         return None
 
     # Resolve common schema terms.
@@ -697,6 +758,11 @@ def _compositional_generate(
     # If we have an explicit organization literal and the question hints at links/traces, defer to
     # the specialized authored-links query which binds Author_Organization.
     if _extract_author_org_literal(question) and re.search(r"\b(link|links|trace|traceability)\b", qn):
+        return None
+
+    # If the question contains a concrete supplier name ("Supplier 03"), defer to the
+    # specialized supplier operator (providedBy + foaf:name filtering).
+    if _extract_supplier_name_literal(question):
         return None
 
     # Relation detection (verb-ish tokens). Try to pick one relation.
@@ -852,14 +918,17 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
 
     # Intent detection (kept for backward compatibility; grounding is the primary trace source).
     # Count phrasing is varied: "how many", "what is the number of", "total number of", etc.
-    is_count = bool(
+    is_count_phrase = bool(
         re.search(
             r"\b(how\s+many|count(\s+of)?|number\s+of|total\s+number\s+of|quantity\s+of|amount\s+of)\b",
             qn,
         )
         or has_any(tokens_sig, {"count", "number", "total", "quantity", "amount"})
     )
+    is_count = is_count_phrase
     is_percent = bool(re.search(r"\b(percent|percentage|ratio)\b", qn) or "percentage" in tokens_sig)
+
+    has_group_intent = bool(re.search(r"\b(per|by|each)\b", qn) or "distribution" in tokens_sig or "group" in qn)
 
     # Core domain terms (mapped to schema local names)
     want_req = has_any(tokens_sig, {"requirement", "req", "spec", "specification"})
@@ -868,6 +937,12 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
     want_supplier = has_any(tokens_sig, {"supplier", "provider", "vendor", "organization", "org", "owner", "responsible"})
     want_link = has_any(tokens_sig, {"link", "trace", "traceability", "relationship", "relation"})
     want_document = has_any(tokens_sig, {"document", "doc", "documentation"})
+
+    if want_supplier and want_model and is_count_phrase and ("provide" in tokens_sig or "provided" in tokens_sig):
+        has_group_intent = True
+    if has_group_intent:
+        # Prefer GROUP BY operators over a global COUNT.
+        is_count = False
 
     want_author = bool(
         has_any(tokens_sig, {"author", "authored", "creator", "created", "written", "owner"})
@@ -884,6 +959,16 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         or any(t in tokens for t in {"without", "missing", "lack", "lacking", "absent", "none", "no"})
         or "no" in tokens_raw
         or re.search(r"\b(do\s+not\s+have|does\s+not\s+have|not\s+having)\b", qn)
+        or re.search(r"\bneither\b", qn)
+        or re.search(r"\bnot\s+(verified|validated|approved|tested|linked|associated|have|has)\b", qn)
+    )
+
+    is_approved_state = bool(
+        re.search(r"\bapproved\b", q_raw, flags=re.IGNORECASE)
+        or re.search(r"\bapproval\b", q_raw, flags=re.IGNORECASE)
+        or has_any(tokens_sig, {"approval", "governance"})
+        or "approval" in qn
+        or "approval state" in qn
     )
 
     # Resolve common classes/predicates from the real graph
@@ -935,6 +1020,8 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
     pred_format_ver = _find_pred(index, "Format_version")
     pred_req_authoring = _find_pred(index, "RequirementAuthoringTechnique")
     pred_language = _find_pred(index, "Language")
+
+    pred_name = _find_pred(index, "name")  # foaf:name
 
     pred_project_code = _find_pred(index, "project_code")
     pred_product = _find_pred(index, "product")
@@ -1007,8 +1094,9 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Link quality: ContentType mismatch (link CT vs target CT)
-    if want_link and ("mismatch" in tokens or "inconsistent" in tokens or "incoherent" in tokens or "mismatch" in qn) and (
-        "contenttype" in tokens or "content type" in qn or "contenttype" in qn
+    if want_link and (
+        re.search(r"\b(mismatch(?:es)?|inconsistent|incoherent|differ|differs|different|does\s+not\s+match|doesn't\s+match|not\s+match)\b", qn)
+        and ("contenttype" in tokens or "content type" in qn or "contenttype" in qn)
     ):
         if not cls_link:
             raise ValueError("Dynamic generator: could not find Traceability_Link_Type class.")
@@ -1073,7 +1161,15 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         )
 
     # Requirements missing a physical model (Satisfied_by link-node of ContentType="Physical Model")
-    if want_req and wants_missing and (want_model or "physical" in tokens_sig or "model" in tokens_sig) and not want_test:
+    if (
+        want_req
+        and wants_missing
+        and (want_model or "physical" in tokens_sig or "model" in tokens_sig)
+        and not want_test
+        and not is_approved_state
+        and "approver" not in tokens_sig
+        and "approval" not in tokens_sig
+    ):
         if not (cls_req and pred_id and pred_satisfied and pred_link and pred_ct):
             raise ValueError("Dynamic generator: graph missing required schema terms for 'requirements without physical model'.")
         pfx = _prefix_lines(index)
@@ -1196,7 +1292,21 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         explain.append("group_by: Maturity_State")
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
-    if want_req and ("author" in tokens_sig or "authored" in tokens_sig or "creator" in tokens_sig or "owner" in tokens_sig) and cls_req and pred_author_org:
+    if (
+        want_req
+        and has_group_intent
+        and (
+            "author" in tokens_sig
+            or "authored" in tokens_sig
+            or "creator" in tokens_sig
+            or "owner" in tokens_sig
+            or "author_organization" in tokens_sig
+            or "authororganization" in tokens_sig
+            or "author organization" in qn
+        )
+        and cls_req
+        and pred_author_org
+    ):
         sparql = _compile_group_count_by_attr(
             graph=graph,
             index=index,
@@ -1228,7 +1338,20 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         explain.append("group_by: ex:subsystem")
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
-    if want_req and ("method" in tokens_sig or "verification" in tokens_sig) and ("verification_method" in tokens_sig or "method" in tokens_sig) and cls_req and pred_verif_method:
+    if (
+        want_req
+        and has_group_intent
+        and cls_req
+        and pred_verif_method
+        and (
+            "verification_method" in tokens_sig
+            or ("verification" in tokens_sig and "method" in tokens_sig)
+            or "verified" in tokens_sig
+            or "verify" in tokens_sig
+            or re.search(r"\bhow\b.*\bverified\b", qn)
+            or re.search(r"\bverification\s+method\b", q_raw, flags=re.IGNORECASE)
+        )
+    ):
         sparql = _compile_group_count_by_attr(
             graph=graph,
             index=index,
@@ -1245,7 +1368,7 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Missing tests for models
-    if want_model and wants_missing and want_test:
+    if want_model and wants_missing and want_test and not want_req:
         if not (cls_model and pred_id and pred_verified and pred_link):
             raise ValueError("Dynamic generator: graph missing required schema terms for 'models without tests'.")
         # Optional: confirm tests class exists, otherwise just check link existence.
@@ -1300,7 +1423,15 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Models grouped by approval state
-    if want_model and ("approval" in tokens_sig or "approved" in tokens_sig) and cls_model and pred_approval:
+    if (
+        want_model
+        and has_group_intent
+        and ("approval" in tokens_sig or "approved" in tokens_sig)
+        and cls_model
+        and pred_approval
+        and not wants_missing
+        and "approver" not in tokens_sig
+    ):
         sparql = _compile_group_count_by_attr(
             graph=graph,
             index=index,
@@ -1366,7 +1497,14 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         )
 
     # Requirements without approver
-    if want_req and wants_missing and ("approver" in tokens_sig or "approver" in tokens) and cls_req and pred_approver:
+    if (
+        want_req
+        and wants_missing
+        and not is_approved_state
+        and ("approver" in tokens_sig or "approver" in tokens)
+        and cls_req
+        and pred_approver
+    ):
         if not pred_id:
             raise ValueError("Dynamic generator: graph missing Id predicate for requirements.")
         pfx = _prefix_lines(index)
@@ -1387,13 +1525,6 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Approved but without approver (requirements + models)
-    is_approved_state = bool(
-        re.search(r"\bapproved\b", q_raw, flags=re.IGNORECASE)
-        or re.search(r"\bapproval\b", q_raw, flags=re.IGNORECASE)
-        or has_any(tokens_sig, {"approval", "governance"})
-        or "approval" in qn
-        or "approval state" in qn
-    )
     if is_approved_state and wants_missing and ("approver" in tokens_sig or "approver" in tokens) and pred_approver and pred_approval:
         if not pred_id:
             raise ValueError("Dynamic generator: graph missing Id predicate.")
@@ -1423,7 +1554,57 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Supplier rollups: models per supplier / tests per supplier / top suppliers with models w/o tests
-    if ("supplier" in tokens_sig or "provider" in tokens_sig) and pred_provided_by and cls_model and pred_ct and want_model and ("by" in qn or "per" in qn or "group" in qn):
+    supplier_name = _extract_supplier_name_literal(question)
+
+    # Parameterized: list models provided by a given supplier (Supplier 03)
+    if supplier_name and pred_provided_by and cls_model and pred_id and pred_name:
+        pfx = _prefix_lines(index)
+
+        # If the question explicitly mentions physical models (or got normalized that way), keep the ContentType constraint.
+        is_physical = bool(pred_ct and ("physical" in tokens_sig or "physical model" in qn or "physicalmodel" in tokens_sig))
+
+        where_lines: list[str] = [
+            f"  ?modelo a <{cls_model}> ; <{pred_id}> ?id ; <{pred_provided_by}> ?prov .",
+        ]
+        if is_physical and pred_ct:
+            where_lines.append(f"  ?modelo <{pred_ct}> \"Physical Model\" .")
+        where_lines.extend(
+            [
+                f"  ?prov <{pred_name}> ?provName .",
+                f"  FILTER(LCASE(STR(?provName)) = LCASE(\"{supplier_name}\"))",
+            ]
+        )
+
+        sparql = (
+            f"{pfx}\n"
+            "SELECT ?modelo ?id ?provName WHERE {\n"
+            + "\n".join(where_lines)
+            + "\n}\nORDER BY ?id"
+        )
+
+        sparql = ensure_limit(sparql, config.limit)
+        check_no_invented_terms(graph, sparql)
+        validate_and_run(graph, sparql)
+        explain = _base_explain()
+        explain.append("operator: MODELS_FOR_SUPPLIER")
+        explain.append(f"supplier: {supplier_name}")
+        return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
+
+    # Aggregation: models per supplier (group-by). Require explicit grouping intent.
+    if (
+        ("supplier" in tokens_sig or "provider" in tokens_sig)
+        and pred_provided_by
+        and cls_model
+        and pred_ct
+        and want_model
+        and (
+            re.search(r"\b(per|each)\b", qn)
+            or "group" in qn
+            or "distribution" in tokens_sig
+            or "count" in tokens_sig
+            or re.search(r"\bnumber\s+of\b", qn)
+        )
+    ):
         pfx = _prefix_lines(index)
         sparql = (
             f"{pfx}\n"
@@ -1475,12 +1656,8 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         return GenerationResult(sparql=sparql, attempts=1, matched_id="dynamic", explanation=explain)
 
     # Manifest summaries: PLM info, dev environment, VnV scenarios
-    if (
-        ("baseline" in tokens_sig or "project" in tokens_sig or "product" in tokens_sig or "release" in tokens_sig)
-        and cls_manifest
-        and pred_manifest_plm
-        and (pred_project_code or pred_product or pred_has_baseline)
-    ):
+    baseline_trigger = bool(re.search(r"\b(baseline|project|product|release)\b", q_raw, flags=re.IGNORECASE))
+    if baseline_trigger and cls_manifest and pred_manifest_plm and (pred_project_code or pred_product or pred_has_baseline):
         pfx = _prefix_lines(index)
         where_lines: list[str] = [
             f"  ?manifest a <{cls_manifest}> ; <{pred_manifest_plm}> ?info .",
@@ -1676,7 +1853,16 @@ def _dynamic_generate(graph: Graph, question: str, config: GenerationConfig, syn
         )
 
     # Requirements without end-to-end traceability (Req -> Model -> Test)
-    if want_req and wants_missing and ("end" in tokens and "traceability" in tokens or "endtoend" in tokens):
+    if (
+        want_req
+        and wants_missing
+        and (
+            re.search(r"\bend\s*-?\s*to\s*-?\s*end\b", qn)
+            or "endtoend" in tokens_sig
+            or ("traceability" in tokens_sig and ("test" in tokens_sig or "testcase" in tokens_sig))
+            or ("chain" in tokens_sig and ("test" in tokens_sig or "testcase" in tokens_sig))
+        )
+    ):
         if not (cls_req and pred_id and pred_satisfied and pred_link and pred_verified):
             raise ValueError(
                 "Dynamic generator: graph missing required schema terms for end-to-end traceability (Satisfied_by/Verified_by/Link)."

@@ -1,0 +1,104 @@
+﻿[OK]   01/74  A.count.suppliers                    op=(none)                          rows=   1    171.7ms
+[OK]   02/74  A.count.suppliers                    op=(none)                          rows=   1     26.2ms
+[OK]   03/74  A.count.suppliers                    op=(none)                          rows=   1     22.5ms
+[OK]   04/74  A.count.requirements                 op=(none)                          rows=   1     39.3ms
+[OK]   05/74  A.count.links                        op=(none)                          rows=   1     39.9ms
+[OK]   06/74  B.missing.req_without_physical_model  op=(none)                          rows=   8   1204.8ms
+[OK]   07/74  B.missing.req_without_physical_model  op=(none)                          rows=   8   1369.8ms
+[OK]   08/74  B.missing.req_without_physical_model  op=(none)                          rows=   8   1217.3ms
+[OK]   09/74  B.missing.models_without_tests       op=(none)                          rows=  30    511.9ms
+[OK]   10/74  B.missing.models_without_tests       op=(none)                          rows=  30    595.6ms
+[OK]   11/74  B.missing.models_without_tests       op=(none)                          rows=  30    548.2ms
+[OK]   12/74  B.missing.end_to_end                 op=REQUIREMENTS_MISSING_END_TO_END  rows=   7   3198.2ms
+[OK]   13/74  B.missing.end_to_end                 op=REQUIREMENTS_MISSING_END_TO_END  rows=   7   3270.9ms
+[OK]   14/74  B.missing.end_to_end                 op=REQUIREMENTS_MISSING_END_TO_END  rows=   7   3218.5ms
+[OK]   15/74  C.percent.req_with_model             op=(none)                          rows=  42   1121.2ms
+[OK]   16/74  C.percent.req_with_model             op=(none)                          rows=  42   1094.9ms
+[OK]   17/74  C.percent.req_with_model             op=(none)                          rows=  42   1087.8ms
+[OK]   18/74  D.audit.links_missing_timestamps     op=LINKS_MISSING_TIMESTAMP         rows=   3     49.4ms
+[OK]   19/74  D.audit.links_missing_timestamps     op=LINKS_MISSING_TIMESTAMP         rows=   3     47.8ms
+[OK]   20/74  D.audit.links_missing_timestamps     op=LINKS_MISSING_TIMESTAMP         rows=   3     47.2ms
+[OK]   21/74  D.audit.links_without_description    op=LINKS_WITHOUT_DESCRIPTION       rows=   2     63.3ms
+[OK]   22/74  D.audit.links_without_description    op=LINKS_WITHOUT_DESCRIPTION       rows=   2     70.0ms
+[OK]   23/74  D.audit.links_without_description    op=LINKS_WITHOUT_DESCRIPTION       rows=   2     61.7ms
+[OK]   24/74  D.audit.contenttype_mismatch         op=LINK_CONTENTTYPE_MISMATCH       rows=   4     69.0ms
+[OK]   25/74  D.audit.contenttype_mismatch         op=LINK_CONTENTTYPE_MISMATCH       rows=   4     68.5ms
+[OK]   26/74  D.audit.contenttype_mismatch         op=LINK_CONTENTTYPE_MISMATCH       rows=   4     69.8ms
+[OK]   27/74  D.audit.duplicates                   op=DUPLICATE_TRACES_AUDIT          rows=  29    120.9ms
+[OK]   28/74  D.audit.duplicates                   op=DUPLICATE_TRACES_AUDIT          rows=  29    118.4ms
+[OK]   29/74  D.audit.duplicates                   op=DUPLICATE_TRACES_AUDIT          rows=  29    116.1ms
+[OK]   30/74  E.audit.req_without_approver         op=REQUIREMENTS_WITHOUT_APPROVER   rows=   4     52.4ms
+[OK]   31/74  E.audit.req_without_approver         op=REQUIREMENTS_WITHOUT_APPROVER   rows=   4     55.6ms
+[OK]   32/74  E.audit.req_without_approver         op=REQUIREMENTS_WITHOUT_APPROVER   rows=   4     58.9ms
+[OK]   33/74  E.audit.approved_without_approver    op=APPROVED_WITHOUT_APPROVER       rows=   2    119.1ms
+[OK]   34/74  E.audit.approved_without_approver    op=APPROVED_WITHOUT_APPROVER       rows=   2     65.0ms
+[OK]   35/74  E.audit.approved_without_approver    op=APPROVED_WITHOUT_APPROVER       rows=   2     64.2ms
+[OK]   36/74  F.groupby.req_by_maturity            op=REQUIREMENTS_BY_MATURITY        rows=   4     41.5ms
+[OK]   37/74  F.groupby.req_by_maturity            op=REQUIREMENTS_BY_MATURITY        rows=   4     42.8ms
+[OK]   38/74  F.groupby.req_by_maturity            op=REQUIREMENTS_BY_MATURITY        rows=   4     43.1ms
+[OK]   39/74  F.groupby.req_by_author_org          op=REQUIREMENTS_BY_AUTHOR_ORG      rows=   7     77.7ms
+[OK]   40/74  F.groupby.req_by_author_org          op=REQUIREMENTS_BY_AUTHOR_ORG      rows=   7     47.5ms
+[OK]   41/74  F.groupby.req_by_author_org          op=REQUIREMENTS_BY_AUTHOR_ORG      rows=   7     44.2ms
+[OK]   42/74  F.groupby.models_by_approval         op=MODELS_BY_APPROVAL_STATE        rows=   2     37.4ms
+[OK]   43/74  F.groupby.models_by_approval         op=MODELS_BY_APPROVAL_STATE        rows=   2     37.3ms
+[OK]   44/74  F.groupby.models_by_approval         op=MODELS_BY_APPROVAL_STATE        rows=   2     37.5ms
+[OK]   45/74  F.groupby.req_by_subsystem           op=REQUIREMENTS_BY_SUBSYSTEM       rows=   6     63.2ms
+[OK]   46/74  F.groupby.req_by_subsystem           op=REQUIREMENTS_BY_SUBSYSTEM       rows=   6     46.9ms
+[OK]   47/74  F.groupby.req_by_subsystem           op=REQUIREMENTS_BY_SUBSYSTEM       rows=   6     41.8ms
+[OK]   48/74  F.groupby.req_by_verification_method  op=(none)                          rows=   1    558.9ms
+[OK]   49/74  F.groupby.req_by_verification_method  op=(none)                          rows=  50     25.2ms
+[OK]   50/74  F.groupby.req_by_verification_method  op=(none)                          rows=  50     49.3ms
+[OK]   51/74  G.manifest.plm_summary               op=PLM_SUMMARY                     rows=   1     38.0ms
+[OK]   52/74  G.manifest.plm_summary               op=PLM_SUMMARY                     rows=   1     37.3ms
+[OK]   53/74  G.manifest.plm_summary               op=PLM_SUMMARY                     rows=   1     40.1ms
+[OK]   54/74  G.manifest.dev_environment           op=DEV_ENVIRONMENT                 rows=   1     44.4ms
+[OK]   55/74  G.manifest.dev_environment           op=DEV_ENVIRONMENT                 rows=   1     43.0ms
+[OK]   56/74  G.manifest.dev_environment           op=DEV_ENVIRONMENT                 rows=   1     43.4ms
+[OK]   57/74  G.manifest.used_documents            op=USED_DOCUMENTS                  rows=   5     27.9ms
+[OK]   58/74  G.manifest.used_documents            op=USED_DOCUMENTS                  rows=   5     26.1ms
+[OK]   59/74  G.manifest.used_documents            op=USED_DOCUMENTS                  rows=   5     26.9ms
+[OK]   60/74  G.manifest.baseline                  op=MANIFEST_PROJECT_BASELINE       rows=   1     37.3ms
+[OK]   61/74  G.manifest.baseline                  op=MANIFEST_PROJECT_BASELINE       rows=   1     38.0ms
+[OK]   62/74  G.manifest.baseline                  op=MANIFEST_PROJECT_BASELINE       rows=   1     41.9ms
+[OK]   63/74  H.vnv.summary                        op=VNV_SCENARIOS_SUMMARY           rows=  10     59.4ms
+[OK]   64/74  H.vnv.summary                        op=VNV_SCENARIOS_SUMMARY           rows=  10     59.5ms
+[OK]   65/74  H.vnv.summary                        op=VNV_SCENARIOS_SUMMARY           rows=  10     58.0ms
+[OK]   66/74  H.vnv.incomplete                     op=VNV_SCENARIOS_INCOMPLETE        rows=   3     35.6ms
+[OK]   67/74  H.vnv.incomplete                     op=VNV_SCENARIOS_INCOMPLETE        rows=   3     35.4ms
+[OK]   68/74  H.vnv.incomplete                     op=VNV_SCENARIOS_INCOMPLETE        rows=   3     35.7ms
+[OK]   69/74  I.supplier.models_for_supplier       op=MODELS_FOR_SUPPLIER             rows=   8     45.4ms
+[OK]   70/74  I.supplier.models_for_supplier       op=MODELS_FOR_SUPPLIER             rows=   8     44.8ms
+[OK]   71/74  I.supplier.models_for_supplier       op=MODELS_FOR_SUPPLIER             rows=   8    103.3ms
+[OK]   72/74  I.supplier.models_by_supplier        op=MODELS_BY_SUPPLIER              rows=   6     52.9ms
+[OK]   73/74  I.supplier.models_by_supplier        op=MODELS_BY_SUPPLIER              rows=   6     37.6ms
+[OK]   74/74  I.supplier.models_by_supplier        op=(none)                          rows=   1     20.7ms
+----------------------------------------------------------------------------------------------------
+Total: 74 | OK: 74 | FAIL: 0 | elapsed=22.28s
+
+Group consistency (operator sets + row counts):
+- A.count.links                       ops=['(none)'] rows=[1]
+- A.count.requirements                ops=['(none)'] rows=[1]
+- A.count.suppliers                   ops=['(none)'] rows=[1]
+- B.missing.end_to_end                ops=['REQUIREMENTS_MISSING_END_TO_END'] rows=[7]
+- B.missing.models_without_tests      ops=['(none)'] rows=[30]
+- B.missing.req_without_physical_model ops=['(none)'] rows=[8]
+- C.percent.req_with_model            ops=['(none)'] rows=[42]
+- D.audit.contenttype_mismatch        ops=['LINK_CONTENTTYPE_MISMATCH'] rows=[4]
+- D.audit.duplicates                  ops=['DUPLICATE_TRACES_AUDIT'] rows=[29]
+- D.audit.links_missing_timestamps    ops=['LINKS_MISSING_TIMESTAMP'] rows=[3]
+- D.audit.links_without_description   ops=['LINKS_WITHOUT_DESCRIPTION'] rows=[2]
+- E.audit.approved_without_approver   ops=['APPROVED_WITHOUT_APPROVER'] rows=[2]
+- E.audit.req_without_approver        ops=['REQUIREMENTS_WITHOUT_APPROVER'] rows=[4]
+- F.groupby.models_by_approval        ops=['MODELS_BY_APPROVAL_STATE'] rows=[2]
+- F.groupby.req_by_author_org         ops=['REQUIREMENTS_BY_AUTHOR_ORG'] rows=[7]
+- F.groupby.req_by_maturity           ops=['REQUIREMENTS_BY_MATURITY'] rows=[4]
+- F.groupby.req_by_subsystem          ops=['REQUIREMENTS_BY_SUBSYSTEM'] rows=[6]
+- F.groupby.req_by_verification_method ops=['(none)'] rows=[1, 50] ROWS_DIFF
+- G.manifest.baseline                 ops=['MANIFEST_PROJECT_BASELINE'] rows=[1]
+- G.manifest.dev_environment          ops=['DEV_ENVIRONMENT'] rows=[1]
+- G.manifest.plm_summary              ops=['PLM_SUMMARY'] rows=[1]
+- G.manifest.used_documents           ops=['USED_DOCUMENTS'] rows=[5]
+- H.vnv.incomplete                    ops=['VNV_SCENARIOS_INCOMPLETE'] rows=[3]
+- H.vnv.summary                       ops=['VNV_SCENARIOS_SUMMARY'] rows=[10]
+- I.supplier.models_by_supplier       ops=['(none)', 'MODELS_BY_SUPPLIER'] rows=[1, 6] OP_MISMATCH ROWS_DIFF
+- I.supplier.models_for_supplier      ops=['MODELS_FOR_SUPPLIER'] rows=[8]
