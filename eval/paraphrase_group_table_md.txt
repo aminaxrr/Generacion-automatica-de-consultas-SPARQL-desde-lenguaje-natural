@@ -1,0 +1,28 @@
+| Grupo | #Paráfrasis | Operador(es) observado(s) | Filas observadas | ¿Consistente? |
+|---|---:|---|---|---|
+| A.count.links | 1 | (none) | 1 | Sí |
+| A.count.requirements | 1 | (none) | 1 | Sí |
+| A.count.suppliers | 3 | (none) | 1 | Sí |
+| B.missing.end_to_end | 3 | REQUIREMENTS_MISSING_END_TO_END | 7 | Sí |
+| B.missing.models_without_tests | 3 | (none) | 30 | Sí |
+| B.missing.req_without_physical_model | 3 | (none) | 8 | Sí |
+| C.percent.req_with_model | 3 | (none) | 42 | Sí |
+| D.audit.contenttype_mismatch | 3 | LINK_CONTENTTYPE_MISMATCH | 4 | Sí |
+| D.audit.duplicates | 3 | DUPLICATE_TRACES_AUDIT | 29 | Sí |
+| D.audit.links_missing_timestamps | 3 | LINKS_MISSING_TIMESTAMP | 3 | Sí |
+| D.audit.links_without_description | 3 | LINKS_WITHOUT_DESCRIPTION | 2 | Sí |
+| E.audit.approved_without_approver | 3 | APPROVED_WITHOUT_APPROVER | 2 | Sí |
+| E.audit.req_without_approver | 3 | REQUIREMENTS_WITHOUT_APPROVER | 4 | Sí |
+| F.groupby.models_by_approval | 3 | MODELS_BY_APPROVAL_STATE | 2 | Sí |
+| F.groupby.req_by_author_org | 3 | REQUIREMENTS_BY_AUTHOR_ORG | 7 | Sí |
+| F.groupby.req_by_maturity | 3 | REQUIREMENTS_BY_MATURITY | 4 | Sí |
+| F.groupby.req_by_subsystem | 3 | REQUIREMENTS_BY_SUBSYSTEM | 6 | Sí |
+| F.groupby.req_by_verification_method | 3 | REQUIREMENTS_BY_VERIFICATION_METHOD | 4 | Sí |
+| G.manifest.baseline | 3 | MANIFEST_PROJECT_BASELINE | 1 | Sí |
+| G.manifest.dev_environment | 3 | DEV_ENVIRONMENT | 1 | Sí |
+| G.manifest.plm_summary | 3 | PLM_SUMMARY | 1 | Sí |
+| G.manifest.used_documents | 3 | USED_DOCUMENTS | 5 | Sí |
+| H.vnv.incomplete | 3 | VNV_SCENARIOS_INCOMPLETE | 3 | Sí |
+| H.vnv.summary | 3 | VNV_SCENARIOS_SUMMARY | 10 | Sí |
+| I.supplier.models_by_supplier | 3 | MODELS_BY_SUPPLIER | 6 | Sí |
+| I.supplier.models_for_supplier | 3 | MODELS_FOR_SUPPLIER | 8 | Sí |

@@ -1,7 +1,12 @@
 # Bibliografía recomendada (base)
 
 > Esta lista es intencionalmente “segura”: fuentes estables y ampliamente citables.
-> Si tu uni exige APA/IEEE, luego lo convertimos a ese formato.
+> En tu caso, la memoria va en **IEEE**: citas numéricas en el texto tipo **[1]** y sección de referencias numerada.
+
+## Guía rápida IEEE (para esta memoria)
+- En el texto: “... como define el W3C en [1]” o “... según [2], [3]”.
+- En la bibliografía: lista numerada en el orden de aparición.
+- Prioriza referencias con autor/organización + título + año. Si solo hay URL, usa organización + título del documento y fecha de acceso.
 
 ## Estándares y especificaciones (W3C)
 - W3C. *RDF 1.1 Primer*. https://www.w3.org/TR/rdf11-primer/
@@ -17,6 +22,21 @@
 ## Librerías / herramientas
 - RDFLib Documentation (Python). https://rdflib.readthedocs.io/
 - Streamlit Documentation. https://docs.streamlit.io/
+
+## Licencias, estándares y cumplimiento (para “marco legal”)
+> Úsalo para justificar licencias de software y buenas prácticas de uso.
+
+- Open Source Initiative (OSI). *The Open Source Definition*. https://opensource.org/osd/
+- SPDX. *SPDX License List*. https://spdx.org/licenses/
+
+## Privacidad / protección de datos (si aplica)
+> Si tu solución no procesa datos personales reales, cita igualmente el marco y explica por qué **no aplica** o cómo reduces riesgos.
+
+- EU. *Regulation (EU) 2016/679 (GDPR / RGPD)*. (Texto consolidado accesible en EUR-Lex): https://eur-lex.europa.eu/
+
+## Gestión de proyectos (para “planificación y presupuesto”)
+- Project Management Institute (PMI). *PMBOK Guide* (edición vigente) — referencia estándar para planificación y gestión.
+- ISO 21500 / ISO 21502 (gestión de proyectos) — si tu universidad prefiere ISO.
 
 ## Question Answering / Semantic Parsing (para “estado del arte”)
 > Elige 4–8 referencias en total (no hace falta meter 40).
