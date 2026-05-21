@@ -1,0 +1,8 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10) (preloaded format=pdflatex.fmt)
+ \write18 enabled.
+
+Sorry, but pdflatex did not succeed.
+
+The log file hopefully contains the information to get MiKTeX going again:
+
+  /var/lib/miktex/.miktex/texmfs/data/miktex/log/pdflatex.log

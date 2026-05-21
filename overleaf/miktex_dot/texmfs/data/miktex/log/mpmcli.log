@@ -1,0 +1,12 @@
+2026-05-16 17:37:05,782Z INFO  mpmcli - this is mpmcli 4.4 (MiKTeX 23.10)
+2026-05-16 17:37:05,782Z INFO  mpmcli - this process (46) started by 'sh' with command line: mpm --update-db
+2026-05-16 17:37:05,782Z INFO  mpmcli - Operating on the private (per-user) MiKTeX setup
+2026-05-16 17:37:05,790Z INFO  mpmcli - running: miktex packages update-package-database
+2026-05-16 17:37:05,844Z INFO  mpmcli.core - forking...
+2026-05-16 17:37:15,696Z INFO  mpmcli - this process (46) finishes with exit code 0
+2026-05-16 17:37:16,173Z INFO  mpmcli - this is mpmcli 4.4 (MiKTeX 23.10)
+2026-05-16 17:37:16,173Z INFO  mpmcli - this process (56) started by 'sh' with command line: mpm --update
+2026-05-16 17:37:16,176Z INFO  mpmcli - Operating on the private (per-user) MiKTeX setup
+2026-05-16 17:37:16,183Z INFO  mpmcli - running: miktex packages update
+2026-05-16 17:37:16,250Z INFO  mpmcli.core - forking...
+2026-05-16 17:37:26,151Z INFO  mpmcli - this process (56) finishes with exit code 0

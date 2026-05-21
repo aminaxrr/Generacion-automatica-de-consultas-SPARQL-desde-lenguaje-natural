@@ -1,0 +1,62 @@
+2026-05-16 17:35:25,318Z INFO  pdflatex - this process (1) started by "unknown process" in directory /data with command line: pdflatex -interaction=nonstopmode -halt-on-error -shell-escape main.tex
+2026-05-16 17:35:25,328Z INFO  pdflatex - this is MiKTeX-PDFTEX 4.16.0 (1.40.25) (MiKTeX 23.10)
+2026-05-16 17:35:25,336Z INFO  pdflatex - allowing known shell commands
+2026-05-16 17:35:25,349Z INFO  pdflatex - allowing all shell commands
+2026-05-16 17:35:25,361Z INFO  pdflatex - going to create file: pdflatex.fmt
+2026-05-16 17:35:25,450Z INFO  pdflatex.core - forking...
+2026-05-16 17:35:27,128Z ERROR pdflatex - /usr/bin/miktex did not succeed; exitCode: 1
+2026-05-16 17:35:27,129Z ERROR pdflatex - output:
+2026-05-16 17:35:27,129Z ERROR pdflatex - Building format 'pdflatex' with engine 'pdftex'...
+
+Sorry, but: The executed process did not succeed.
+
+2026-05-16 17:35:27,129Z FATAL pdflatex.core - The memory dump file could not be found.
+2026-05-16 17:35:27,129Z FATAL pdflatex.core - Data: fileName="pdflatex.fmt"
+2026-05-16 17:35:27,130Z FATAL pdflatex.core - Source: Libraries/MiKTeX/TeXAndFriends/texmfapp.cpp:697
+2026-05-16 17:35:27,130Z FATAL pdflatex - The memory dump file could not be found.
+2026-05-16 17:35:27,130Z FATAL pdflatex - Info: fileName="pdflatex.fmt"
+2026-05-16 17:35:27,130Z FATAL pdflatex - Source: Libraries/MiKTeX/TeXAndFriends/texmfapp.cpp
+2026-05-16 17:35:27,131Z FATAL pdflatex - Line: 697
+2026-05-16 17:35:27,137Z INFO  pdflatex - this process (1) finishes with exit code 1
+2026-05-16 17:35:27,155Z ERROR pdflatex - major issue: So far, you have not checked for MiKTeX updates.
+2026-05-16 17:36:01,172Z INFO  pdflatex - this process (15) started by sh in directory /data with command line: pdflatex -interaction=nonstopmode -halt-on-error -shell-escape main.tex
+2026-05-16 17:36:01,185Z INFO  pdflatex - this is MiKTeX-PDFTEX 4.16.0 (1.40.25) (MiKTeX 23.10)
+2026-05-16 17:36:01,200Z INFO  pdflatex - allowing known shell commands
+2026-05-16 17:36:01,222Z INFO  pdflatex - allowing all shell commands
+2026-05-16 17:36:01,237Z INFO  pdflatex - going to create file: pdflatex.fmt
+2026-05-16 17:36:01,313Z INFO  pdflatex.core - forking...
+2026-05-16 17:36:03,362Z ERROR pdflatex - /usr/bin/miktex did not succeed; exitCode: 1
+2026-05-16 17:36:03,363Z ERROR pdflatex - output:
+2026-05-16 17:36:03,363Z ERROR pdflatex - Building format 'pdflatex' with engine 'pdftex'...
+
+Sorry, but: The executed process did not succeed.
+
+2026-05-16 17:36:03,364Z FATAL pdflatex.core - The memory dump file could not be found.
+2026-05-16 17:36:03,364Z FATAL pdflatex.core - Data: fileName="pdflatex.fmt"
+2026-05-16 17:36:03,364Z FATAL pdflatex.core - Source: Libraries/MiKTeX/TeXAndFriends/texmfapp.cpp:697
+2026-05-16 17:36:03,365Z FATAL pdflatex - The memory dump file could not be found.
+2026-05-16 17:36:03,366Z FATAL pdflatex - Info: fileName="pdflatex.fmt"
+2026-05-16 17:36:03,366Z FATAL pdflatex - Source: Libraries/MiKTeX/TeXAndFriends/texmfapp.cpp
+2026-05-16 17:36:03,366Z FATAL pdflatex - Line: 697
+2026-05-16 17:36:03,376Z INFO  pdflatex - this process (15) finishes with exit code 1
+2026-05-16 17:36:03,396Z ERROR pdflatex - major issue: So far, you have not checked for MiKTeX updates.
+2026-05-16 17:37:45,376Z INFO  pdflatex - this process (15) started by sh in directory /data with command line: pdflatex -interaction=nonstopmode -halt-on-error -shell-escape main.tex
+2026-05-16 17:37:45,388Z INFO  pdflatex - this is MiKTeX-PDFTEX 4.16.0 (1.40.25) (MiKTeX 23.10)
+2026-05-16 17:37:45,398Z INFO  pdflatex - allowing known shell commands
+2026-05-16 17:37:45,415Z INFO  pdflatex - allowing all shell commands
+2026-05-16 17:37:45,429Z INFO  pdflatex - going to create file: pdflatex.fmt
+2026-05-16 17:37:45,511Z INFO  pdflatex.core - forking...
+2026-05-16 17:37:45,517Z ERROR pdflatex - /usr/bin/miktex did not succeed; exitCode: 1
+2026-05-16 17:37:45,518Z ERROR pdflatex - output:
+2026-05-16 17:37:45,518Z ERROR pdflatex - Building format 'pdflatex' with engine 'pdftex'...
+
+Sorry, but: The executed process did not succeed.
+
+2026-05-16 17:37:45,518Z FATAL pdflatex.core - The memory dump file could not be found.
+2026-05-16 17:37:45,519Z FATAL pdflatex.core - Data: fileName="pdflatex.fmt"
+2026-05-16 17:37:45,519Z FATAL pdflatex.core - Source: Libraries/MiKTeX/TeXAndFriends/texmfapp.cpp:697
+2026-05-16 17:37:45,519Z FATAL pdflatex - The memory dump file could not be found.
+2026-05-16 17:37:45,519Z FATAL pdflatex - Info: fileName="pdflatex.fmt"
+2026-05-16 17:37:45,520Z FATAL pdflatex - Source: Libraries/MiKTeX/TeXAndFriends/texmfapp.cpp
+2026-05-16 17:37:45,520Z FATAL pdflatex - Line: 697
+2026-05-16 17:37:45,531Z INFO  pdflatex - this process (15) finishes with exit code 1

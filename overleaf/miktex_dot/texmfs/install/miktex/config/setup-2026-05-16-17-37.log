@@ -1,0 +1,25 @@
+
+
+MiKTeX Setup Utility 5.5.0+3f4a6a7 Report
+
+Date: Saturday, May 16, 2026
+Time: 17:36:45
+OS version: Linux 6.6.114.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Mon Dec  1 20:46:23 UTC 2025 x86_64
+SystemAdmin: false
+SharedSetup: false
+UserRoots: <none specified>
+UserData: <none specified>
+UserConfig: <none specified>
+CommonRoots: <none specified>
+CommonData: <none specified>
+CommonConfig: <none specified>
+Installation: /var/lib/miktex/.miktex/texmfs/install
+initexmf --principal=setup --create-config-file=miktex/config/miktex.ini --set-config-value=[Core]SharedSetup=0 --disable-installer --verbose:
+miktex --disable-installer --verbose fndb refresh:
+miktex --disable-installer --verbose links install --force:
+miktex --disable-installer --verbose fontmaps configure:
+miktex --disable-installer --verbose languages configure:
+initexmf --default-paper-size=A4 --disable-installer --verbose:
+initexmf --set-config-value=[MPM]AutoInstall=2 --disable-installer --verbose:
+miktex --disable-installer --verbose fndb refresh:
+initexmf --report --disable-installer --verbose:

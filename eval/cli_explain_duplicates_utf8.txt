@@ -1,0 +1,65 @@
+﻿Attempts: 1
+Matched: dynamic À score=(n/a)
+Matched NL: (no nl)
+--------------------------------------------------------------------------------
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX ex: <http://example.org/tfg/mbse#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT ?src ?pred ?target (COUNT(DISTINCT ?link) AS ?numLinks) WHERE {
+  VALUES ?pred { <http://www.lotar.org/schemas/mbse/p510#Satisfied_by> <http://www.lotar.org/schemas/mbse/p510#Verified_by> <http://www.lotar.org/schemas/mbse/p510#Validated_by> <http://www.lotar.org/schemas/mbse/p510#uses> }
+  ?src ?pred ?link .
+  ?link <http://www.lotar.org/schemas/mbse/p510#Link> ?target .
+}
+GROUP BY ?src ?pred ?target
+HAVING(COUNT(DISTINCT ?link) > 1)
+ORDER BY DESC(?numLinks)
+LIMIT 200
+--------------------------------------------------------------------------------
+EXPLANATION
+- normalized: audit duplicate traceability traceability link
+- tokens_sig: audit, duplicate, link, traceability
+- ground: 'duplicate' -> operator=DUPLICATE
+- ground: 'audit/check' -> operator=AUDIT
+- ground: 'link' -> entity=Traceability_Link_Type
+- operator: DUPLICATE_TRACES_AUDIT
+- pattern: VALUES ?pred {Satisfied_by Verified_by Validated_by uses} + GROUP BY/HAVING
+- uses_predicates: Satisfied_by, Verified_by, Validated_by, uses
+- link_target: Link
+--------------------------------------------------------------------------------
+src | pred | target | numLinks
+--------------------------------------------------------------------------------
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_002 | 5
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_024 | 4
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_008 | 4
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_003 | 4
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013 | 4
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_002 | 3
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_005 | 3
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_012 | 3
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_020 | 3
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_011 | 3
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_010 | 3
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_001 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_026 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_015 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_011 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_004 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_008 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_030 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_004 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_007 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_019 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_019 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_017 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_022 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirement_033 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_018 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Satisfied_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_018 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_022 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_002 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_017 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_008 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_PhysicalModel_013 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_013 | 2
+http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_Requirements_Traceability_f66958a9-a780-4b00-8627-a8dcc8a1bf94 | http://www.lotar.org/schemas/mbse/p510#Verified_by | http://www.lotar.org/schemas/mbse/p510/instances/3746317213/_TestCase_005 | 2
+

@@ -1,0 +1,46 @@
+﻿Attempts: 1
+Matched: dynamic À score=(n/a)
+Matched NL: (no nl)
+--------------------------------------------------------------------------------
+PREFIX p510: <http://www.lotar.org/schemas/mbse/p510#>
+PREFIX ex: <http://example.org/tfg/mbse#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT ?id WHERE {
+  ?req a <http://www.lotar.org/schemas/mbse/p510#Requirement> ; <http://www.lotar.org/schemas/mbse/p510#Id> ?id .
+  FILTER NOT EXISTS {
+    ?req <http://www.lotar.org/schemas/mbse/p510#Satisfied_by> ?sl .
+    ?sl <http://www.lotar.org/schemas/mbse/p510#Link> ?m .
+    ?m a <http://www.lotar.org/schemas/mbse/p510#DesignModel> .
+    ?m <http://www.lotar.org/schemas/mbse/p510#Verified_by> ?vl .
+    ?vl <http://www.lotar.org/schemas/mbse/p510#Link> ?t .
+    ?t a <http://www.lotar.org/schemas/mbse/p510#VerificationTest> .
+  }
+}
+ORDER BY ?id
+LIMIT 200
+--------------------------------------------------------------------------------
+EXPLANATION
+- normalized: requirement missing end to end traceability traceability link
+- tokens_sig: end, link, requirement, traceability
+- ground: 'missing/without' -> operator=NOT_EXISTS
+- ground: 'requirement' -> entity=Requirement
+- ground: 'link' -> entity=Traceability_Link_Type
+- operator: REQUIREMENTS_MISSING_END_TO_END
+- path: Requirement -Satisfied_by-> Model -Verified_by-> Test (via link nodes)
+- filter: NOT EXISTS full path
+--------------------------------------------------------------------------------
+id
+--------------------------------------------------------------------------------
+REQ-012
+REQ-016
+REQ-020
+REQ-023
+REQ-034
+REQ-038
+REQ-050
+

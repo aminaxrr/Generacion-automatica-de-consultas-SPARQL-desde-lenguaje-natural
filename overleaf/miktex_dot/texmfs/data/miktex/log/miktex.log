@@ -1,0 +1,244 @@
+2026-05-16 17:35:14,859Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:35:14,860Z INFO  miktex - this process (28) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose fndb refresh
+2026-05-16 17:35:14,926Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/config)...
+2026-05-16 17:35:14,995Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/data)...
+2026-05-16 17:35:15,059Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/install)...
+2026-05-16 17:35:16,031Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:35:16,032Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:35:16,080Z INFO  miktex - Refreshing FNDB for MPM...
+2026-05-16 17:35:17,099Z INFO  miktex - this process (28) finishes with exit code 0
+2026-05-16 17:35:17,469Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:35:17,469Z INFO  miktex - this process (31) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose links install --force
+2026-05-16 17:35:17,469Z INFO  miktex - Installing links in target directory /var/lib/miktex/bin...
+2026-05-16 17:35:17,587Z INFO  miktex - this process (31) finishes with exit code 0
+2026-05-16 17:35:17,884Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:35:17,885Z INFO  miktex - this process (34) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose fontmaps configure
+2026-05-16 17:35:17,887Z INFO  miktex - Parsing configuration file /var/lib/miktex/.miktex/texmfs/install/miktex/config/updmap.cfg...
+2026-05-16 17:35:18,007Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvipdfmx/kanjix.map...
+2026-05-16 17:35:18,039Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/builtin35.map...
+2026-05-16 17:35:18,093Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/download35.map...
+2026-05-16 17:35:18,141Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/ps2pk.map...
+2026-05-16 17:35:18,190Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts_pk.map...
+2026-05-16 17:35:18,240Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts_t1.map...
+2026-05-16 17:35:18,294Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex_dl14.map...
+2026-05-16 17:35:18,350Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex_ndl14.map...
+2026-05-16 17:35:18,405Z INFO  miktex - Copying /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts_t1.map
+2026-05-16 17:35:18,405Z INFO  miktex -      to /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts.map...
+2026-05-16 17:35:18,418Z INFO  miktex - Copying /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex_dl14.map
+2026-05-16 17:35:18,419Z INFO  miktex -      to /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex.map...
+2026-05-16 17:35:18,449Z INFO  miktex - running: fc-cache --verbose
+2026-05-16 17:35:18,507Z INFO  miktex.core - forking...
+2026-05-16 17:35:18,521Z INFO  miktex - /usr/share/fonts: skipping, existing cache is valid: 0 fonts, 4 dirs
+2026-05-16 17:35:18,521Z INFO  miktex - /usr/share/fonts/cMap: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,521Z INFO  miktex - /usr/share/fonts/cmap: skipping, existing cache is valid: 0 fonts, 5 dirs
+2026-05-16 17:35:18,522Z INFO  miktex - /usr/share/fonts/cmap/adobe-cns1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,522Z INFO  miktex - /usr/share/fonts/cmap/adobe-gb1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,522Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,523Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan2: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,523Z INFO  miktex - /usr/share/fonts/cmap/adobe-korea1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,523Z INFO  miktex - /usr/share/fonts/opentype: skipping, existing cache is valid: 0 fonts, 1 dirs
+2026-05-16 17:35:18,524Z INFO  miktex - /usr/share/fonts/opentype/urw-base35: skipping, existing cache is valid: 35 fonts, 0 dirs
+2026-05-16 17:35:18,524Z INFO  miktex - /usr/share/fonts/type1: skipping, existing cache is valid: 0 fonts, 1 dirs
+2026-05-16 17:35:18,524Z INFO  miktex - /usr/share/fonts/type1/urw-base35: skipping, existing cache is valid: 35 fonts, 0 dirs
+2026-05-16 17:35:18,525Z INFO  miktex - /usr/local/share/fonts: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:35:18,525Z INFO  miktex - /var/lib/miktex/.local/share/fonts: skipping, no such directory
+2026-05-16 17:35:18,526Z INFO  miktex - /var/lib/miktex/.fonts: skipping, no such directory
+2026-05-16 17:35:18,526Z INFO  miktex - /usr/share/fonts/cMap: skipping, looped directory detected
+2026-05-16 17:35:18,526Z INFO  miktex - /usr/share/fonts/cmap: skipping, looped directory detected
+2026-05-16 17:35:18,527Z INFO  miktex - /usr/share/fonts/opentype: skipping, looped directory detected
+2026-05-16 17:35:18,527Z INFO  miktex - /usr/share/fonts/type1: skipping, looped directory detected
+2026-05-16 17:35:18,527Z INFO  miktex - /usr/share/fonts/cmap/adobe-cns1: skipping, looped directory detected
+2026-05-16 17:35:18,528Z INFO  miktex - /usr/share/fonts/cmap/adobe-gb1: skipping, looped directory detected
+2026-05-16 17:35:18,528Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan1: skipping, looped directory detected
+2026-05-16 17:35:18,528Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan2: skipping, looped directory detected
+2026-05-16 17:35:18,529Z INFO  miktex - /usr/share/fonts/cmap/adobe-korea1: skipping, looped directory detected
+2026-05-16 17:35:18,529Z INFO  miktex - /usr/share/fonts/opentype/urw-base35: skipping, looped directory detected
+2026-05-16 17:35:18,529Z INFO  miktex - /usr/share/fonts/type1/urw-base35: skipping, looped directory detected
+2026-05-16 17:35:18,529Z INFO  miktex - /var/cache/fontconfig: not cleaning unwritable cache directory
+2026-05-16 17:35:18,530Z INFO  miktex - /var/lib/miktex/.cache/fontconfig: not cleaning non-existent cache directory
+2026-05-16 17:35:18,530Z INFO  miktex - /var/lib/miktex/.fontconfig: not cleaning non-existent cache directory
+2026-05-16 17:35:18,530Z INFO  miktex - fc-cache: succeeded
+2026-05-16 17:35:18,545Z INFO  miktex - this process (34) finishes with exit code 0
+2026-05-16 17:35:18,849Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:35:18,850Z INFO  miktex - this process (38) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose languages configure
+2026-05-16 17:35:18,850Z INFO  miktex - Creating language.dat, language.dat.lua and language.def...
+2026-05-16 17:35:18,996Z INFO  miktex - this process (38) finishes with exit code 0
+2026-05-16 17:35:21,693Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:35:21,693Z INFO  miktex - this process (47) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose fndb refresh
+2026-05-16 17:35:21,748Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/config)...
+2026-05-16 17:35:21,831Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/data)...
+2026-05-16 17:35:21,912Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/install)...
+2026-05-16 17:35:22,739Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:35:22,739Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:35:22,790Z INFO  miktex - Refreshing FNDB for MPM...
+2026-05-16 17:35:23,716Z INFO  miktex - this process (47) finishes with exit code 0
+2026-05-16 17:35:25,933Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:35:25,933Z INFO  miktex - this process (14) started by pdflatex in directory /data with command line: miktex formats build pdflatex --engine pdftex
+2026-05-16 17:35:25,948Z INFO  miktex - Building format 'pdflatex' with engine 'pdftex'...
+2026-05-16 17:35:26,054Z INFO  miktex.core - forking...
+2026-05-16 17:35:27,101Z ERROR miktex - sub-process error output has been saved to '/var/lib/miktex/.miktex/texmfs/data/miktex/log/miktex-makefmt_2026-05-16-173527.out'
+2026-05-16 17:35:27,119Z FATAL miktex - The executed process did not succeed.
+2026-05-16 17:35:27,119Z FATAL miktex - Info: exitCode="-1", fileName="/usr/bin/miktex-makefmt"
+2026-05-16 17:35:27,119Z FATAL miktex - Source: 
+2026-05-16 17:35:27,120Z FATAL miktex - Line: 0
+2026-05-16 17:35:27,120Z INFO  miktex - this process (14) finishes with exit code 1
+2026-05-16 17:36:01,764Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:36:01,765Z INFO  miktex - this process (18) started by pdflatex in directory /data with command line: miktex formats build pdflatex --engine pdftex
+2026-05-16 17:36:01,777Z INFO  miktex - Building format 'pdflatex' with engine 'pdftex'...
+2026-05-16 17:36:01,887Z INFO  miktex.core - forking...
+2026-05-16 17:36:03,336Z ERROR miktex - sub-process error output has been saved to '/var/lib/miktex/.miktex/texmfs/data/miktex/log/miktex-makefmt_2026-05-16-173603.out'
+2026-05-16 17:36:03,355Z FATAL miktex - The executed process did not succeed.
+2026-05-16 17:36:03,356Z FATAL miktex - Info: exitCode="-1", fileName="/usr/bin/miktex-makefmt"
+2026-05-16 17:36:03,356Z FATAL miktex - Source: 
+2026-05-16 17:36:03,356Z FATAL miktex - Line: 0
+2026-05-16 17:36:03,357Z INFO  miktex - this process (18) finishes with exit code 1
+2026-05-16 17:36:55,804Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:36:55,804Z INFO  miktex - this process (21) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose fndb refresh
+2026-05-16 17:36:55,856Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/config)...
+2026-05-16 17:36:55,937Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/data)...
+2026-05-16 17:36:56,018Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/install)...
+2026-05-16 17:36:56,819Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:36:56,820Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:36:56,864Z INFO  miktex - Refreshing FNDB for MPM...
+2026-05-16 17:36:57,746Z INFO  miktex - this process (21) finishes with exit code 0
+2026-05-16 17:36:57,982Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:36:57,983Z INFO  miktex - this process (24) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose links install --force
+2026-05-16 17:36:57,983Z INFO  miktex - Installing links in target directory /var/lib/miktex/bin...
+2026-05-16 17:36:58,102Z INFO  miktex - this process (24) finishes with exit code 0
+2026-05-16 17:36:58,394Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:36:58,395Z INFO  miktex - this process (27) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose fontmaps configure
+2026-05-16 17:36:58,397Z INFO  miktex - Parsing configuration file /var/lib/miktex/.miktex/texmfs/install/miktex/config/updmap.cfg...
+2026-05-16 17:36:58,513Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvipdfmx/kanjix.map...
+2026-05-16 17:36:58,519Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/builtin35.map...
+2026-05-16 17:36:58,559Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/download35.map...
+2026-05-16 17:36:58,599Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/ps2pk.map...
+2026-05-16 17:36:58,640Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts_pk.map...
+2026-05-16 17:36:58,681Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts_t1.map...
+2026-05-16 17:36:58,722Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex_dl14.map...
+2026-05-16 17:36:58,761Z INFO  miktex - Writing /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex_ndl14.map...
+2026-05-16 17:36:58,802Z INFO  miktex - Copying /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts_t1.map
+2026-05-16 17:36:58,802Z INFO  miktex -      to /var/lib/miktex/.miktex/texmfs/data/fonts/map/dvips/psfonts.map...
+2026-05-16 17:36:58,809Z INFO  miktex - Copying /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex_dl14.map
+2026-05-16 17:36:58,809Z INFO  miktex -      to /var/lib/miktex/.miktex/texmfs/data/fonts/map/pdftex/pdftex.map...
+2026-05-16 17:36:58,825Z INFO  miktex - running: fc-cache --verbose
+2026-05-16 17:36:58,879Z INFO  miktex.core - forking...
+2026-05-16 17:36:58,892Z INFO  miktex - /usr/share/fonts: skipping, existing cache is valid: 0 fonts, 4 dirs
+2026-05-16 17:36:58,893Z INFO  miktex - /usr/share/fonts/cMap: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,893Z INFO  miktex - /usr/share/fonts/cmap: skipping, existing cache is valid: 0 fonts, 5 dirs
+2026-05-16 17:36:58,893Z INFO  miktex - /usr/share/fonts/cmap/adobe-cns1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,894Z INFO  miktex - /usr/share/fonts/cmap/adobe-gb1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,894Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,895Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan2: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,895Z INFO  miktex - /usr/share/fonts/cmap/adobe-korea1: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,895Z INFO  miktex - /usr/share/fonts/opentype: skipping, existing cache is valid: 0 fonts, 1 dirs
+2026-05-16 17:36:58,896Z INFO  miktex - /usr/share/fonts/opentype/urw-base35: skipping, existing cache is valid: 35 fonts, 0 dirs
+2026-05-16 17:36:58,896Z INFO  miktex - /usr/share/fonts/type1: skipping, existing cache is valid: 0 fonts, 1 dirs
+2026-05-16 17:36:58,896Z INFO  miktex - /usr/share/fonts/type1/urw-base35: skipping, existing cache is valid: 35 fonts, 0 dirs
+2026-05-16 17:36:58,897Z INFO  miktex - /usr/local/share/fonts: skipping, existing cache is valid: 0 fonts, 0 dirs
+2026-05-16 17:36:58,897Z INFO  miktex - /var/lib/miktex/.local/share/fonts: skipping, no such directory
+2026-05-16 17:36:58,898Z INFO  miktex - /var/lib/miktex/.fonts: skipping, no such directory
+2026-05-16 17:36:58,898Z INFO  miktex - /usr/share/fonts/cMap: skipping, looped directory detected
+2026-05-16 17:36:58,898Z INFO  miktex - /usr/share/fonts/cmap: skipping, looped directory detected
+2026-05-16 17:36:58,899Z INFO  miktex - /usr/share/fonts/opentype: skipping, looped directory detected
+2026-05-16 17:36:58,899Z INFO  miktex - /usr/share/fonts/type1: skipping, looped directory detected
+2026-05-16 17:36:58,900Z INFO  miktex - /usr/share/fonts/cmap/adobe-cns1: skipping, looped directory detected
+2026-05-16 17:36:58,900Z INFO  miktex - /usr/share/fonts/cmap/adobe-gb1: skipping, looped directory detected
+2026-05-16 17:36:58,900Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan1: skipping, looped directory detected
+2026-05-16 17:36:58,900Z INFO  miktex - /usr/share/fonts/cmap/adobe-japan2: skipping, looped directory detected
+2026-05-16 17:36:58,901Z INFO  miktex - /usr/share/fonts/cmap/adobe-korea1: skipping, looped directory detected
+2026-05-16 17:36:58,901Z INFO  miktex - /usr/share/fonts/opentype/urw-base35: skipping, looped directory detected
+2026-05-16 17:36:58,901Z INFO  miktex - /usr/share/fonts/type1/urw-base35: skipping, looped directory detected
+2026-05-16 17:36:58,902Z INFO  miktex - /var/cache/fontconfig: not cleaning unwritable cache directory
+2026-05-16 17:36:58,902Z INFO  miktex - /var/lib/miktex/.cache/fontconfig: not cleaning non-existent cache directory
+2026-05-16 17:36:58,902Z INFO  miktex - /var/lib/miktex/.fontconfig: not cleaning non-existent cache directory
+2026-05-16 17:36:58,903Z INFO  miktex - fc-cache: succeeded
+2026-05-16 17:36:58,918Z INFO  miktex - this process (27) finishes with exit code 0
+2026-05-16 17:36:59,156Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:36:59,156Z INFO  miktex - this process (31) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose languages configure
+2026-05-16 17:36:59,157Z INFO  miktex - Creating language.dat, language.dat.lua and language.def...
+2026-05-16 17:36:59,304Z INFO  miktex - this process (31) finishes with exit code 0
+2026-05-16 17:37:02,155Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:37:02,155Z INFO  miktex - this process (40) started by miktexsetup in directory /data with command line: miktex --disable-installer --verbose fndb refresh
+2026-05-16 17:37:02,211Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/config)...
+2026-05-16 17:37:02,297Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/data)...
+2026-05-16 17:37:02,386Z INFO  miktex - Creating FNDB for user root directory (/var/lib/miktex/.miktex/texmfs/install)...
+2026-05-16 17:37:03,268Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:37:03,268Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:37:03,314Z INFO  miktex - Refreshing FNDB for MPM...
+2026-05-16 17:37:04,236Z INFO  miktex - this process (40) finishes with exit code 0
+2026-05-16 17:37:06,088Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:37:06,088Z INFO  miktex - this process (49) started by mpm in directory /data with command line: miktex packages update-package-database
+2026-05-16 17:37:06,863Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:37:06,863Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:37:06,907Z INFO  miktex.packagemanager - going to download https://api2.miktex.org/hello
+2026-05-16 17:37:07,391Z INFO  miktex.packagemanager - going to download https://api2.miktex.org/repositories?&releaseState=Stable&orderBy=ranking&take=1&onlySecure=true
+2026-05-16 17:37:07,513Z INFO  miktex - downloading https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb3-2.9.tar.lzma...
+2026-05-16 17:37:07,521Z INFO  miktex.packagemanager - going to download https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb3-2.9.tar.lzma
+2026-05-16 17:37:08,967Z INFO  miktex - 1.94 MB, 65.07 Mbit/s
+2026-05-16 17:37:11,256Z INFO  miktex - updating package manifests (/var/lib/miktex/.miktex/texmfs/install/miktex/config/package-manifests.ini)...
+2026-05-16 17:37:12,479Z INFO  miktex - installed 8671 package manifests
+2026-05-16 17:37:12,479Z INFO  miktex - visiting repository https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/...
+2026-05-16 17:37:12,479Z INFO  miktex - repository type: remote package repository
+2026-05-16 17:37:12,494Z INFO  miktex - loading package repository manifest...
+2026-05-16 17:37:12,494Z INFO  miktex - downloading https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb1-2.9.tar.lzma...
+2026-05-16 17:37:12,495Z INFO  miktex.packagemanager - going to download https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb1-2.9.tar.lzma
+2026-05-16 17:37:13,051Z INFO  miktex - 0.41 MB, 115.61 Mbit/s
+2026-05-16 17:37:14,261Z WARN  miktex.packagemanager - dependency problem: luxi is required by _miktex-fonts-type1
+2026-05-16 17:37:14,262Z WARN  miktex.packagemanager - dependency problem: ms is required by _miktex-latex-packages
+2026-05-16 17:37:14,262Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:37:14,263Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:37:15,649Z INFO  miktex - this process (49) finishes with exit code 0
+2026-05-16 17:37:16,550Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:37:16,550Z INFO  miktex - this process (59) started by mpm in directory /data with command line: miktex packages update
+2026-05-16 17:37:17,354Z WARN  miktex.packagemanager - dependency problem: luxi is required by _miktex-fonts-type1
+2026-05-16 17:37:17,355Z WARN  miktex.packagemanager - dependency problem: ms is required by _miktex-latex-packages
+2026-05-16 17:37:17,356Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:37:17,356Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:37:17,418Z INFO  miktex.packagemanager - searching for updateable packages
+2026-05-16 17:37:17,420Z INFO  miktex.packagemanager - going to download https://api2.miktex.org/repositories?&releaseState=Stable&orderBy=ranking&take=1&onlySecure=true
+2026-05-16 17:37:17,857Z INFO  miktex - downloading https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb3-2.9.tar.lzma...
+2026-05-16 17:37:17,858Z INFO  miktex.packagemanager - going to download https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb3-2.9.tar.lzma
+2026-05-16 17:37:17,050Z INFO  miktex - 1.94 MB, 94.30 Mbit/s
+2026-05-16 17:37:19,285Z INFO  miktex - updating package manifests (/var/lib/miktex/.miktex/texmfs/install/miktex/config/package-manifests.ini)...
+2026-05-16 17:37:20,531Z INFO  miktex - installed 8671 package manifests
+2026-05-16 17:37:20,531Z INFO  miktex - visiting repository https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/...
+2026-05-16 17:37:20,531Z INFO  miktex - repository type: remote package repository
+2026-05-16 17:37:20,543Z INFO  miktex - loading package repository manifest...
+2026-05-16 17:37:20,543Z INFO  miktex - downloading https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb1-2.9.tar.lzma...
+2026-05-16 17:37:20,544Z INFO  miktex.packagemanager - going to download https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/miktex-zzdb1-2.9.tar.lzma
+2026-05-16 17:37:21,023Z INFO  miktex - 0.41 MB, 107.08 Mbit/s
+2026-05-16 17:37:22,175Z WARN  miktex.packagemanager - dependency problem: luxi is required by _miktex-fonts-type1
+2026-05-16 17:37:22,177Z WARN  miktex.packagemanager - dependency problem: ms is required by _miktex-latex-packages
+2026-05-16 17:37:22,178Z WARN  miktex.packagemanager - dependency problem: showframe is required by _miktex-latex-packages
+2026-05-16 17:37:22,178Z WARN  miktex.packagemanager - dependency problem: thailatex is required by _miktex-latex-packages
+2026-05-16 17:37:23,899Z INFO  miktex - package repository digest: d1abda01ea7b53913583567832425875
+2026-05-16 17:37:24,562Z INFO  miktex.packagemanager - biber-linux-x86_64: new essential package
+2026-05-16 17:37:24,624Z INFO  miktex.packagemanager - going to download https://api2.miktex.org/repositories/75d677a70e7465490ab4b206a65d24f7
+2026-05-16 17:37:24,979Z INFO  miktex - starting package maintenance...
+2026-05-16 17:37:24,980Z INFO  miktex - installation directory: /var/lib/miktex/.miktex/texmfs/install
+2026-05-16 17:37:24,981Z INFO  miktex - package repository: https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/
+2026-05-16 17:37:25,333Z INFO  miktex - package repository digest: d1abda01ea7b53913583567832425875
+2026-05-16 17:37:25,334Z INFO  miktex - going to download 26007626 bytes
+2026-05-16 17:37:25,334Z INFO  miktex - going to install 29 file(s) (2 package(s))
+2026-05-16 17:37:25,962Z INFO  miktex.packagemanager - installing package biber-linux-x86_64
+2026-05-16 17:37:25,962Z INFO  miktex - Installing package biber-linux-x86_64...
+2026-05-16 17:37:25,962Z INFO  miktex - downloading https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/biber-linux-x86_64.tar.lzma...
+2026-05-16 17:37:25,963Z INFO  miktex.packagemanager - going to download https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/biber-linux-x86_64.tar.lzma
+2026-05-16 17:37:25,995Z FATAL miktex.core - Error in the HTTP2 framing layer
+2026-05-16 17:37:25,995Z FATAL miktex.core - Data: url="https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/biber-linux-x86_64.tar.lzma", code="16"
+2026-05-16 17:37:25,995Z FATAL miktex.core - Source: Libraries/MiKTeX/PackageManager/CurlWebSession.cpp:247
+2026-05-16 17:37:26,096Z FATAL miktex - Error in the HTTP2 framing layer
+2026-05-16 17:37:26,096Z FATAL miktex - Info: url="https://softlibre.unizar.es/tex-archive/systems/win32/miktex/tm/packages/biber-linux-x86_64.tar.lzma", code="16"
+2026-05-16 17:37:26,097Z FATAL miktex - Source: Libraries/MiKTeX/PackageManager/CurlWebSession.cpp
+2026-05-16 17:37:26,097Z FATAL miktex - Line: 247
+2026-05-16 17:37:26,102Z INFO  miktex - this process (59) finishes with exit code 1
+2026-05-16 17:37:45,967Z INFO  miktex - this is One MiKTeX Utility 1.8 (MiKTeX 23.10)
+2026-05-16 17:37:45,968Z INFO  miktex - this process (18) started by pdflatex in directory /data with command line: miktex formats build pdflatex --engine pdftex
+2026-05-16 17:37:45,979Z INFO  miktex - Building format 'pdflatex' with engine 'pdftex'...
+2026-05-16 17:37:46,074Z INFO  miktex.core - forking...
+2026-05-16 17:37:45,493Z ERROR miktex - sub-process error output has been saved to '/var/lib/miktex/.miktex/texmfs/data/miktex/log/miktex-makefmt_2026-05-16-173745.out'
+2026-05-16 17:37:45,510Z FATAL miktex - The executed process did not succeed.
+2026-05-16 17:37:45,511Z FATAL miktex - Info: exitCode="-1", fileName="/usr/bin/miktex-makefmt"
+2026-05-16 17:37:45,511Z FATAL miktex - Source: 
+2026-05-16 17:37:45,511Z FATAL miktex - Line: 0
+2026-05-16 17:37:45,512Z INFO  miktex - this process (18) finishes with exit code 1
