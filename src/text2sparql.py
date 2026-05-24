@@ -462,7 +462,7 @@ def _ground_question(question: str, normalized: str, tokens_sig: set[str], index
         add("duplicate", "operator", "DUPLICATE")
     if re.search(r"\b(audit|check|detect|validate)\b", q):
         add("audit/check", "operator", "AUDIT")
-    if re.search(r"\b(summary|overview|resume|resumen)\b", q):
+    if re.search(r"\b(summary|overview|resume)\b", q):
         add("summary", "operator", "SUMMARY")
     if re.search(r"\b(by|per|grouped\s+by)\b", q):
         add("by/per", "operator", "GROUP_BY")

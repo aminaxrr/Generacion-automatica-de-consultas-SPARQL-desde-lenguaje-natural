@@ -1,0 +1,38 @@
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "docker-pdflatex",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-v",
+        "c:/Users/Amina/Documents/TFG/overleaf:/work/overleaf",
+        "-w",
+        "/work/overleaf",
+        "blang/latex:ctanfull",
+        "pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-file-line-error",
+        "-shell-escape",
+        "-output-directory=.",
+        "main.tex"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Docker: pdflatex",
+      "tools": [
+        "docker-pdflatex"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "Docker: pdflatex",
+  "latex-workshop.latex.outDir": "overleaf",
+  "latex-workshop.latex.autoClean.run": "never",
+  "files.associations": {
+    "*.tex": "latex"
+  }
+}
